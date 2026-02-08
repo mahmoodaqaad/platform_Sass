@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // no `url` here in Prisma 7 – it is in prisma.config.ts
+}
+
+enum Role {
+  ADMIN
+  USER
+  OWNER
+  STAFF
+  CUSTOMER
+}
+
+enum BusinessType {
+  SALON
+  CLINIC
+  SPA
+  GYM
+  RESTAURANT
+  HOTEL
+  STORE
+  OTHER
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  name          String?
+  password      String?
+  image         String?
+  role          Role       @default(USER) // Global role (ADMIN or USER)
+  memberships   Member[]   // Roles within specific businesses
+  ownedBusinesses Business[] // Businesses owned by this user
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Business {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique
+  type          BusinessType @default(OTHER)
+  description   String?
+  logo          String?
+  address       String?
+  phone         String?
+  status        String       @default("يعمل")
+  
+  owner         User         @relation(fields: [ownerId], references: [id])
+  ownerId       String
+  
+  members       Member[]
+  services      Service[]
+  products      Product[]
+  appointments  Appointment[]
+  orders        Order[]
+  customers     Customer[]
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  role        MemberRole @default(STAFF)
+  
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  
+  business    Business @relation(fields: [businessId], references: [id])
+  businessId  String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, businessId])
+}
+
+enum MemberRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  duration    Int      // in minutes
+  price       Decimal
+  
+  business    Business @relation(fields: [businessId], references: [id])
+  businessId  String
+  
+  appointments Appointment[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  startTime   DateTime
+  endTime     DateTime
+  status      AppointmentStatus @default(PENDING)
+  
+  service     Service  @relation(fields: [serviceId], references: [id])
+  serviceId   String
+  
+  business    Business @relation(fields: [businessId], references: [id])
+  businessId  String
+  
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal
+  stock       Int      @default(0)
+  images      String[]
+  
+  business    Business @relation(fields: [businessId], references: [id])
+  businessId  String
+  
+  orderItems  OrderItem[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  total       Decimal
+  status      OrderStatus @default(PENDING)
+  
+  business    Business @relation(fields: [businessId], references: [id])
+  businessId  String
+  
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String
+  
+  items       OrderItem[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  quantity  Int
+  price     Decimal
+  
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  status      String   @default("New")
+  
+  business    Business @relation(fields: [businessId], references: [id])
+  businessId  String
+  
+  appointments Appointment[]
+  orders       Order[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([email, businessId])
+}
