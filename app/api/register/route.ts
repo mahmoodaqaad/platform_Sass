@@ -7,6 +7,17 @@ import { setCookie } from "@/Tools/generateToken"
 
 export const POST = async (req: NextRequest) => {
     try {
+        // Check if registration is open
+        const settings = await prisma.globalSettings.findUnique({
+            where: { id: "global" }
+        })
+
+        if (settings && !settings.registrationOpen) {
+            return NextResponse.json({
+                message: "التسجيل مغلق حالياً من قبل الإدارة. يرجى المحاولة لاحقاً أو التواصل مع الدعم."
+            }, { status: 403 })
+        }
+
         const body = await req.json() as RegisterDto
         const { name, email, password } = body
 

@@ -26,16 +26,14 @@ export const GET = async (req: NextRequest) => {
     try {
         const businesses = await prisma.business.findMany({
             include: {
+
                 owner: {
                     select: { name: true, email: true }
                 },
                 _count: {
                     select: {
-                        members: {
-                            where: {
-                                role: "STAFF"
-                            }
-                        }
+                        members: { where: { role: "STAFF" } },
+                        services: true
                     }
                 }
             },
@@ -48,10 +46,21 @@ export const GET = async (req: NextRequest) => {
             name: b.name,
             slug: b.slug,
             ownerName: b.owner.name,
-            ownerEmail: b.owner.email,
+            ownerEmail: b.owner.email, 
             staffCount: b._count.members,
-            status: b.status || "يعمل",
-            createdAt: b.createdAt
+            serviceCount: b._count.services,
+            plan: b.plan,
+            planActive: b.planActive,
+            subscriptionStart: b.subscriptionStart,
+            subscriptionEnd: b.subscriptionEnd,
+            status: b.status || "ACTIVE",
+            logo: b.logo,
+            createdAt: b.createdAt,
+            type: b.type,
+            description: b.description,
+            address: b.address,
+            phone: b.phone,
+            allpaied: Number(b.AllPaied)
         }));
 
         return NextResponse.json(formatted);
@@ -68,16 +77,20 @@ export const PUT = async (req: NextRequest) => {
     }
 
     try {
-        const { id, name, slug, status } = await req.json();
+        const { id, name, slug, status, type, description, address, phone, logo } = await req.json();
 
         if (!id) return NextResponse.json({ message: "ID is required" }, { status: 400 });
+        const isSlugExist = await prisma.business.findFirst({ where: { slug, id: { not: id } } })
+        if (isSlugExist) return NextResponse.json({ message: "هذا الرابط مستخدم " }, { status: 400 });
 
         const updated = await prisma.business.update({
             where: { id },
             data: {
                 name,
                 slug,
-                // status // REMOVED: status is missing from current Prisma client
+                status,
+                type, description, address, phone,
+                logo,
             }
         });
 
@@ -90,14 +103,15 @@ export const PUT = async (req: NextRequest) => {
 
 // POST - Create a new business
 export const POST = async (req: NextRequest) => {
+
     if (!await verifyAdmin(req)) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     try {
-        const { name, slug, ownerEmail } = await req.json();
+        const { name, slug, ownerEmail, type, description, address, phone, logo, numMonth, plan } = await req.json();
 
-        if (!name || !slug || !ownerEmail) {
+        if (!name || !slug || !ownerEmail || !type || !description || !address || !phone || !numMonth || !plan) {
             return NextResponse.json({ message: "جميع الحقول مطلوبة" }, { status: 400 });
         }
 
@@ -112,6 +126,9 @@ export const POST = async (req: NextRequest) => {
         if (existingSlug) {
             return NextResponse.json({ message: "هذا الرابط (Slug) مستخدم بالفعل" }, { status: 400 });
         }
+        const newEndDate = new Date()
+        newEndDate.setDate(newEndDate.getDate() + (30 * Number(numMonth)))
+        // return NextResponse.json(newEndDate)
 
         const newBusiness = await prisma.$transaction(async (tx) => {
             // Update user role to OWNER if it's not already
@@ -127,7 +144,11 @@ export const POST = async (req: NextRequest) => {
                     name,
                     slug,
                     ownerId: user.id,
-                    // status: "يعمل" // REMOVED: status is missing from current Prisma client
+                    type, description, address, phone,
+                    logo,
+                    subscriptionEnd: newEndDate,
+                    plan,
+
                 }
             });
 
@@ -154,15 +175,14 @@ export const DELETE = async (req: NextRequest) => {
     if (!await verifyAdmin(req)) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
     try {
         const { id } = await req.json();
+        //  re   NextResponse.json({id})
 
-        // Use transaction to delete related records if necessary, 
-        // or rely on cascade delete if configured in schema.
         await prisma.business.delete({
             where: { id }
         });
+
 
         return NextResponse.json({ message: "Business deleted successfully" });
     } catch (error) {

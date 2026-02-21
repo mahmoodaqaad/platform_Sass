@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, usePathname } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import axios from "axios";
 import {
@@ -10,65 +12,58 @@ import {
     HiShoppingBag,
     HiUsers,
     HiCog,
-    HiLogout,
     HiShieldCheck,
     HiOutlineOfficeBuilding
 } from "react-icons/hi";
+import Logout from "../Logout";
+import { User } from "@/prisma/generated/prisma/client";
 
 const Sidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
     const pathname = usePathname();
-    const router = useRouter();
+    const t = useTranslations("Navigation");
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const res = await axios.get("/api/auth/me");
                 if (res.data.authenticated) setUser(res.data.user);
-            } catch (err) { }
+            } catch { }
         };
         fetchUser();
     }, []);
 
-    const handleLogout = async () => {
-        try {
-            await axios.post("/api/auth/logout");
-            router.push("/login");
-            router.refresh();
-        } catch (err) { }
-    };
-
     const getMenuItems = () => {
         if (!user) return [];
 
-        const common = [{ name: "نظرة عامة", icon: <HiViewGrid />, href: `/${user.role.toLowerCase()}` }];
+        const common = [{ name: t("overview"), icon: <HiViewGrid />, href: `/${user.role.toLowerCase()}` }];
 
         if (user.role === "ADMIN") {
             return [
                 ...common,
-                { name: "المستخدمون", icon: <HiShieldCheck />, href: "/admin/users" },
-                { name: "الأعمال", icon: <HiOutlineOfficeBuilding />, href: "/admin/businesses" },
-                { name: "إعدادات المنظمة", icon: <HiCog />, href: "/admin/settings" },
+                { name: t("users"), icon: <HiShieldCheck />, href: "/admin/users" },
+                { name: t("businesses"), icon: <HiOutlineOfficeBuilding />, href: "/admin/businesses" },
+                { name: t("orgSettings"), icon: <HiCog />, href: "/admin/settings" },
             ];
         }
 
         if (user.role === "OWNER") {
             return [
                 ...common,
-                { name: "المواعيد", icon: <HiCalendar />, href: "/owner/appointments" },
-                { name: "الخدمات", icon: <HiShoppingBag />, href: "/owner/services" },
-                { name: "الموظفون", icon: <HiUsers />, href: "/owner/staff" },
-                { name: "العملاء", icon: <HiUsers />, href: "/owner/customers" },
-                { name: "الإعدادات", icon: <HiCog />, href: "/owner/settings" },
+                { name: t("appointments"), icon: <HiCalendar />, href: "/owner/appointments" },
+                { name: t("services"), icon: <HiShoppingBag />, href: "/owner/services" },
+                { name: t("staff"), icon: <HiUsers />, href: "/owner/staff" },
+                { name: t("customers"), icon: <HiUsers />, href: "/owner/customers" },
+                { name: t("settings"), icon: <HiCog />, href: "/owner/settings" },
             ];
         }
 
         if (user.role === "STAFF") {
             return [
                 ...common,
-                { name: "جدولي", icon: <HiCalendar />, href: "/staff/schedule" },
-                { name: "قائمة العملاء", icon: <HiUsers />, href: "/staff/customers" },
+                { name: t("schedule"), icon: <HiCalendar />, href: "/staff/schedule" },
+                { name: t("customerList"), icon: <HiUsers />, href: "/staff/customers" },
             ];
         }
 
@@ -76,6 +71,11 @@ const Sidebar = () => {
     };
 
     const menuItems = getMenuItems();
+
+    // Check if path is active (ignoring locale prefix which usePathname from @/i18n/routing already does)
+    const isLinkActive = (href: string) => {
+        return pathname === href;
+    };
 
     return (
         <motion.div
@@ -87,7 +87,10 @@ const Sidebar = () => {
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 className="absolute -right-3 top-10 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white border-2 border-zinc-950 z-20 hover:scale-110 transition-transform"
             >
-                <HiChevronLeft className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
+        
+
+                    <HiChevronLeft className={`transition-transform duration-300  ${isCollapsed ? 'rotate-180' : ''}`} />
+                
             </button>
 
             {/* Brand */}
@@ -109,7 +112,7 @@ const Sidebar = () => {
             {/* Navigation */}
             <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
                 {menuItems.map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive = isLinkActive(item.href);
                     return (
                         <Link
                             key={item.name}
@@ -141,15 +144,8 @@ const Sidebar = () => {
             </nav>
 
             {/* Footer / User */}
-            <div className="p-4 border-t border-zinc-900">
-                <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-4 p-4 rounded-2xl text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
-                >
-                    <HiLogout className="text-2xl" />
-                    {!isCollapsed && <span className="font-bold text-sm">تسجيل الخروج</span>}
-                </button>
-            </div>
+            <Logout dash={true} isCollapsed={isCollapsed} setUser={setUser} />
+
         </motion.div>
     );
 };

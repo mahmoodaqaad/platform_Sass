@@ -4,25 +4,31 @@ import Sidebar from "./Sidebar";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import axios from "axios";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "../LanguageSwitcher";
+
+import { User } from "@/prisma/generated/prisma/client";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
+    const t = useTranslations("Roles");
+    const tCommon = useTranslations("Common");
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const res = await axios.get("/api/auth/me");
                 if (res.data.authenticated) setUser(res.data.user);
-            } catch (err) { }
+            } catch { }
         };
         fetchUser();
     }, []);
 
     const getRoleName = (role: string) => {
-        if (role === "ADMIN") return "المدير العام";
-        if (role === "OWNER") return "صاحب العمل";
-        if (role === "STAFF") return "موظف";
-        return "مستخدم";
+        if (role === "ADMIN") return t("admin");
+        if (role === "OWNER") return t("owner");
+        if (role === "STAFF") return t("staff");
+        return t("user");
     };
 
     return (
@@ -33,15 +39,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 <header className="h-20 border-b border-zinc-900 flex items-center justify-between px-10 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <h2 className="font-bold uppercase tracking-widest text-xs text-indigo-400">
-                            منصة التحكم
+                            {t("dashboardTitle")}
                         </h2>
                     </div>
 
                     <div className="flex items-center gap-6">
+                        <LanguageSwitcher />
+
                         <div className="flex flex-col items-end">
                             <span className="text-white font-bold text-sm">{user?.name || "..."}</span>
-                            <span className="text-zinc-500 text-[10px] font-black uppercase tracking-tighter">
-                                {user ? getRoleName(user.role) : "تحميل..."}
+                            <span className="text-zinc-500 text-[10px] font-black uppercase tracking-tighter text-right">
+                                {user ? getRoleName(user.role) : tCommon("loading")}
                             </span>
                         </div>
                         <div className="w-10 h-10 rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-px">

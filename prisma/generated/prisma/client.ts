@@ -84,3 +84,8 @@ export type OrderItem = Prisma.OrderItemModel
  * 
  */
 export type Customer = Prisma.CustomerModel
+/**
+ * Model GlobalSettings
+ * 
+ */
+export type GlobalSettings = Prisma.GlobalSettingsModel

@@ -5,7 +5,157 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // no `url` here in Prisma 7 – it is in prisma.config.ts
+}
+
+model User {
+  id              String     @id @default(cuid())
+  email           String     @unique
+  name            String?
+  role            Role       @default(USER)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  password        String?
+  image           String?
+  ownedBusinesses Business[]
+  memberships     Member[]
+}
+
+model Business {
+  id                  String         @id @default(cuid())
+  name                String
+  slug                String         @unique
+  type                BusinessType   @default(OTHER)
+  ownerId             String
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  address             String?
+  description         String?
+  logo                String?
+  phone               String?
+  planActive          Boolean        @default(true)
+  subscriptionEnd     DateTime?
+  subscriptionStart   DateTime       @default(now())
+  plan                PLAN           @default(BASIC)
+  AllPaied            Decimal        @default(0.0)
+  status              BusinessStatus @default(ACTIVE)
+  marketingAutomation Boolean        @default(false)
+  remindersEnabled    Boolean        @default(false)
+  appointments        Appointment[]
+  owner               User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  customers           Customer[]
+  members             Member[]
+  orders              Order[]
+  products            Product[]
+  services            Service[]
+}
+
+model Member {
+  id         String     @id @default(cuid())
+  role       MemberRole @default(STAFF)
+  userId     String
+  businessId String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  business   Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  duration     Int
+  price        Decimal
+  businessId   String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  image        String?
+  isActive     Boolean       @default(true)
+  appointments Appointment[]
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id         String            @id @default(cuid())
+  startTime  DateTime
+  endTime    DateTime
+  status     AppointmentStatus @default(PENDING)
+  serviceId  String
+  businessId String
+  customerId String
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer   Customer          @relation(fields: [customerId], references: [id])
+  service    Service           @relation(fields: [serviceId], references: [id])
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal
+  stock       Int         @default(0)
+  images      String[]
+  businessId  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  business    Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  total      Decimal
+  status     OrderStatus @default(PENDING)
+  businessId String
+  customerId String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  business   Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  quantity  Int
+  price     Decimal
+  orderId   String
+  productId String
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Customer {
+  id           String        @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  businessId   String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  status       String        @default("New")
+  notes        String?
+  appointments Appointment[]
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  orders       Order[]
+
+  @@unique([email, businessId])
+}
+
+model GlobalSettings {
+  id               String   @id @default("global")
+  platformName     String   @default("Booking SaaS")
+  supportEmail     String   @default("support@example.com")
+  supportPhone     String?
+  registrationOpen Boolean  @default(true)
+  currency         String   @default("USD")
+  commissionRate   Decimal  @default(10.0)
+  tiersConfig      Json?
+  updatedAt        DateTime @updatedAt
 }
 
 enum Role {
@@ -27,99 +177,24 @@ enum BusinessType {
   OTHER
 }
 
-model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
-  name          String?
-  password      String?
-  image         String?
-  role          Role       @default(USER) // Global role (ADMIN or USER)
-  memberships   Member[]   // Roles within specific businesses
-  ownedBusinesses Business[] // Businesses owned by this user
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+enum PLAN {
+  BASIC
+  PRO
+  BUSINESS
+  ENTERPRISE
 }
 
-model Business {
-  id            String       @id @default(cuid())
-  name          String
-  slug          String       @unique
-  type          BusinessType @default(OTHER)
-  description   String?
-  logo          String?
-  address       String?
-  phone         String?
-  status        String       @default("يعمل")
-  
-  owner         User         @relation(fields: [ownerId], references: [id])
-  ownerId       String
-  
-  members       Member[]
-  services      Service[]
-  products      Product[]
-  appointments  Appointment[]
-  orders        Order[]
-  customers     Customer[]
-
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-}
-
-model Member {
-  id          String   @id @default(cuid())
-  role        MemberRole @default(STAFF)
-  
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  
-  business    Business @relation(fields: [businessId], references: [id])
-  businessId  String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@unique([userId, businessId])
+enum BusinessStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
 }
 
 enum MemberRole {
   OWNER
   MANAGER
   STAFF
-}
-
-model Service {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  duration    Int      // in minutes
-  price       Decimal
-  
-  business    Business @relation(fields: [businessId], references: [id])
-  businessId  String
-  
-  appointments Appointment[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Appointment {
-  id          String   @id @default(cuid())
-  startTime   DateTime
-  endTime     DateTime
-  status      AppointmentStatus @default(PENDING)
-  
-  service     Service  @relation(fields: [serviceId], references: [id])
-  serviceId   String
-  
-  business    Business @relation(fields: [businessId], references: [id])
-  businessId  String
-  
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 enum AppointmentStatus {
@@ -129,75 +204,10 @@ enum AppointmentStatus {
   COMPLETED
 }
 
-model Product {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  price       Decimal
-  stock       Int      @default(0)
-  images      String[]
-  
-  business    Business @relation(fields: [businessId], references: [id])
-  businessId  String
-  
-  orderItems  OrderItem[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Order {
-  id          String   @id @default(cuid())
-  total       Decimal
-  status      OrderStatus @default(PENDING)
-  
-  business    Business @relation(fields: [businessId], references: [id])
-  businessId  String
-  
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  String
-  
-  items       OrderItem[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model OrderItem {
-  id        String  @id @default(cuid())
-  quantity  Int
-  price     Decimal
-  
-  order     Order   @relation(fields: [orderId], references: [id])
-  orderId   String
-  
-  product   Product @relation(fields: [productId], references: [id])
-  productId String
-}
-
 enum OrderStatus {
   PENDING
   PAID
   SHIPPED
   DELIVERED
   CANCELLED
-}
-
-model Customer {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  phone       String?
-  status      String   @default("New")
-  
-  business    Business @relation(fields: [businessId], references: [id])
-  businessId  String
-  
-  appointments Appointment[]
-  orders       Order[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@unique([email, businessId])
 }

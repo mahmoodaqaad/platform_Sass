@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import axios from "axios";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
     HiArrowRight,
     HiChartBar,
@@ -15,6 +17,21 @@ import {
 } from "react-icons/hi";
 
 const Hero = () => {
+    const t = useTranslations("Hero");
+    const [platformName, setPlatformName] = React.useState("Platform");
+
+    React.useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get("/api/settings/public");
+                setPlatformName(res.data.platformName);
+            } catch (err) {
+                console.error("Hero settings fetch error:", err);
+            }
+        };
+        fetchSettings();
+    }, []);
+
     return (
         <section className="relative min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden bg-[#050505] text-white">
             {/* Background Gradients & Grid - Human-Made Feel */}
@@ -65,7 +82,7 @@ const Hero = () => {
                         className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest mb-8"
                     >
                         <HiLightningBolt />
-                        <span>v2.0 is now live</span>
+                        <span>{t("v2Live")}</span>
                     </motion.div>
 
                     <motion.h1
@@ -74,9 +91,9 @@ const Hero = () => {
                         transition={{ duration: 0.6, delay: 0.1 }}
                         className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] mb-8 tracking-tight"
                     >
-                        The Operating System <br />
+                        {t("titleLine1")} <br />
                         <span className="text-transparent bg-clip-text bg-linear-to-r from-white via-white to-white/40">
-                            For Modern Business
+                            {t("titleLine2")}
                         </span>
                     </motion.h1>
 
@@ -86,8 +103,7 @@ const Hero = () => {
                         transition={{ duration: 0.6, delay: 0.2 }}
                         className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed mb-10"
                     >
-                        A unified platform to manage operations, scale infrastructure, and
-                        accelerate growth with precision. Built for humans, powered by data.
+                        {t("description")}
                     </motion.p>
 
                     <motion.div
@@ -100,14 +116,14 @@ const Hero = () => {
                             href="/register"
                             className="px-8 py-4 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group shadow-2xl shadow-white/5"
                         >
-                            Get Started for Free
-                            <HiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                            {t("getStartedFree")}
+                            <HiArrowRight className="group-hover:translate-x-1 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
                         </Link>
                         <Link
                             href="#demo"
                             className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 rounded-xl font-bold transition-all flex items-center justify-center"
                         >
-                            Request a Demo
+                            {t("requestDemo")}
                         </Link>
                     </motion.div>
 
@@ -118,9 +134,9 @@ const Hero = () => {
                         transition={{ duration: 1, delay: 0.8 }}
                         className="mt-16 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-500"
                     >
-                        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter"><HiGlobeAlt /> GLOBAL</div>
-                        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter"><HiBriefcase /> NEXUS</div>
-                        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter"><HiShieldCheck /> SECURE</div>
+                        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter"><HiGlobeAlt /> {t("global")}</div>
+                        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter"><HiBriefcase /> {t("nexus")}</div>
+                        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter"><HiShieldCheck /> {t("secure")}</div>
                         <div className="flex items-center gap-2 font-bold text-xl tracking-tighter font-serif italic">Acme Corp</div>
                     </motion.div>
                 </div>
@@ -138,7 +154,7 @@ const Hero = () => {
                         <div className="w-16 md:w-60 border-r border-zinc-900 bg-zinc-950/50 p-4 hidden md:flex flex-col gap-6">
                             <div className="flex items-center gap-3 px-2 mb-4">
                                 <div className="w-8 h-8 rounded-lg bg-indigo-600" />
-                                <div className="h-4 w-24 bg-zinc-800 rounded-full" />
+                                <div className="h-4 w-24 bg-zinc-800 rounded-full flex items-center px-2 text-[8px] font-bold text-zinc-500 overflow-hidden">{platformName}</div>
                             </div>
                             {[1, 2, 3, 4, 5].map((i) => (
                                 <div key={i} className="flex items-center gap-3 px-2">
@@ -165,16 +181,16 @@ const Hero = () => {
                             {/* Grid of Stats */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {[
-                                    { label: "Active Users", val: "12,402", icon: <HiUsers className="text-indigo-400" /> },
-                                    { label: "Revenue", val: "$452,000", icon: <HiCurrencyDollar className="text-emerald-400" /> },
-                                    { label: "Growth", val: "+24.5%", icon: <HiChartBar className="text-amber-400" /> }
+                                    { label: t("activeUsers"), val: "12,402", icon: <HiUsers className="text-indigo-400" /> },
+                                    { label: t("revenue"), val: "$452,000", icon: <HiCurrencyDollar className="text-emerald-400" /> },
+                                    { label: t("growth"), val: "+24.5%", icon: <HiChartBar className="text-amber-400" /> }
                                 ].map((stat, i) => (
                                     <div key={i} className="p-5 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 flex flex-col gap-3">
                                         <div className="flex justify-between items-center text-zinc-500 font-medium text-sm">
                                             <span>{stat.label}</span>
                                             {stat.icon}
                                         </div>
-                                        <div className="text-2xl font-bold">{stat.val}</div>
+                                        <div className="text-2xl font-bold ltr:text-left rtl:text-right">{stat.val}</div>
                                         <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
                                             <div className="h-full bg-indigo-500 rounded-full w-2/3" />
                                         </div>

@@ -2,9 +2,64 @@
 
 import React from "react";
 import Link from "next/link";
-import { SiX, SiLinkedin, SiGithub, SiDiscord } from "react-icons/si";
+import axios from "axios";
+import { SiTeal, SiLinkedin, SiGithub, SiWhatsapp } from "react-icons/si";
+import { useTranslations } from "next-intl";
+
+interface PublicSettings {
+    platformName: string;
+    supportEmail: string;
+    supportPhone: string;
+    currency: string;
+    tiersConfig: Record<string, any>;
+}
 
 const Footer = () => {
+    const [settings, setSettings] = React.useState<PublicSettings | null>(null);
+    const t = useTranslations("Landing.Footer");
+
+    React.useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await axios.get("/api/settings/public");
+                setSettings(res.data);
+            } catch (err) {
+                console.error("Footer settings fetch error:", err);
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    const linksSection = [
+        {
+            title: t("cols.product"),
+            links: [
+                { name: t("links.features"), href: "#features" },
+                { name: t("links.integrations"), href: "#" },
+                { name: t("links.pricing"), href: "#pricing" },
+                { name: t("links.changelog"), href: "#" }
+            ]
+        },
+        {
+            title: t("cols.company"),
+            links: [
+                { name: t("links.about"), href: "#" },
+                { name: t("links.careers"), href: "#" },
+                { name: t("links.blog"), href: "#" },
+                { name: t("links.newsroom"), href: "#" }
+            ]
+        },
+        {
+            title: t("cols.legal"),
+            links: [
+                { name: t("links.privacy"), href: "#" },
+                { name: t("links.terms"), href: "#" },
+                { name: t("links.cookie"), href: "#" },
+                { name: t("links.sla"), href: "#" }
+            ]
+        }
+    ];
+
     return (
         <footer className="bg-[#050505] border-t border-zinc-900 pt-20 pb-10">
             <div className="container mx-auto px-6">
@@ -15,13 +70,13 @@ const Footer = () => {
                             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                                 <span className="text-white font-black">M</span>
                             </div>
-                            <span className="text-xl font-bold tracking-tight">Platform</span>
+                            <span className="text-xl font-bold tracking-tight">{settings?.platformName || "Platform"}</span>
                         </Link>
                         <p className="text-zinc-500 text-sm leading-relaxed mb-8">
-                            The unified operating system for modern business management and digital scaling.
+                            {t("brandDesc")}
                         </p>
                         <div className="flex gap-4">
-                            {[SiX, SiLinkedin, SiGithub, SiDiscord].map((Icon, i) => (
+                            {[{ Icon: SiTeal, link: "" }, { Icon: SiLinkedin }, { Icon: SiGithub }, { Icon: SiWhatsapp }].map(({ Icon, link }, i) => (
                                 <Link
                                     key={i}
                                     href="#"
@@ -34,20 +89,7 @@ const Footer = () => {
                     </div>
 
                     {/* Links */}
-                    {[
-                        {
-                            title: "Product",
-                            links: ["Features", "Integrations", "Pricing", "Changelog"]
-                        },
-                        {
-                            title: "Company",
-                            links: ["About Us", "Careers", "Blog", "Newsroom"]
-                        },
-                        {
-                            title: "Legal",
-                            links: ["Privacy Policy", "Terms of Service", "Cookie Policy", "SLA"]
-                        }
-                    ].map((col, i) => (
+                    {linksSection.map((col, i) => (
                         <div key={i}>
                             <h4 className="font-bold mb-6 text-sm uppercase tracking-widest text-zinc-300">
                                 {col.title}
@@ -55,8 +97,8 @@ const Footer = () => {
                             <ul className="space-y-4">
                                 {col.links.map((link, lIndex) => (
                                     <li key={lIndex}>
-                                        <Link href="#" className="text-zinc-500 hover:text-white text-sm transition-colors">
-                                            {link}
+                                        <Link href={link.href} className="text-zinc-500 hover:text-white text-sm transition-colors">
+                                            {link.name}
                                         </Link>
                                     </li>
                                 ))}
@@ -66,11 +108,18 @@ const Footer = () => {
                 </div>
 
                 <div className="flex flex-col md:row items-center justify-between pt-10 border-t border-zinc-900 gap-6 text-zinc-600 text-xs">
-                    <p>© 2026 MyPlatform Inc. All rights reserved.</p>
+                    <p>{t("rights", { year: new Date().getFullYear(), platform: settings?.platformName || "Platform" })}</p>
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                        System Status: Nominal
+                        {t("status")}
                     </div>
+                    <div className="flex items-center">
+                        {t("createdBy")}
+                        <span className="text-sky-500 mx-1 font-bold" >
+                            Mahmood aqaad
+                        </span>
+                    </div>
+
                 </div>
             </div>
         </footer>

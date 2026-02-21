@@ -34,6 +34,26 @@ export const BusinessType = {
 export type BusinessType = (typeof BusinessType)[keyof typeof BusinessType]
 
 
+export const PLAN = {
+  BASIC: 'BASIC',
+  PRO: 'PRO',
+  BUSINESS: 'BUSINESS',
+  ENTERPRISE: 'ENTERPRISE'
+} as const
+
+export type PLAN = (typeof PLAN)[keyof typeof PLAN]
+
+
+export const BusinessStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  PENDING: 'PENDING'
+} as const
+
+export type BusinessStatus = (typeof BusinessStatus)[keyof typeof BusinessStatus]
+
+
 export const MemberRole = {
   OWNER: 'OWNER',
   MANAGER: 'MANAGER',

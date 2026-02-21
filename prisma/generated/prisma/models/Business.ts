@@ -20,8 +20,18 @@ export type BusinessModel = runtime.Types.Result.DefaultSelection<Prisma.$Busine
 
 export type AggregateBusiness = {
   _count: BusinessCountAggregateOutputType | null
+  _avg: BusinessAvgAggregateOutputType | null
+  _sum: BusinessSumAggregateOutputType | null
   _min: BusinessMinAggregateOutputType | null
   _max: BusinessMaxAggregateOutputType | null
+}
+
+export type BusinessAvgAggregateOutputType = {
+  AllPaied: runtime.Decimal | null
+}
+
+export type BusinessSumAggregateOutputType = {
+  AllPaied: runtime.Decimal | null
 }
 
 export type BusinessMinAggregateOutputType = {
@@ -29,14 +39,21 @@ export type BusinessMinAggregateOutputType = {
   name: string | null
   slug: string | null
   type: $Enums.BusinessType | null
-  description: string | null
-  logo: string | null
-  address: string | null
-  phone: string | null
-  status: string | null
   ownerId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  address: string | null
+  description: string | null
+  logo: string | null
+  phone: string | null
+  planActive: boolean | null
+  subscriptionEnd: Date | null
+  subscriptionStart: Date | null
+  plan: $Enums.PLAN | null
+  AllPaied: runtime.Decimal | null
+  status: $Enums.BusinessStatus | null
+  marketingAutomation: boolean | null
+  remindersEnabled: boolean | null
 }
 
 export type BusinessMaxAggregateOutputType = {
@@ -44,14 +61,21 @@ export type BusinessMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   type: $Enums.BusinessType | null
-  description: string | null
-  logo: string | null
-  address: string | null
-  phone: string | null
-  status: string | null
   ownerId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  address: string | null
+  description: string | null
+  logo: string | null
+  phone: string | null
+  planActive: boolean | null
+  subscriptionEnd: Date | null
+  subscriptionStart: Date | null
+  plan: $Enums.PLAN | null
+  AllPaied: runtime.Decimal | null
+  status: $Enums.BusinessStatus | null
+  marketingAutomation: boolean | null
+  remindersEnabled: boolean | null
 }
 
 export type BusinessCountAggregateOutputType = {
@@ -59,31 +83,53 @@ export type BusinessCountAggregateOutputType = {
   name: number
   slug: number
   type: number
-  description: number
-  logo: number
-  address: number
-  phone: number
-  status: number
   ownerId: number
   createdAt: number
   updatedAt: number
+  address: number
+  description: number
+  logo: number
+  phone: number
+  planActive: number
+  subscriptionEnd: number
+  subscriptionStart: number
+  plan: number
+  AllPaied: number
+  status: number
+  marketingAutomation: number
+  remindersEnabled: number
   _all: number
 }
 
+
+export type BusinessAvgAggregateInputType = {
+  AllPaied?: true
+}
+
+export type BusinessSumAggregateInputType = {
+  AllPaied?: true
+}
 
 export type BusinessMinAggregateInputType = {
   id?: true
   name?: true
   slug?: true
   type?: true
-  description?: true
-  logo?: true
-  address?: true
-  phone?: true
-  status?: true
   ownerId?: true
   createdAt?: true
   updatedAt?: true
+  address?: true
+  description?: true
+  logo?: true
+  phone?: true
+  planActive?: true
+  subscriptionEnd?: true
+  subscriptionStart?: true
+  plan?: true
+  AllPaied?: true
+  status?: true
+  marketingAutomation?: true
+  remindersEnabled?: true
 }
 
 export type BusinessMaxAggregateInputType = {
@@ -91,14 +137,21 @@ export type BusinessMaxAggregateInputType = {
   name?: true
   slug?: true
   type?: true
-  description?: true
-  logo?: true
-  address?: true
-  phone?: true
-  status?: true
   ownerId?: true
   createdAt?: true
   updatedAt?: true
+  address?: true
+  description?: true
+  logo?: true
+  phone?: true
+  planActive?: true
+  subscriptionEnd?: true
+  subscriptionStart?: true
+  plan?: true
+  AllPaied?: true
+  status?: true
+  marketingAutomation?: true
+  remindersEnabled?: true
 }
 
 export type BusinessCountAggregateInputType = {
@@ -106,14 +159,21 @@ export type BusinessCountAggregateInputType = {
   name?: true
   slug?: true
   type?: true
-  description?: true
-  logo?: true
-  address?: true
-  phone?: true
-  status?: true
   ownerId?: true
   createdAt?: true
   updatedAt?: true
+  address?: true
+  description?: true
+  logo?: true
+  phone?: true
+  planActive?: true
+  subscriptionEnd?: true
+  subscriptionStart?: true
+  plan?: true
+  AllPaied?: true
+  status?: true
+  marketingAutomation?: true
+  remindersEnabled?: true
   _all?: true
 }
 
@@ -155,6 +215,18 @@ export type BusinessAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: BusinessAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: BusinessSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: BusinessMinAggregateInputType
@@ -185,6 +257,8 @@ export type BusinessGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: BusinessCountAggregateInputType | true
+  _avg?: BusinessAvgAggregateInputType
+  _sum?: BusinessSumAggregateInputType
   _min?: BusinessMinAggregateInputType
   _max?: BusinessMaxAggregateInputType
 }
@@ -194,15 +268,24 @@ export type BusinessGroupByOutputType = {
   name: string
   slug: string
   type: $Enums.BusinessType
-  description: string | null
-  logo: string | null
-  address: string | null
-  phone: string | null
-  status: string
   ownerId: string
   createdAt: Date
   updatedAt: Date
+  address: string | null
+  description: string | null
+  logo: string | null
+  phone: string | null
+  planActive: boolean
+  subscriptionEnd: Date | null
+  subscriptionStart: Date
+  plan: $Enums.PLAN
+  AllPaied: runtime.Decimal
+  status: $Enums.BusinessStatus
+  marketingAutomation: boolean
+  remindersEnabled: boolean
   _count: BusinessCountAggregateOutputType | null
+  _avg: BusinessAvgAggregateOutputType | null
+  _sum: BusinessSumAggregateOutputType | null
   _min: BusinessMinAggregateOutputType | null
   _max: BusinessMaxAggregateOutputType | null
 }
@@ -230,21 +313,28 @@ export type BusinessWhereInput = {
   name?: Prisma.StringFilter<"Business"> | string
   slug?: Prisma.StringFilter<"Business"> | string
   type?: Prisma.EnumBusinessTypeFilter<"Business"> | $Enums.BusinessType
-  description?: Prisma.StringNullableFilter<"Business"> | string | null
-  logo?: Prisma.StringNullableFilter<"Business"> | string | null
-  address?: Prisma.StringNullableFilter<"Business"> | string | null
-  phone?: Prisma.StringNullableFilter<"Business"> | string | null
-  status?: Prisma.StringFilter<"Business"> | string
   ownerId?: Prisma.StringFilter<"Business"> | string
   createdAt?: Prisma.DateTimeFilter<"Business"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Business"> | Date | string
-  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  members?: Prisma.MemberListRelationFilter
-  services?: Prisma.ServiceListRelationFilter
-  products?: Prisma.ProductListRelationFilter
+  address?: Prisma.StringNullableFilter<"Business"> | string | null
+  description?: Prisma.StringNullableFilter<"Business"> | string | null
+  logo?: Prisma.StringNullableFilter<"Business"> | string | null
+  phone?: Prisma.StringNullableFilter<"Business"> | string | null
+  planActive?: Prisma.BoolFilter<"Business"> | boolean
+  subscriptionEnd?: Prisma.DateTimeNullableFilter<"Business"> | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFilter<"Business"> | Date | string
+  plan?: Prisma.EnumPLANFilter<"Business"> | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFilter<"Business"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFilter<"Business"> | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFilter<"Business"> | boolean
+  remindersEnabled?: Prisma.BoolFilter<"Business"> | boolean
   appointments?: Prisma.AppointmentListRelationFilter
-  orders?: Prisma.OrderListRelationFilter
+  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   customers?: Prisma.CustomerListRelationFilter
+  members?: Prisma.MemberListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
+  products?: Prisma.ProductListRelationFilter
+  services?: Prisma.ServiceListRelationFilter
 }
 
 export type BusinessOrderByWithRelationInput = {
@@ -252,21 +342,28 @@ export type BusinessOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
-  logo?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
-  phone?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  owner?: Prisma.UserOrderByWithRelationInput
-  members?: Prisma.MemberOrderByRelationAggregateInput
-  services?: Prisma.ServiceOrderByRelationAggregateInput
-  products?: Prisma.ProductOrderByRelationAggregateInput
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  planActive?: Prisma.SortOrder
+  subscriptionEnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriptionStart?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  AllPaied?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  marketingAutomation?: Prisma.SortOrder
+  remindersEnabled?: Prisma.SortOrder
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
-  orders?: Prisma.OrderOrderByRelationAggregateInput
+  owner?: Prisma.UserOrderByWithRelationInput
   customers?: Prisma.CustomerOrderByRelationAggregateInput
+  members?: Prisma.MemberOrderByRelationAggregateInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
+  products?: Prisma.ProductOrderByRelationAggregateInput
+  services?: Prisma.ServiceOrderByRelationAggregateInput
 }
 
 export type BusinessWhereUniqueInput = Prisma.AtLeast<{
@@ -277,21 +374,28 @@ export type BusinessWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.BusinessWhereInput | Prisma.BusinessWhereInput[]
   name?: Prisma.StringFilter<"Business"> | string
   type?: Prisma.EnumBusinessTypeFilter<"Business"> | $Enums.BusinessType
-  description?: Prisma.StringNullableFilter<"Business"> | string | null
-  logo?: Prisma.StringNullableFilter<"Business"> | string | null
-  address?: Prisma.StringNullableFilter<"Business"> | string | null
-  phone?: Prisma.StringNullableFilter<"Business"> | string | null
-  status?: Prisma.StringFilter<"Business"> | string
   ownerId?: Prisma.StringFilter<"Business"> | string
   createdAt?: Prisma.DateTimeFilter<"Business"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Business"> | Date | string
-  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  members?: Prisma.MemberListRelationFilter
-  services?: Prisma.ServiceListRelationFilter
-  products?: Prisma.ProductListRelationFilter
+  address?: Prisma.StringNullableFilter<"Business"> | string | null
+  description?: Prisma.StringNullableFilter<"Business"> | string | null
+  logo?: Prisma.StringNullableFilter<"Business"> | string | null
+  phone?: Prisma.StringNullableFilter<"Business"> | string | null
+  planActive?: Prisma.BoolFilter<"Business"> | boolean
+  subscriptionEnd?: Prisma.DateTimeNullableFilter<"Business"> | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFilter<"Business"> | Date | string
+  plan?: Prisma.EnumPLANFilter<"Business"> | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFilter<"Business"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFilter<"Business"> | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFilter<"Business"> | boolean
+  remindersEnabled?: Prisma.BoolFilter<"Business"> | boolean
   appointments?: Prisma.AppointmentListRelationFilter
-  orders?: Prisma.OrderListRelationFilter
+  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   customers?: Prisma.CustomerListRelationFilter
+  members?: Prisma.MemberListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
+  products?: Prisma.ProductListRelationFilter
+  services?: Prisma.ServiceListRelationFilter
 }, "id" | "slug">
 
 export type BusinessOrderByWithAggregationInput = {
@@ -299,17 +403,26 @@ export type BusinessOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
-  logo?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
-  phone?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  planActive?: Prisma.SortOrder
+  subscriptionEnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriptionStart?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  AllPaied?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  marketingAutomation?: Prisma.SortOrder
+  remindersEnabled?: Prisma.SortOrder
   _count?: Prisma.BusinessCountOrderByAggregateInput
+  _avg?: Prisma.BusinessAvgOrderByAggregateInput
   _max?: Prisma.BusinessMaxOrderByAggregateInput
   _min?: Prisma.BusinessMinOrderByAggregateInput
+  _sum?: Prisma.BusinessSumOrderByAggregateInput
 }
 
 export type BusinessScalarWhereWithAggregatesInput = {
@@ -320,14 +433,21 @@ export type BusinessScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Business"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Business"> | string
   type?: Prisma.EnumBusinessTypeWithAggregatesFilter<"Business"> | $Enums.BusinessType
-  description?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
-  logo?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
-  address?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
-  phone?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
-  status?: Prisma.StringWithAggregatesFilter<"Business"> | string
   ownerId?: Prisma.StringWithAggregatesFilter<"Business"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Business"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Business"> | Date | string
+  address?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
+  logo?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"Business"> | string | null
+  planActive?: Prisma.BoolWithAggregatesFilter<"Business"> | boolean
+  subscriptionEnd?: Prisma.DateTimeNullableWithAggregatesFilter<"Business"> | Date | string | null
+  subscriptionStart?: Prisma.DateTimeWithAggregatesFilter<"Business"> | Date | string
+  plan?: Prisma.EnumPLANWithAggregatesFilter<"Business"> | $Enums.PLAN
+  AllPaied?: Prisma.DecimalWithAggregatesFilter<"Business"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusWithAggregatesFilter<"Business"> | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolWithAggregatesFilter<"Business"> | boolean
+  remindersEnabled?: Prisma.BoolWithAggregatesFilter<"Business"> | boolean
 }
 
 export type BusinessCreateInput = {
@@ -335,20 +455,27 @@ export type BusinessCreateInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
-  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateInput = {
@@ -356,20 +483,27 @@ export type BusinessUncheckedCreateInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUpdateInput = {
@@ -377,20 +511,27 @@ export type BusinessUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
-  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateInput = {
@@ -398,20 +539,27 @@ export type BusinessUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateManyInput = {
@@ -419,14 +567,21 @@ export type BusinessCreateManyInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
 }
 
 export type BusinessUpdateManyMutationInput = {
@@ -434,13 +589,20 @@ export type BusinessUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type BusinessUncheckedUpdateManyInput = {
@@ -448,14 +610,21 @@ export type BusinessUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type BusinessListRelationFilter = {
@@ -473,14 +642,25 @@ export type BusinessCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  logo?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  planActive?: Prisma.SortOrder
+  subscriptionEnd?: Prisma.SortOrder
+  subscriptionStart?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  AllPaied?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  marketingAutomation?: Prisma.SortOrder
+  remindersEnabled?: Prisma.SortOrder
+}
+
+export type BusinessAvgOrderByAggregateInput = {
+  AllPaied?: Prisma.SortOrder
 }
 
 export type BusinessMaxOrderByAggregateInput = {
@@ -488,14 +668,21 @@ export type BusinessMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  logo?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  planActive?: Prisma.SortOrder
+  subscriptionEnd?: Prisma.SortOrder
+  subscriptionStart?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  AllPaied?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  marketingAutomation?: Prisma.SortOrder
+  remindersEnabled?: Prisma.SortOrder
 }
 
 export type BusinessMinOrderByAggregateInput = {
@@ -503,14 +690,25 @@ export type BusinessMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  logo?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  planActive?: Prisma.SortOrder
+  subscriptionEnd?: Prisma.SortOrder
+  subscriptionStart?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  AllPaied?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  marketingAutomation?: Prisma.SortOrder
+  remindersEnabled?: Prisma.SortOrder
+}
+
+export type BusinessSumOrderByAggregateInput = {
+  AllPaied?: Prisma.SortOrder
 }
 
 export type BusinessScalarRelationFilter = {
@@ -562,6 +760,30 @@ export type BusinessUncheckedUpdateManyWithoutOwnerNestedInput = {
 
 export type EnumBusinessTypeFieldUpdateOperationsInput = {
   set?: $Enums.BusinessType
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type EnumPLANFieldUpdateOperationsInput = {
+  set?: $Enums.PLAN
+}
+
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumBusinessStatusFieldUpdateOperationsInput = {
+  set?: $Enums.BusinessStatus
 }
 
 export type BusinessCreateNestedOneWithoutMembersInput = {
@@ -653,19 +875,26 @@ export type BusinessCreateWithoutOwnerInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutOwnerInput = {
@@ -673,19 +902,26 @@ export type BusinessUncheckedCreateWithoutOwnerInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutOwnerInput = {
@@ -722,14 +958,21 @@ export type BusinessScalarWhereInput = {
   name?: Prisma.StringFilter<"Business"> | string
   slug?: Prisma.StringFilter<"Business"> | string
   type?: Prisma.EnumBusinessTypeFilter<"Business"> | $Enums.BusinessType
-  description?: Prisma.StringNullableFilter<"Business"> | string | null
-  logo?: Prisma.StringNullableFilter<"Business"> | string | null
-  address?: Prisma.StringNullableFilter<"Business"> | string | null
-  phone?: Prisma.StringNullableFilter<"Business"> | string | null
-  status?: Prisma.StringFilter<"Business"> | string
   ownerId?: Prisma.StringFilter<"Business"> | string
   createdAt?: Prisma.DateTimeFilter<"Business"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Business"> | Date | string
+  address?: Prisma.StringNullableFilter<"Business"> | string | null
+  description?: Prisma.StringNullableFilter<"Business"> | string | null
+  logo?: Prisma.StringNullableFilter<"Business"> | string | null
+  phone?: Prisma.StringNullableFilter<"Business"> | string | null
+  planActive?: Prisma.BoolFilter<"Business"> | boolean
+  subscriptionEnd?: Prisma.DateTimeNullableFilter<"Business"> | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFilter<"Business"> | Date | string
+  plan?: Prisma.EnumPLANFilter<"Business"> | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFilter<"Business"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFilter<"Business"> | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFilter<"Business"> | boolean
+  remindersEnabled?: Prisma.BoolFilter<"Business"> | boolean
 }
 
 export type BusinessCreateWithoutMembersInput = {
@@ -737,19 +980,26 @@ export type BusinessCreateWithoutMembersInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutMembersInput = {
@@ -757,19 +1007,26 @@ export type BusinessUncheckedCreateWithoutMembersInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutMembersInput = {
@@ -793,19 +1050,26 @@ export type BusinessUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutMembersInput = {
@@ -813,19 +1077,26 @@ export type BusinessUncheckedUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateWithoutServicesInput = {
@@ -833,19 +1104,26 @@ export type BusinessCreateWithoutServicesInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
-  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutServicesInput = {
@@ -853,19 +1131,26 @@ export type BusinessUncheckedCreateWithoutServicesInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutServicesInput = {
@@ -889,19 +1174,26 @@ export type BusinessUpdateWithoutServicesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
-  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutServicesInput = {
@@ -909,19 +1201,26 @@ export type BusinessUncheckedUpdateWithoutServicesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateWithoutAppointmentsInput = {
@@ -929,19 +1228,26 @@ export type BusinessCreateWithoutAppointmentsInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
-  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutAppointmentsInput = {
@@ -949,19 +1255,26 @@ export type BusinessUncheckedCreateWithoutAppointmentsInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutAppointmentsInput = {
@@ -985,19 +1298,26 @@ export type BusinessUpdateWithoutAppointmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
-  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutAppointmentsInput = {
@@ -1005,19 +1325,26 @@ export type BusinessUncheckedUpdateWithoutAppointmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateWithoutProductsInput = {
@@ -1025,19 +1352,26 @@ export type BusinessCreateWithoutProductsInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
-  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutProductsInput = {
@@ -1045,19 +1379,26 @@ export type BusinessUncheckedCreateWithoutProductsInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
-  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutProductsInput = {
@@ -1081,19 +1422,26 @@ export type BusinessUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
-  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutProductsInput = {
@@ -1101,19 +1449,26 @@ export type BusinessUncheckedUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateWithoutOrdersInput = {
@@ -1121,19 +1476,26 @@ export type BusinessCreateWithoutOrdersInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
-  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
   customers?: Prisma.CustomerCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutOrdersInput = {
@@ -1141,19 +1503,26 @@ export type BusinessUncheckedCreateWithoutOrdersInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutOrdersInput = {
@@ -1177,19 +1546,26 @@ export type BusinessUpdateWithoutOrdersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
-  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutOrdersInput = {
@@ -1197,19 +1573,26 @@ export type BusinessUncheckedUpdateWithoutOrdersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateWithoutCustomersInput = {
@@ -1217,19 +1600,26 @@ export type BusinessCreateWithoutCustomersInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedBusinessesInput
   members?: Prisma.MemberCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
-  appointments?: Prisma.AppointmentCreateNestedManyWithoutBusinessInput
   orders?: Prisma.OrderCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessUncheckedCreateWithoutCustomersInput = {
@@ -1237,19 +1627,26 @@ export type BusinessUncheckedCreateWithoutCustomersInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   ownerId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
-  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
-  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutBusinessInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutBusinessInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutBusinessInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutBusinessInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutBusinessInput
 }
 
 export type BusinessCreateOrConnectWithoutCustomersInput = {
@@ -1273,19 +1670,26 @@ export type BusinessUpdateWithoutCustomersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedBusinessesNestedInput
   members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
-  appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
   orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutCustomersInput = {
@@ -1293,19 +1697,26 @@ export type BusinessUncheckedUpdateWithoutCustomersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessCreateManyOwnerInput = {
@@ -1313,13 +1724,20 @@ export type BusinessCreateManyOwnerInput = {
   name: string
   slug: string
   type?: $Enums.BusinessType
-  description?: string | null
-  logo?: string | null
-  address?: string | null
-  phone?: string | null
-  status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  address?: string | null
+  description?: string | null
+  logo?: string | null
+  phone?: string | null
+  planActive?: boolean
+  subscriptionEnd?: Date | string | null
+  subscriptionStart?: Date | string
+  plan?: $Enums.PLAN
+  AllPaied?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: $Enums.BusinessStatus
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
 }
 
 export type BusinessUpdateWithoutOwnerInput = {
@@ -1327,19 +1745,26 @@ export type BusinessUpdateWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateWithoutOwnerInput = {
@@ -1347,19 +1772,26 @@ export type BusinessUncheckedUpdateWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
-  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
-  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutBusinessNestedInput
-  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutBusinessNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutBusinessNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutBusinessNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutBusinessNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutBusinessNestedInput
 }
 
 export type BusinessUncheckedUpdateManyWithoutOwnerInput = {
@@ -1367,13 +1799,20 @@ export type BusinessUncheckedUpdateManyWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumBusinessTypeFieldUpdateOperationsInput | $Enums.BusinessType
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subscriptionStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  plan?: Prisma.EnumPLANFieldUpdateOperationsInput | $Enums.PLAN
+  AllPaied?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.EnumBusinessStatusFieldUpdateOperationsInput | $Enums.BusinessStatus
+  marketingAutomation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  remindersEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -1382,21 +1821,21 @@ export type BusinessUncheckedUpdateManyWithoutOwnerInput = {
  */
 
 export type BusinessCountOutputType = {
-  members: number
-  services: number
-  products: number
   appointments: number
-  orders: number
   customers: number
+  members: number
+  orders: number
+  products: number
+  services: number
 }
 
 export type BusinessCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  members?: boolean | BusinessCountOutputTypeCountMembersArgs
-  services?: boolean | BusinessCountOutputTypeCountServicesArgs
-  products?: boolean | BusinessCountOutputTypeCountProductsArgs
   appointments?: boolean | BusinessCountOutputTypeCountAppointmentsArgs
-  orders?: boolean | BusinessCountOutputTypeCountOrdersArgs
   customers?: boolean | BusinessCountOutputTypeCountCustomersArgs
+  members?: boolean | BusinessCountOutputTypeCountMembersArgs
+  orders?: boolean | BusinessCountOutputTypeCountOrdersArgs
+  products?: boolean | BusinessCountOutputTypeCountProductsArgs
+  services?: boolean | BusinessCountOutputTypeCountServicesArgs
 }
 
 /**
@@ -1412,29 +1851,22 @@ export type BusinessCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
 /**
  * BusinessCountOutputType without action
  */
-export type BusinessCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MemberWhereInput
-}
-
-/**
- * BusinessCountOutputType without action
- */
-export type BusinessCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ServiceWhereInput
-}
-
-/**
- * BusinessCountOutputType without action
- */
-export type BusinessCountOutputTypeCountProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProductWhereInput
-}
-
-/**
- * BusinessCountOutputType without action
- */
 export type BusinessCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AppointmentWhereInput
+}
+
+/**
+ * BusinessCountOutputType without action
+ */
+export type BusinessCountOutputTypeCountCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomerWhereInput
+}
+
+/**
+ * BusinessCountOutputType without action
+ */
+export type BusinessCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MemberWhereInput
 }
 
 /**
@@ -1447,8 +1879,15 @@ export type BusinessCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types
 /**
  * BusinessCountOutputType without action
  */
-export type BusinessCountOutputTypeCountCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CustomerWhereInput
+export type BusinessCountOutputTypeCountProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductWhereInput
+}
+
+/**
+ * BusinessCountOutputType without action
+ */
+export type BusinessCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceWhereInput
 }
 
 
@@ -1457,21 +1896,28 @@ export type BusinessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name?: boolean
   slug?: boolean
   type?: boolean
-  description?: boolean
-  logo?: boolean
-  address?: boolean
-  phone?: boolean
-  status?: boolean
   ownerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  members?: boolean | Prisma.Business$membersArgs<ExtArgs>
-  services?: boolean | Prisma.Business$servicesArgs<ExtArgs>
-  products?: boolean | Prisma.Business$productsArgs<ExtArgs>
+  address?: boolean
+  description?: boolean
+  logo?: boolean
+  phone?: boolean
+  planActive?: boolean
+  subscriptionEnd?: boolean
+  subscriptionStart?: boolean
+  plan?: boolean
+  AllPaied?: boolean
+  status?: boolean
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   appointments?: boolean | Prisma.Business$appointmentsArgs<ExtArgs>
-  orders?: boolean | Prisma.Business$ordersArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   customers?: boolean | Prisma.Business$customersArgs<ExtArgs>
+  members?: boolean | Prisma.Business$membersArgs<ExtArgs>
+  orders?: boolean | Prisma.Business$ordersArgs<ExtArgs>
+  products?: boolean | Prisma.Business$productsArgs<ExtArgs>
+  services?: boolean | Prisma.Business$servicesArgs<ExtArgs>
   _count?: boolean | Prisma.BusinessCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["business"]>
 
@@ -1480,14 +1926,21 @@ export type BusinessSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   name?: boolean
   slug?: boolean
   type?: boolean
-  description?: boolean
-  logo?: boolean
-  address?: boolean
-  phone?: boolean
-  status?: boolean
   ownerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  address?: boolean
+  description?: boolean
+  logo?: boolean
+  phone?: boolean
+  planActive?: boolean
+  subscriptionEnd?: boolean
+  subscriptionStart?: boolean
+  plan?: boolean
+  AllPaied?: boolean
+  status?: boolean
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["business"]>
 
@@ -1496,14 +1949,21 @@ export type BusinessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   name?: boolean
   slug?: boolean
   type?: boolean
-  description?: boolean
-  logo?: boolean
-  address?: boolean
-  phone?: boolean
-  status?: boolean
   ownerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  address?: boolean
+  description?: boolean
+  logo?: boolean
+  phone?: boolean
+  planActive?: boolean
+  subscriptionEnd?: boolean
+  subscriptionStart?: boolean
+  plan?: boolean
+  AllPaied?: boolean
+  status?: boolean
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["business"]>
 
@@ -1512,25 +1972,32 @@ export type BusinessSelectScalar = {
   name?: boolean
   slug?: boolean
   type?: boolean
-  description?: boolean
-  logo?: boolean
-  address?: boolean
-  phone?: boolean
-  status?: boolean
   ownerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  address?: boolean
+  description?: boolean
+  logo?: boolean
+  phone?: boolean
+  planActive?: boolean
+  subscriptionEnd?: boolean
+  subscriptionStart?: boolean
+  plan?: boolean
+  AllPaied?: boolean
+  status?: boolean
+  marketingAutomation?: boolean
+  remindersEnabled?: boolean
 }
 
-export type BusinessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "type" | "description" | "logo" | "address" | "phone" | "status" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["business"]>
+export type BusinessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "type" | "ownerId" | "createdAt" | "updatedAt" | "address" | "description" | "logo" | "phone" | "planActive" | "subscriptionEnd" | "subscriptionStart" | "plan" | "AllPaied" | "status" | "marketingAutomation" | "remindersEnabled", ExtArgs["result"]["business"]>
 export type BusinessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  members?: boolean | Prisma.Business$membersArgs<ExtArgs>
-  services?: boolean | Prisma.Business$servicesArgs<ExtArgs>
-  products?: boolean | Prisma.Business$productsArgs<ExtArgs>
   appointments?: boolean | Prisma.Business$appointmentsArgs<ExtArgs>
-  orders?: boolean | Prisma.Business$ordersArgs<ExtArgs>
+  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   customers?: boolean | Prisma.Business$customersArgs<ExtArgs>
+  members?: boolean | Prisma.Business$membersArgs<ExtArgs>
+  orders?: boolean | Prisma.Business$ordersArgs<ExtArgs>
+  products?: boolean | Prisma.Business$productsArgs<ExtArgs>
+  services?: boolean | Prisma.Business$servicesArgs<ExtArgs>
   _count?: boolean | Prisma.BusinessCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BusinessIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1543,27 +2010,34 @@ export type BusinessIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $BusinessPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Business"
   objects: {
-    owner: Prisma.$UserPayload<ExtArgs>
-    members: Prisma.$MemberPayload<ExtArgs>[]
-    services: Prisma.$ServicePayload<ExtArgs>[]
-    products: Prisma.$ProductPayload<ExtArgs>[]
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
-    orders: Prisma.$OrderPayload<ExtArgs>[]
+    owner: Prisma.$UserPayload<ExtArgs>
     customers: Prisma.$CustomerPayload<ExtArgs>[]
+    members: Prisma.$MemberPayload<ExtArgs>[]
+    orders: Prisma.$OrderPayload<ExtArgs>[]
+    products: Prisma.$ProductPayload<ExtArgs>[]
+    services: Prisma.$ServicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     slug: string
     type: $Enums.BusinessType
-    description: string | null
-    logo: string | null
-    address: string | null
-    phone: string | null
-    status: string
     ownerId: string
     createdAt: Date
     updatedAt: Date
+    address: string | null
+    description: string | null
+    logo: string | null
+    phone: string | null
+    planActive: boolean
+    subscriptionEnd: Date | null
+    subscriptionStart: Date
+    plan: $Enums.PLAN
+    AllPaied: runtime.Decimal
+    status: $Enums.BusinessStatus
+    marketingAutomation: boolean
+    remindersEnabled: boolean
   }, ExtArgs["result"]["business"]>
   composites: {}
 }
@@ -1958,13 +2432,13 @@ readonly fields: BusinessFieldRefs;
  */
 export interface Prisma__BusinessClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  members<T extends Prisma.Business$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  services<T extends Prisma.Business$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  products<T extends Prisma.Business$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   appointments<T extends Prisma.Business$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  orders<T extends Prisma.Business$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customers<T extends Prisma.Business$customersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$customersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  members<T extends Prisma.Business$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orders<T extends Prisma.Business$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  products<T extends Prisma.Business$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  services<T extends Prisma.Business$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Business$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1998,14 +2472,21 @@ export interface BusinessFieldRefs {
   readonly name: Prisma.FieldRef<"Business", 'String'>
   readonly slug: Prisma.FieldRef<"Business", 'String'>
   readonly type: Prisma.FieldRef<"Business", 'BusinessType'>
-  readonly description: Prisma.FieldRef<"Business", 'String'>
-  readonly logo: Prisma.FieldRef<"Business", 'String'>
-  readonly address: Prisma.FieldRef<"Business", 'String'>
-  readonly phone: Prisma.FieldRef<"Business", 'String'>
-  readonly status: Prisma.FieldRef<"Business", 'String'>
   readonly ownerId: Prisma.FieldRef<"Business", 'String'>
   readonly createdAt: Prisma.FieldRef<"Business", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Business", 'DateTime'>
+  readonly address: Prisma.FieldRef<"Business", 'String'>
+  readonly description: Prisma.FieldRef<"Business", 'String'>
+  readonly logo: Prisma.FieldRef<"Business", 'String'>
+  readonly phone: Prisma.FieldRef<"Business", 'String'>
+  readonly planActive: Prisma.FieldRef<"Business", 'Boolean'>
+  readonly subscriptionEnd: Prisma.FieldRef<"Business", 'DateTime'>
+  readonly subscriptionStart: Prisma.FieldRef<"Business", 'DateTime'>
+  readonly plan: Prisma.FieldRef<"Business", 'PLAN'>
+  readonly AllPaied: Prisma.FieldRef<"Business", 'Decimal'>
+  readonly status: Prisma.FieldRef<"Business", 'BusinessStatus'>
+  readonly marketingAutomation: Prisma.FieldRef<"Business", 'Boolean'>
+  readonly remindersEnabled: Prisma.FieldRef<"Business", 'Boolean'>
 }
     
 
@@ -2402,78 +2883,6 @@ export type BusinessDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Business.members
- */
-export type Business$membersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Member
-   */
-  select?: Prisma.MemberSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Member
-   */
-  omit?: Prisma.MemberOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MemberInclude<ExtArgs> | null
-  where?: Prisma.MemberWhereInput
-  orderBy?: Prisma.MemberOrderByWithRelationInput | Prisma.MemberOrderByWithRelationInput[]
-  cursor?: Prisma.MemberWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MemberScalarFieldEnum | Prisma.MemberScalarFieldEnum[]
-}
-
-/**
- * Business.services
- */
-export type Business$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Service
-   */
-  select?: Prisma.ServiceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Service
-   */
-  omit?: Prisma.ServiceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ServiceInclude<ExtArgs> | null
-  where?: Prisma.ServiceWhereInput
-  orderBy?: Prisma.ServiceOrderByWithRelationInput | Prisma.ServiceOrderByWithRelationInput[]
-  cursor?: Prisma.ServiceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
-}
-
-/**
- * Business.products
- */
-export type Business$productsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Product
-   */
-  select?: Prisma.ProductSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Product
-   */
-  omit?: Prisma.ProductOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProductInclude<ExtArgs> | null
-  where?: Prisma.ProductWhereInput
-  orderBy?: Prisma.ProductOrderByWithRelationInput | Prisma.ProductOrderByWithRelationInput[]
-  cursor?: Prisma.ProductWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ProductScalarFieldEnum | Prisma.ProductScalarFieldEnum[]
-}
-
-/**
  * Business.appointments
  */
 export type Business$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2495,6 +2904,54 @@ export type Business$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
+}
+
+/**
+ * Business.customers
+ */
+export type Business$customersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Customer
+   */
+  select?: Prisma.CustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Customer
+   */
+  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerInclude<ExtArgs> | null
+  where?: Prisma.CustomerWhereInput
+  orderBy?: Prisma.CustomerOrderByWithRelationInput | Prisma.CustomerOrderByWithRelationInput[]
+  cursor?: Prisma.CustomerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomerScalarFieldEnum | Prisma.CustomerScalarFieldEnum[]
+}
+
+/**
+ * Business.members
+ */
+export type Business$membersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Member
+   */
+  select?: Prisma.MemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Member
+   */
+  omit?: Prisma.MemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MemberInclude<ExtArgs> | null
+  where?: Prisma.MemberWhereInput
+  orderBy?: Prisma.MemberOrderByWithRelationInput | Prisma.MemberOrderByWithRelationInput[]
+  cursor?: Prisma.MemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MemberScalarFieldEnum | Prisma.MemberScalarFieldEnum[]
 }
 
 /**
@@ -2522,27 +2979,51 @@ export type Business$ordersArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Business.customers
+ * Business.products
  */
-export type Business$customersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Business$productsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Customer
+   * Select specific fields to fetch from the Product
    */
-  select?: Prisma.CustomerSelect<ExtArgs> | null
+  select?: Prisma.ProductSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Customer
+   * Omit specific fields from the Product
    */
-  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  omit?: Prisma.ProductOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CustomerInclude<ExtArgs> | null
-  where?: Prisma.CustomerWhereInput
-  orderBy?: Prisma.CustomerOrderByWithRelationInput | Prisma.CustomerOrderByWithRelationInput[]
-  cursor?: Prisma.CustomerWhereUniqueInput
+  include?: Prisma.ProductInclude<ExtArgs> | null
+  where?: Prisma.ProductWhereInput
+  orderBy?: Prisma.ProductOrderByWithRelationInput | Prisma.ProductOrderByWithRelationInput[]
+  cursor?: Prisma.ProductWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CustomerScalarFieldEnum | Prisma.CustomerScalarFieldEnum[]
+  distinct?: Prisma.ProductScalarFieldEnum | Prisma.ProductScalarFieldEnum[]
+}
+
+/**
+ * Business.services
+ */
+export type Business$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Service
+   */
+  select?: Prisma.ServiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Service
+   */
+  omit?: Prisma.ServiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceInclude<ExtArgs> | null
+  where?: Prisma.ServiceWhereInput
+  orderBy?: Prisma.ServiceOrderByWithRelationInput | Prisma.ServiceOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
 }
 
 /**

@@ -392,7 +392,8 @@ export const ModelName = {
   Product: 'Product',
   Order: 'Order',
   OrderItem: 'OrderItem',
-  Customer: 'Customer'
+  Customer: 'Customer',
+  GlobalSettings: 'GlobalSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "business" | "member" | "service" | "appointment" | "product" | "order" | "orderItem" | "customer"
+    modelProps: "user" | "business" | "member" | "service" | "appointment" | "product" | "order" | "orderItem" | "customer" | "globalSettings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1079,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GlobalSettings: {
+      payload: Prisma.$GlobalSettingsPayload<ExtArgs>
+      fields: Prisma.GlobalSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GlobalSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GlobalSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.GlobalSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GlobalSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.GlobalSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.GlobalSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.GlobalSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GlobalSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.GlobalSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>
+        }
+        update: {
+          args: Prisma.GlobalSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.GlobalSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GlobalSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GlobalSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.GlobalSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GlobalSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.GlobalSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGlobalSettings>
+        }
+        groupBy: {
+          args: Prisma.GlobalSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GlobalSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GlobalSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GlobalSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1121,11 +1196,11 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  password: 'password',
-  image: 'image',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  password: 'password',
+  image: 'image'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1136,14 +1211,21 @@ export const BusinessScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   type: 'type',
-  description: 'description',
-  logo: 'logo',
-  address: 'address',
-  phone: 'phone',
-  status: 'status',
   ownerId: 'ownerId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  address: 'address',
+  description: 'description',
+  logo: 'logo',
+  phone: 'phone',
+  planActive: 'planActive',
+  subscriptionEnd: 'subscriptionEnd',
+  subscriptionStart: 'subscriptionStart',
+  plan: 'plan',
+  AllPaied: 'AllPaied',
+  status: 'status',
+  marketingAutomation: 'marketingAutomation',
+  remindersEnabled: 'remindersEnabled'
 } as const
 
 export type BusinessScalarFieldEnum = (typeof BusinessScalarFieldEnum)[keyof typeof BusinessScalarFieldEnum]
@@ -1169,7 +1251,9 @@ export const ServiceScalarFieldEnum = {
   price: 'price',
   businessId: 'businessId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  image: 'image',
+  isActive: 'isActive'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
@@ -1234,13 +1318,29 @@ export const CustomerScalarFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
-  status: 'status',
   businessId: 'businessId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  status: 'status',
+  notes: 'notes'
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const GlobalSettingsScalarFieldEnum = {
+  id: 'id',
+  platformName: 'platformName',
+  supportEmail: 'supportEmail',
+  supportPhone: 'supportPhone',
+  registrationOpen: 'registrationOpen',
+  currency: 'currency',
+  commissionRate: 'commissionRate',
+  tiersConfig: 'tiersConfig',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GlobalSettingsScalarFieldEnum = (typeof GlobalSettingsScalarFieldEnum)[keyof typeof GlobalSettingsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1249,6 +1349,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1265,6 +1373,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -1330,6 +1447,55 @@ export type ListEnumBusinessTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'PLAN'
+ */
+export type EnumPLANFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PLAN'>
+    
+
+
+/**
+ * Reference to a field of type 'PLAN[]'
+ */
+export type ListEnumPLANFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PLAN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BusinessStatus'
+ */
+export type EnumBusinessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BusinessStatus[]'
+ */
+export type ListEnumBusinessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BusinessStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'MemberRole'
  */
 export type EnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole'>
@@ -1358,20 +1524,6 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal[]'
- */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
  * Reference to a field of type 'AppointmentStatus'
  */
 export type EnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus'>
@@ -1396,6 +1548,20 @@ export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'OrderStatus[]'
  */
 export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1516,6 +1682,7 @@ export type GlobalOmitConfig = {
   order?: Prisma.OrderOmit
   orderItem?: Prisma.OrderItemOmit
   customer?: Prisma.CustomerOmit
+  globalSettings?: Prisma.GlobalSettingsOmit
 }
 
 /* Types for Logging */

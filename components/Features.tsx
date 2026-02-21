@@ -10,47 +10,50 @@ import {
     HiCube,
     HiClock
 } from "react-icons/hi";
-
-const features = [
-    {
-        title: "Lightning Performance",
-        description: "Built on edge infrastructure to ensure sub-millisecond latency for your global users.",
-        icon: <HiLightningBolt className="w-8 h-8 text-amber-400" />,
-        color: "bg-amber-500/10 border-amber-500/20"
-    },
-    {
-        title: "Bank-Level Security",
-        description: "Enterprise-grade encryption and compliance standards out of the box.",
-        icon: <HiShieldCheck className="w-8 h-8 text-indigo-400" />,
-        color: "bg-indigo-500/10 border-indigo-500/20"
-    },
-    {
-        title: "Real-time Analytics",
-        description: "Grasp every data point with our proprietary real-time streaming engine.",
-        icon: <HiChartBar className="w-8 h-8 text-emerald-400" />,
-        color: "bg-emerald-500/10 border-emerald-500/20"
-    },
-    {
-        title: "Team Collaboration",
-        description: "Synchronize your entire organization with unified workspace tools.",
-        icon: <HiUsers className="w-8 h-8 text-rose-400" />,
-        color: "bg-rose-500/10 border-rose-500/20"
-    },
-    {
-        title: "Modular Scaling",
-        description: "Our micro-services architecture scales with you, from startup to enterprise.",
-        icon: <HiCube className="w-8 h-8 text-purple-400" />,
-        color: "bg-purple-500/10 border-purple-500/20"
-    },
-    {
-        title: "24/7 Automation",
-        description: "Automate your workflows with AI-driven scheduling and execution.",
-        icon: <HiClock className="w-8 h-8 text-cyan-400" />,
-        color: "bg-cyan-500/10 border-cyan-500/20"
-    }
-];
+import { useTranslations } from "next-intl";
 
 const Features = () => {
+    const t = useTranslations("Landing.Features");
+
+    const features = [
+        {
+            title: t("items.lightning.title"),
+            description: t("items.lightning.description"),
+            icon: <HiLightningBolt className="w-8 h-8 text-amber-400" />,
+            color: "bg-amber-500/10 border-amber-500/20"
+        },
+        {
+            title: t("items.security.title"),
+            description: t("items.security.description"),
+            icon: <HiShieldCheck className="w-8 h-8 text-indigo-400" />,
+            color: "bg-indigo-500/10 border-indigo-500/20"
+        },
+        {
+            title: t("items.analytics.title"),
+            description: t("items.analytics.description"),
+            icon: <HiChartBar className="w-8 h-8 text-emerald-400" />,
+            color: "bg-emerald-500/10 border-emerald-500/20"
+        },
+        {
+            title: t("items.collaboration.title"),
+            description: t("items.collaboration.description"),
+            icon: <HiUsers className="w-8 h-8 text-rose-400" />,
+            color: "bg-rose-500/10 border-rose-500/20"
+        },
+        {
+            title: t("items.scaling.title"),
+            description: t("items.scaling.description"),
+            icon: <HiCube className="w-8 h-8 text-purple-400" />,
+            color: "bg-purple-500/10 border-purple-500/20"
+        },
+        {
+            title: t("items.automation.title"),
+            description: t("items.automation.description"),
+            icon: <HiClock className="w-8 h-8 text-cyan-400" />,
+            color: "bg-cyan-500/10 border-cyan-500/20"
+        }
+    ];
+
     return (
         <section id="features" className="py-24 bg-[#050505] text-white relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
@@ -61,7 +64,7 @@ const Features = () => {
                         viewport={{ once: true }}
                         className="text-4xl md:text-5xl font-black mb-6"
                     >
-                        Engineered for <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-500 to-purple-500">Excellence</span>
+                        {t("titlePrefix")} <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-500 to-purple-500">{t("titleHighlight")}</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -70,7 +73,7 @@ const Features = () => {
                         transition={{ delay: 0.1 }}
                         className="text-zinc-400 text-lg max-w-2xl mx-auto"
                     >
-                        Every tool you need to build, scale, and succeed. Built with precision and a human touch.
+                        {t("subtitle")}
                     </motion.p>
                 </div>
 

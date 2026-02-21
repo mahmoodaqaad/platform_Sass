@@ -59,7 +59,8 @@ export const ModelName = {
   Product: 'Product',
   Order: 'Order',
   OrderItem: 'OrderItem',
-  Customer: 'Customer'
+  Customer: 'Customer',
+  GlobalSettings: 'GlobalSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -82,11 +83,11 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  password: 'password',
-  image: 'image',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  password: 'password',
+  image: 'image'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -97,14 +98,21 @@ export const BusinessScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   type: 'type',
-  description: 'description',
-  logo: 'logo',
-  address: 'address',
-  phone: 'phone',
-  status: 'status',
   ownerId: 'ownerId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  address: 'address',
+  description: 'description',
+  logo: 'logo',
+  phone: 'phone',
+  planActive: 'planActive',
+  subscriptionEnd: 'subscriptionEnd',
+  subscriptionStart: 'subscriptionStart',
+  plan: 'plan',
+  AllPaied: 'AllPaied',
+  status: 'status',
+  marketingAutomation: 'marketingAutomation',
+  remindersEnabled: 'remindersEnabled'
 } as const
 
 export type BusinessScalarFieldEnum = (typeof BusinessScalarFieldEnum)[keyof typeof BusinessScalarFieldEnum]
@@ -130,7 +138,9 @@ export const ServiceScalarFieldEnum = {
   price: 'price',
   businessId: 'businessId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  image: 'image',
+  isActive: 'isActive'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
@@ -195,13 +205,29 @@ export const CustomerScalarFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
-  status: 'status',
   businessId: 'businessId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  status: 'status',
+  notes: 'notes'
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
+export const GlobalSettingsScalarFieldEnum = {
+  id: 'id',
+  platformName: 'platformName',
+  supportEmail: 'supportEmail',
+  supportPhone: 'supportPhone',
+  registrationOpen: 'registrationOpen',
+  currency: 'currency',
+  commissionRate: 'commissionRate',
+  tiersConfig: 'tiersConfig',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GlobalSettingsScalarFieldEnum = (typeof GlobalSettingsScalarFieldEnum)[keyof typeof GlobalSettingsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -210,6 +236,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -226,4 +260,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

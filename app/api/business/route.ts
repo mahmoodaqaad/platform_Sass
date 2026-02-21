@@ -14,11 +14,17 @@ export const POST = async (req: NextRequest) => {
         const userId = decoded.id;
 
         const body = await req.json();
-        const { name, slug, type, description } = body;
+        const { name, slug, type, description, address, phone, plan, duration, AllPaied } = body;
 
-        if (!name || !slug || !type) {
+        if (!name || !slug || !type || !address || !phone) {
             return NextResponse.json({ message: "يرجى ملء البيانات الأساسية" }, { status: 400 });
         }
+
+        // Calculate subscription dates
+        const months = parseInt(duration) || 1;
+        const subscriptionStart = new Date();
+        const subscriptionEnd = new Date();
+        subscriptionEnd.setDate(subscriptionEnd.getDate() + (30 * months));
 
         // Check if slug exists
         const slugExist = await prisma.business.findUnique({ where: { slug } });
@@ -35,9 +41,21 @@ export const POST = async (req: NextRequest) => {
                     type,
                     description,
                     ownerId: userId,
+                    plan: plan || "BASIC",
+                    planActive: true,
+                    address,
+                    phone,
+                    AllPaied,
+                    subscriptionStart,
+                    subscriptionEnd,
+
                 }
             });
-
+            await prisma.user.update({
+                where: { id: userId }, data: {
+                    role: "OWNER"
+                }
+            })
             await tx.member.create({
                 data: {
                     userId,

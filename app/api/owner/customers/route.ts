@@ -49,7 +49,7 @@ export const POST = async (req: NextRequest) => {
     if (!business) return NextResponse.json({ message: "غير مصرح لك بالوصول" }, { status: 401 });
 
     try {
-        const { name, email, phone, status } = await req.json();
+        const { name, email, phone, status, notes } = await req.json();
 
         if (!name || !email) {
             return NextResponse.json({ message: "يرجى إدخال الاسم والبريد الإلكتروني" }, { status: 400 });
@@ -74,6 +74,7 @@ export const POST = async (req: NextRequest) => {
                 name,
                 email,
                 phone,
+                notes,
                 status: status || "New",
                 businessId: business.id
             }
@@ -92,9 +93,9 @@ export const PATCH = async (req: NextRequest) => {
     if (!business) return NextResponse.json({ message: "غير مصرح لك بالوصول" }, { status: 401 });
 
     try {
-        const { id, status } = await req.json();
+        const { id, name, email, phone, status, notes } = await req.json();
 
-        if (!id || !status) {
+        if (!id) {
             return NextResponse.json({ message: "بيانات ناقصة" }, { status: 400 });
         }
 
@@ -103,7 +104,13 @@ export const PATCH = async (req: NextRequest) => {
                 id,
                 businessId: business.id
             },
-            data: { status }
+            data: {
+                name,
+                email,
+                phone,
+                status,
+                notes
+            }
         });
 
         return NextResponse.json({ message: "تم تحديث حالة العميل", customer: updatedCustomer });

@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "@/Tools/db";
 
 export const BusinessService = {
     async getBySlug(slug: string) {

@@ -32,6 +32,24 @@ export const GET = async (req: NextRequest) => {
                 email: true,
                 role: true,
                 createdAt: true,
+                ownedBusinesses: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                        type: true,
+                    }
+                },
+                memberships: {
+                    include: {
+                        business: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        }
+                    }
+                }
             },
             orderBy: { createdAt: "desc" }
         });
@@ -49,31 +67,32 @@ export const POST = async (req: NextRequest) => {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     try {
-        const { name, email, password, role, businessName, businessSlug, businessId } = await req.json();
+        const { name, email, password, role, businessName, businessSlug, businessType, businessId } = await req.json();
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
-
-        let newUser;
-        if (existingUser) {
-            // Upsert Behavior: Update existing user role
-            newUser = await prisma.user.update({
-                where: { email },
-                data: { role },
-                select: { id: true, name: true, email: true, role: true }
-            });
-        } else {
-            // Create new user
-            const hashedPassword = await bcrypt.hash(password, 10);
-            newUser = await prisma.user.create({
-                data: { name, email, password: hashedPassword, role },
-                select: { id: true, name: true, email: true, role: true }
-            });
-        }
+        if (existingUser) return NextResponse.json({ message: "exist_user" }, { status: 400 })
+        // let newUser;
+        // if (existingUser) {
+        //     // Upsert Behavior: Update existing user role
+        //     newUser = await prisma.user.update({
+        //         where: { email },
+        //         data: { role },
+        //         select: { id: true, name: true, email: true, role: true }
+        //     });
+        // } else {
+        // Create new user
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await prisma.user.create({
+            data: { name, email, password: hashedPassword, role },
+            select: { id: true, name: true, email: true, role: true }
+        });
+        // }
 
         // OWNER Case
         if (role === "OWNER") {
             const finalSlug = businessSlug || name.toLowerCase().trim().replace(/\s+/g, "_");
             const finalName = businessName || `${name} Business`;
+            const finalType = businessType || "OTHER";
 
             // Validate Slug
             const existingBiz = await prisma.business.findUnique({ where: { slug: finalSlug } });
@@ -94,7 +113,8 @@ export const POST = async (req: NextRequest) => {
                             name: finalName,
                             slug: finalSlug,
                             ownerId: ownerId,
-                            // status: "يعمل" // REMOVED: status is missing from current Prisma client
+                            type: finalType,
+                            status: "ACTIVE"
                         }
                     });
                     await tx.member.create({
@@ -123,9 +143,9 @@ export const POST = async (req: NextRequest) => {
             message: existingUser ? "تم تحديث بيانات المستخدم وتخصيص الصلاحيات" : "تم إنشاء المستخدم بنجاح",
             user: newUser
         }, { status: 201 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Create/Upsert user error:", error);
-        return NextResponse.json({ message: "حدث خطأ في الخادم", details: error.message }, { status: 500 });
+        return NextResponse.json({ message: "حدث خطأ في الخادم" }, { status: 500 });
     }
 };
 
@@ -135,36 +155,42 @@ export const PUT = async (req: NextRequest) => {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     try {
-        const { id, name, email, role, businessName, businessSlug, businessId } = await req.json();
+        const { id, name, email, role, businessName, businessSlug, businessType, businessId } = await req.json();
 
+        const existingUser = await prisma.user.findUnique({ where: { email, NOT: { id: id } }, });
+        if (existingUser) return NextResponse.json({ message: "this user already exist" }, { status: 400 })
         const updatedUser = await prisma.user.update({
             where: { id },
             data: { name, email, role },
             select: { id: true, name: true, email: true, role: true }
         });
 
-        // Automation: Create business if role is promoted to OWNER
+        // Automation: Create/Update business if role is OWNER
         if (role === "OWNER") {
-            const hasBusiness = await prisma.business.findFirst({ where: { ownerId: id } });
-            if (!hasBusiness) {
-                const finalSlug = businessSlug || name.toLowerCase().trim().replace(/\s+/g, "_");
-                const finalName = businessName || `${name} Business`;
+            const existingBiz = await prisma.business.findFirst({ where: { ownerId: id } });
 
-                // Validate Slug
-                const existingBiz = await prisma.business.findUnique({ where: { slug: finalSlug } });
-                if (existingBiz) {
+            const finalSlug = businessSlug || name.toLowerCase().trim().replace(/\s+/g, "_");
+            const finalName = businessName || `${name} Business`;
+            const finalType = businessType || "OTHER";
+            if (!existingBiz) {
+                // Check slug uniqueness
+                const slugConflict = await prisma.business.findUnique({ where: { slug: finalSlug } });
+                if (slugConflict) {
                     return NextResponse.json({
-                        message: "تم تحديث المستخدم، ولكن رابط العمل (Slug) مستخدم بالفعل. يرجى إنشاء العمل يدوياً للمستخدم."
-                    }, { status: 200 }); // Partial success
+                        message: "تم تحديث المستخدم، ولكن رابط العمل (Slug) مستخدم بالفعل. يرجى إنشاء العمل يدوياً."
+                    }, { status: 200 });
                 }
 
+
                 await prisma.$transaction(async (tx) => {
+
                     const newBusiness = await tx.business.create({
                         data: {
                             name: finalName,
                             slug: finalSlug,
                             ownerId: id,
-                            // status: "يعمل" // REMOVED: status is missing from current Prisma client
+                            type: finalType,
+                            status: "ACTIVE"
                         }
                     });
                     await tx.member.create({
@@ -175,15 +201,33 @@ export const PUT = async (req: NextRequest) => {
                         }
                     });
                 });
+            } else {
+                // Update existing business
+                await prisma.business.update({
+                    where: { id: existingBiz.id },
+                    data: {
+                        name: finalName,
+                        slug: finalSlug,
+                        type: finalType
+                    }
+                });
             }
         }
         // STAFF Assignment
         else if (role === "STAFF" && businessId) {
-            // Check if already a member
-            const existingMember = await prisma.member.findFirst({
-                where: { userId: id, businessId }
+            // Check if already a member of ANY business
+            const currentMembership = await prisma.member.findFirst({
+                where: { userId: id }
             });
-            if (!existingMember) {
+
+            if (currentMembership) {
+                // Update membership to new business
+                await prisma.member.update({
+                    where: { id: currentMembership.id },
+                    data: { businessId, role: "STAFF" }
+                });
+            } else {
+                // Create new membership
                 await prisma.member.create({
                     data: { userId: id, businessId, role: "STAFF" }
                 });
@@ -229,7 +273,7 @@ export const PATCH = async (req: NextRequest) => {
                                 name: `${user.name} Business`,
                                 slug,
                                 ownerId: userId,
-                                status: "يعمل"
+                                status: "ACTIVE"
                             }
                         });
                         await tx.member.create({

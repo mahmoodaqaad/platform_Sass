@@ -1,0 +1,801 @@
+{
+    "Common": {
+        "dashboard": "Dashboard",
+        "home": "Home",
+        "login": "Login",
+        "register": "Register",
+        "logout": {
+            "btn": "log out",
+            "title": "? log out ",
+            "subtitle": "?you ara sure leave the Panel ",
+            "ok": "log out",
+            "no": "Cancel"
+        },
+        "profile": "Profile",
+        "settings": "Settings",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "search": "Search...",
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "pricing": "Pricing",
+        "contact": "Contact",
+        "Modals": {
+            "delete": {
+                "title": "Are you sure?",
+                "description": "You are about to delete <bold>{name}</bold>. This action is permanent and cannot be undone.",
+                "confirm": "Yes, delete",
+                "cancel": "Cancel"
+            }
+        }
+    },
+    "Navigation": {
+        "users": "Users",
+        "staff": "Staff",
+        "bookings": "Bookings",
+        "rooms": "Rooms",
+        "reviews": "Reviews",
+        "overview": "Overview",
+        "appointments": "Appointments",
+        "services": "Services",
+        "customers": "Customers",
+        "schedule": "My Schedule",
+        "customerList": "Customer List",
+        "businesses": "Businesses",
+        "orgSettings": "Organization Settings",
+        "settings": "Settings"
+    },
+    "Roles": {
+        "admin": "General Manager",
+        "owner": "Business Owner",
+        "staff": "Staff",
+        "user": "User",
+        "dashboardTitle": "Control Panel"
+    },
+    "Auth": {
+        "signIn": "sign In",
+        "signUp": "Sign Up",
+        "redirect": "you should be login agian",
+        "welcomeBack": "Welcome Back",
+        "signInToAccount": "Sign in to your account",
+        "email": "Email Address",
+        "password": "Password",
+        "forgotPassword": "Forgot password?",
+        "dontHaveAccount": "Don't have an account?",
+        "createAccount": "Create Account",
+        "fullName": "Full Name",
+        "confirmPassword": "Confirm Password",
+        "alreadyHaveAccount": "Already have an account?",
+        "manageBusiness": "Login to your dashboard to manage your bookings, view analytics, and grow your business.",
+        "accessDashboard": "Access Your Dashboard",
+        "manageBookings": "Manage Bookings",
+        "realtimeAnalytics": "View Real-time Analytics",
+        "prioritySupport": "24/7 Priority Support",
+        "redirecting": "Redirecting you to your {role} hub...",
+        "signingIn": "Signing In...",
+        "buildBusiness": "Build Your Business",
+        "registerDescription": "Create your account and manage bookings, customers, and staff with a powerful modern dashboard.",
+        "smartBooking": "Smart Booking System",
+        "advancedDashboard": "Advanced Dashboard",
+        "staffManagement": "Staff & Customer Management",
+        "analyticsReports": "Analytics & Reports",
+        "registrationClosed": "Registration Closed Temporarily",
+        "registrationClosedMsg": "We apologize, but new registrations are currently closed for system improvements. Please try again later or contact support.",
+        "accountCreated": "Account Created!",
+        "welcomeAboard": "Welcome aboard. Redirecting to your {role} hub...",
+        "loginFailed": "Login failed",
+        "unexpectedError": "An unexpected error occurred",
+        "registrationFailed": "Registration failed",
+        "nameShort": "Your name is too short!",
+        "passwordShort": "Your password is too short!",
+        "passwordMismatch": "Confirm password does not match your password",
+        "contactUs": "Contact Us"
+    },
+    "Hero": {
+        "v2Live": "v2.0 is now live",
+        "titleLine1": "The Operating System",
+        "titleLine2": "For Modern Business",
+        "description": "A unified platform to manage operations, scale infrastructure, and accelerate growth with precision. Built for humans, powered by data.",
+        "getStartedFree": "Get Started for Free",
+        "requestDemo": "Request a Demo",
+        "activeUsers": "Active Users",
+        "revenue": "Revenue",
+        "growth": "Growth",
+        "global": "GLOBAL",
+        "nexus": "NEXUS",
+        "secure": "SECURE"
+    },
+    "Landing": {
+        "Features": {
+            "titlePrefix": "Engineered for",
+            "titleHighlight": "Excellence",
+            "subtitle": "Every tool you need to build, scale, and succeed. Built with precision and a human touch.",
+            "items": {
+                "lightning": {
+                    "title": "Lightning Performance",
+                    "description": "Built on edge infrastructure to ensure sub-millisecond latency for your global users."
+                },
+                "security": {
+                    "title": "Bank-Level Security",
+                    "description": "Enterprise-grade encryption and compliance standards out of the box."
+                },
+                "analytics": {
+                    "title": "Real-time Analytics",
+                    "description": "Grasp every data point with our proprietary real-time streaming engine."
+                },
+                "collaboration": {
+                    "title": "Team Collaboration",
+                    "description": "Synchronize your entire organization with unified workspace tools."
+                },
+                "scaling": {
+                    "title": "Modular Scaling",
+                    "description": "Our micro-services architecture scales with you, from startup to enterprise."
+                },
+                "automation": {
+                    "title": "24/7 Automation",
+                    "description": "Automate your workflows with AI-driven scheduling and execution."
+                }
+            }
+        },
+        "Pricing": {
+            "titlePrefix": "Pricing",
+            "titleHighlight": "Plan",
+            "subtitle": "Start free and upgrade as you grow. No hidden fees.",
+            "mostPopular": "Most Popular",
+            "month": "/month",
+            "plans": {
+                "basic": {
+                    "name": "Basic",
+                    "description": "Perfect for small projects and starters.",
+                    "button": "Start for Free",
+                    "features": {
+                        "services": "Up to {services} services",
+                        "members": "{members} staff members",
+                        "appointments": "{appointments} bookings/mo",
+                        "support": "Community Support"
+                    }
+                },
+                "pro": {
+                    "name": "Pro",
+                    "description": "The complete package for growth and scaling.",
+                    "button": "Try Pro Free",
+                    "features": {
+                        "services": "Up to {services} services",
+                        "members": "{members} staff members",
+                        "appointments": "{appointments} bookings/mo",
+                        "support": "24/7 Support",
+                        "reporting": "Advanced Reporting"
+                    }
+                },
+                "business": {
+                    "name": "Business",
+                    "description": "Complete solutions for mid-to-large companies.",
+                    "button": "Subscribe Now",
+                    "features": {
+                        "services": "Up to {services} services",
+                        "members": "{members} staff members",
+                        "appointments": "{appointments} bookings/mo",
+                        "support": "Dedicated VIP Support",
+                        "analytics": "Advanced Analytics"
+                    }
+                },
+                "enterprise": {
+                    "name": "Enterprise",
+                    "description": "Custom solutions for large organizations.",
+                    "button": "Contact Us",
+                    "price": "Custom",
+                    "features": {
+                        "services": "Unlimited Services",
+                        "members": "Unlimited Staff",
+                        "appointments": "Unlimited Bookings",
+                        "manager": "Dedicated Account Manager",
+                        "sla": "SLA Agreement"
+                    }
+                }
+            }
+        },
+        "Contact": {
+            "titleLine1": "Let's Build the",
+            "titleHighlight": "Future Together",
+            "subtitle": "Have a question or a project in mind? Our team is here to help you navigate your digital transformation.",
+            "info": {
+                "email": "Email",
+                "phone": "Phone",
+                "office": "Office"
+            },
+            "form": {
+                "fullName": "Full Name",
+                "email": "Email Address",
+                "subject": "Subject",
+                "message": "Message",
+                "send": "Send Message",
+                "placeholders": {
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                    "subject": "How can we help?",
+                    "message": "Tell us about your project..."
+                }
+            }
+        },
+        "Footer": {
+            "brandDesc": "Empowering businesses with modern booking solutions. Streamline your operations and delight your customers.",
+            "cols": {
+                "product": "Product",
+                "company": "Company",
+                "legal": "Legal"
+            },
+            "links": {
+                "features": "Features",
+                "integrations": "Integrations",
+                "pricing": "Pricing",
+                "changelog": "Changelog",
+                "about": "About Us",
+                "careers": "Careers",
+                "blog": "Blog",
+                "newsroom": "Newsroom",
+                "privacy": "Privacy Policy",
+                "terms": "Terms of Service",
+                "cookie": "Cookie Policy",
+                "sla": "SLA"
+            },
+            "rights": "© {year} {platform}. All rights reserved.",
+            "status": "All systems operational",
+            "createdBy": "Created by"
+        }
+    },
+    "D": {
+        "admin": {
+            "users": {
+                "title": "User Management",
+                "subtitle": "View, edit, and add users to the platform.",
+                "addUser": "Add New User",
+                "searchPlaceholder": "Search by name, email, or ID...",
+                "filterRole": "Role",
+                "allRoles": "All Roles",
+                "reset": "Reset",
+                "role": "Role",
+                "joined": "Joined",
+                "noUsers": "No users found matching your search.",
+                "clearFilters": "Clear all filters",
+                "modal": {
+                    "addTitle": "Add New User",
+                    "editTitle": "Edit User Details",
+                    "addSubtitle": "Enter new account details and permissions.",
+                    "editSubtitle": "Update current account information.",
+                    "userExistError": "this user already exist",
+                    "name": "Full Name",
+                    "email": "Email Address",
+                    "password": "Password",
+                    "role": "Role",
+                    "businessDetails": "Business Details (Optional - Auto-created if empty)",
+                    "businessName": "Business Name",
+                    "businessSlug": "Business Slug",
+                    "businessType": "Business Type",
+                    "goToBusinesses": "Go to businesses page to add full details",
+                    "assignStaff": "Assign Staff to Business",
+                    "create": "Create Account",
+                    "save": "Save Changes",
+                    "deleteTitle": "Delete User Account",
+                    "deleteDescription": "You are about to delete \"{name}\". This will remove all their access permissions.",
+                    "deleteConfirm": "Yes, Delete Account"
+                }
+            },
+            "businesses": {
+                "title": "Business Management",
+                "subtitle": "Monitor projects and companies registered on the platform.",
+                "addBusiness": "Add New Business",
+                "searchPlaceholder": "Search by business name, owner, email, phone or slug...",
+                "filterStatus": "Status",
+                "filterType": "Type",
+                "reset": "Reset",
+                "stats": {
+                    "total": "Total Businesses",
+                    "active": "Active Businesses",
+                    "proPlans": "Pro/Business Plans",
+                    "pending": "Pending"
+                },
+                "table": {
+                    "business": "Business",
+                    "owner": "Owner",
+                    "stats": "Stats",
+                    "subscription": "Subscription",
+                    "status": "Status",
+                    "actions": "Actions",
+                    "startDate": "Start Date",
+                    "service": "Service",
+                    "staff": "Staff",
+                    "plan": "Plan",
+                    "lifetime": "Lifetime",
+                    "loading": "Loading data...",
+                    "noResults": "No results found."
+                },
+                "modal": {
+                    "editTitle": "Edit Business",
+                    "editSubtitle": "Edit basic project details.",
+                    "addTitle": "Add New Business",
+                    "addSubtitle": "Create a new business and assign an owner.",
+                    "name": "Business Name",
+                    "slug": "Slug",
+                    "type": "Business Type",
+                    "description": "Description",
+                    "phone": "Phone Number",
+                    "address": "Address",
+                    "ownerEmail": "Owner Email",
+                    "months": "Months",
+                    "plan": "Plan",
+                    "save": "Save Changes",
+                    "create": "Create Business",
+                    "cancel": "Cancel",
+                    "deleteTitle": "Delete Business",
+                    "deleteDescription": "You are about to delete \"{name}\". This will delete all associated services, staff, and appointments.",
+                    "deleteConfirm": "Yes, Delete Business"
+                }
+            },
+            "businessDetails": {
+                "title": "Business Details",
+                "subtitle": "View and manage all data for {name}",
+                "visitWebsite": "Visit Website",
+                "editData": "Edit Data",
+                "extendSubscription": "Extend Subscription",
+                "notFound": "Business not found",
+                "sections": {
+                    "services": "Services",
+                    "staff": "Staff",
+                    "basicInfo": "Basic Information",
+                    "ownerData": "Owner Data",
+                    "accountActivity": "Account Activity",
+                    "subscriptionStatus": "Subscription Status"
+                },
+                "fields": {
+                    "businessType": "Business Type",
+                    "joinDate": "Join Date",
+                    "phoneNumber": "Phone Number",
+                    "address": "Address",
+                    "businessDescription": "Business Description",
+                    "ownerName": "Owner Name",
+                    "email": "Email",
+                    "currentPlan": "Current Plan",
+                    "expiresOn": "Expires On",
+                    "daysRemaining": "{count} days remaining",
+                    "notAvailable": "Not available",
+                    "noDescription": "No description"
+                },
+                "activityPlaceholder": "Activity log will be available soon in this section.",
+                "editModal": {
+                    "title": "Edit Business",
+                    "subtitle": "Edit basic business information.",
+                    "businessName": "Business Name",
+                    "slug": "Slug (Custom Link)",
+                    "businessType": "Business Type",
+                    "status": "Status",
+                    "phoneNumber": "Phone Number",
+                    "address": "Address",
+                    "businessLogo": "Business Logo",
+                    "saveChanges": "Save Changes",
+                    "updateError": "An error occurred during update",
+                    "updateSuccess": "Changes saved successfully"
+                },
+                "extendModal": {
+                    "title": "Extend Subscription",
+                    "subtitle": "Add additional time to business validity.",
+                    "duration": "Extension Duration",
+                    "oneMonth": "1 Month",
+                    "threeMonths": "3 Months",
+                    "sixMonths": "6 Months",
+                    "oneYear": "1 Year (12 Months)",
+                    "confirm": "Confirm Extension",
+                    "success": "Subscription extended successfully",
+                    "error": "An error occurred while extending subscription"
+                }
+            },
+            "settings": {
+                "title": "Platform Settings",
+                "subtitle": "Control global identity, usage limits, and financial commissions.",
+                "tabs": {
+                    "general": "General",
+                    "limits": "Limits & Plans",
+                    "revenue": "Revenue & Finance",
+                    "users": "System Roles"
+                },
+                "general": {
+                    "title": "Platform Identity & Contact",
+                    "platformName": "Technical Platform Name",
+                    "supportEmail": "Official Support Email",
+                    "supportPhone": "Support Link or Phone",
+                    "registration": {
+                        "legend": "CLOSE/OPEN REGISTRATION",
+                        "open": "Open to Public",
+                        "closed": "Temporarily Closed"
+                    }
+                },
+                "limits": {
+                    "title": "Customize Subscription Limits",
+                    "tier": "Tier",
+                    "plans": {
+                        "Services": "Services",
+                        "Members": "Members",
+                        "Appointments_Mo": "Appointments/Mo"
+                    }
+                },
+                "revenue": {
+                    "title": "Finance & Commissions",
+                    "currency": "Official Currency",
+                    "commission": "Platform Commission Rate (%)",
+                    "note": "These commissions will be automatically applied to electronic payments via Stripe once enabled."
+                },
+                "users": {
+                    "title": "Manage System Roles & Permissions",
+                    "description": "Review the advanced permission matrix and control user roles and admins.",
+                    "button": "View Permission Matrix"
+                },
+                "save": "Save All Changes",
+                "success": "Settings updated successfully",
+                "error": "Failed to save changes",
+                "loading": "Loading data..."
+            },
+            "roles": {
+                "title": "System Roles & Permissions",
+                "subtitle": "Manage access levels and control platform functions for each role.",
+                "roles": {
+                    "ADMIN": {
+                        "name": "System Admin",
+                        "description": "Full control over the platform, settings, and users."
+                    },
+                    "OWNER": {
+                        "name": "Business Owner",
+                        "description": "Manage their own company, services, staff, and reports."
+                    },
+                    "STAFF": {
+                        "name": "Staff",
+                        "description": "Manage appointments and customers within the assigned company."
+                    },
+                    "USER": {
+                        "name": "User",
+                        "description": "Browse services, book appointments, and manage profile."
+                    }
+                },
+                "matrix": {
+                    "title": "Detailed Permission Matrix",
+                    "permission": "Permission / Function"
+                },
+                "groups": {
+                    "system": "System Management",
+                    "business": "Business Management",
+                    "operations": "Daily Operations"
+                },
+                "permissions": {
+                    "PLATFORM_SETTINGS": "Modify Platform Settings",
+                    "USER_MANAGEMENT": "Manage All Users",
+                    "BUSINESS_APPROVAL": "Approve Businesses",
+                    "MANAGE_BUSINESS": "Edit Business Details",
+                    "MANAGE_SERVICES": "Add/Remove Services",
+                    "VIEW_ANALYTICS": "View Financial Reports",
+                    "MANAGE_APPOINTMENTS": "Manage Appointments",
+                    "VIEW_CUSTOMERS": "View Customer Records",
+                    "CREATE_BOOKINGS": "Create New Bookings"
+                },
+                "securityNote": {
+                    "title": "Security Notice",
+                    "description": "These permissions are enforced at the API and database level. The \"System Admin\" role has full permissions and cannot be restricted to ensure system recovery capabilities in emergencies."
+                }
+            },
+            "overview": {
+                "title": "General Manager Dashboard",
+                "subtitle": "Welcome to the platform management center. Here is a summary of the latest real-time developments.",
+                "stats": {
+                    "users": "Total Users",
+                    "businesses": "Active Businesses",
+                    "revenue": "Total Revenue",
+                    "growth": "Growth Rate",
+                    "thisMonth": "+ {count} this month",
+                    "activeNow": "{count} currently active"
+                },
+                "recentUsers": {
+                    "title": "Latest Registered Members",
+                    "viewAll": "View All",
+                    "noUsers": "No members registered currently.",
+                    "active": "active"
+                },
+                "health": {
+                    "title": "Platform Health",
+                    "dbConnection": "Database Connection",
+                    "responseTime": "Response Time",
+                    "dataIntegrity": "Data Integrity",
+                    "availability": "Availability",
+                    "downloadReport": "Download Full Technical Report"
+                }
+            }
+        },
+        "owner": {
+            "overview": {
+                "title": "Welcome back, {name}",
+                "subtitle": "Here is a summary of what's happening in your business today.",
+                "stats": {
+                    "revenue": "Total Revenue",
+                    "appointments": "Appointments (Month)",
+                    "customers": "New Customers",
+                    "pending": "Pending Orders"
+                },
+                "recent": {
+                    "title": "Upcoming Appointments",
+                    "viewAll": "View All",
+                    "noAppointments": "No scheduled appointments at the moment."
+                },
+                "automation": {
+                    "title": "Smart Automation",
+                    "reminders": "Message Reminders",
+                    "remindersDesc": "Send automatic alerts",
+                    "marketing": "Auto Marketing",
+                    "marketingDesc": "Offers for past customers",
+                    "updated": "Automation settings updated",
+                    "failed": "Failed to update settings"
+                },
+                "quickAction": "Quick Action",
+                "tip": {
+                    "title": "Pro Tip",
+                    "description": "Businesses using automation reduced no-shows by 35% and increased customer loyalty.",
+                    "button": "Explore More"
+                }
+            },
+            "appointments": {
+                "title": "Appointments & Bookings",
+                "subtitle": "Track and manage all upcoming and past bookings for your business.",
+                "report": "Download Report",
+                "newBooking": "New Manual Booking",
+                "manualBooking": {
+                    "title": "New Manual Booking",
+                    "subtitle": "Manually add a new appointment for your customers.",
+                    "selectCustomer": "Select Existing Customer (Optional)",
+                    "newOrSearch": "-- New Customer or Search --",
+                    "customerName": "Customer Name",
+                    "customerEmail": "Email Address",
+                    "service": "Service",
+                    "selectService": "Select Service...",
+                    "startTime": "Start Time",
+                    "confirm": "Confirm Booking",
+                    "cancel": "Cancel",
+                    "success": "Booking added successfully",
+                    "error": "Error adding booking",
+                    "duplicate": "This booking already exists. Do you want to duplicate it?"
+                },
+                "table": {
+                    "listTitle": "Appointments List",
+                    "customer": "Customer",
+                    "service": "Service",
+                    "dateTime": "Date & Time",
+                    "price": "Price",
+                    "status": "Status",
+                    "actions": "Actions",
+                    "loading": "Loading...",
+                    "noResults": "No bookings found matching this filter."
+                },
+                "status": {
+                    "all": "All",
+                    "today": "Today",
+                    "pending": "Pending",
+                    "completed": "Completed",
+                    "confirmed": "Confirmed",
+                    "cancelled": "Cancelled"
+                },
+                "actions": {
+                    "confirm": "Confirm",
+                    "cancel": "Cancel",
+                    "complete": "Complete Appointment",
+                    "waitlist": "Put on Waitlist",
+                    "reset": "Reset Status",
+                    "updateSuccess": "Status updated",
+                    "updateError": "Update failed"
+                }
+            },
+            "customers": {
+                "title": "Customer List",
+                "subtitle": "Manage your customer data and track their history.",
+                "searchPlaceholder": "Search by name, email, or phone...",
+                "addCustomer": "Add New Customer",
+                "total": "Total Customers",
+                "stats": {
+                    "bookings": "Bookings Count",
+                    "spent": "Total Spent"
+                },
+                "status": {
+                    "new": "New",
+                    "regular": "Regular",
+                    "vip": "VIP"
+                },
+                "modal": {
+                    "addTitle": "Add New Customer",
+                    "editTitle": "Edit Customer",
+                    "addSubtitle": "Register a new customer in your system.",
+                    "editSubtitle": "Update customer information and notes.",
+                    "name": "Full Name",
+                    "email": "Email Address",
+                    "phone": "Phone Number",
+                    "notes": "Notes & Extra Details",
+                    "notesPlaceholder": "Add any important details or notes about this customer...",
+                    "save": "Save Changes",
+                    "create": "Add Customer",
+                    "cancel": "Cancel",
+                    "noPhone": "No number"
+                },
+                "empty": {
+                    "loading": "Loading...",
+                    "noResults": "No customers found matching your search."
+                }
+            },
+            "services": {
+                "title": "Service Management",
+                "subtitle": "Add and edit the services you offer to your clients.",
+                "active": "Active Services",
+                "archived": "Archive",
+                "addService": "Add New Service",
+                "duration": "{min} min",
+                "archivedLabel": "Archived",
+                "noDesc": "No description available.",
+                "edit": "Edit",
+                "restore": "Restore Service",
+                "empty": {
+                    "title": "No services found",
+                    "description": "You haven't added any services yet. Start by clicking the button above."
+                },
+                "modal": {
+                    "addTitle": "New Service",
+                    "editTitle": "Edit Service",
+                    "addSubtitle": "Add a new service to your booking menu.",
+                    "editSubtitle": "Update current service details.",
+                    "name": "Service Name",
+                    "description": "Description",
+                    "duration": "Duration (minutes)",
+                    "price": "Price ($)",
+                    "save": "Save Service",
+                    "update": "Update Service",
+                    "error": "An error occurred"
+                },
+                "delete": {
+                    "title": "Are you sure?",
+                    "description": "Service \"{name}\" will be archived. Past bookings history will remain, but customers won't be able to book it again.",
+                    "confirm": "Yes, Archive",
+                    "cancel": "Cancel"
+                }
+            },
+            "staff": {
+                "title": "Staff Management",
+                "subtitle": "Add and manage your team members.",
+                "addStaff": "Add New Staff",
+                "loading": "Loading...",
+                "empty": {
+                    "title": "No staff members yet",
+                    "description": "Start by adding your first team member now."
+                },
+                "card": {
+                    "noName": "No Name",
+                    "joined": "Joined Date"
+                },
+                "modal": {
+                    "title": "Add New Staff",
+                    "subtitle": "This user will be automatically assigned as Staff to your business.",
+                    "name": "Full Name",
+                    "email": "Email Address",
+                    "password": "Temporary Password",
+                    "submit": "Create Staff Account",
+                    "error": "An unexpected error occurred"
+                }
+            },
+            "settings": {
+                "title": "Settings",
+                "subtitle": "Manage your business details, notifications, and security options.",
+                "tabs": {
+                    "business": "Business Details",
+                    "notifications": "Notifications",
+                    "security": "Security",
+                    "billing": "Billing"
+                },
+                "business": {
+                    "name": "Business Name",
+                    "phone": "Phone Number",
+                    "address": "Address",
+                    "descriptionLabel": "Business Description",
+                    "descriptionPlaceholder": "Write a short description of your business...",
+                    "save": "Save Changes"
+                },
+                "comingSoon": {
+                    "title": "Coming Soon",
+                    "description": "We are working on these settings."
+                },
+                "notifications": {
+                    "title": "Notification Settings",
+                    "email": "Email Notifications",
+                    "emailDesc": "Receive appointment and customer alerts via email",
+                    "sms": "SMS Notifications",
+                    "smsDesc": "Receive instant text alerts",
+                    "marketing": "Marketing Notifications",
+                    "marketingDesc": "Receive platform news and updates"
+                },
+                "security": {
+                    "title": "Change Password",
+                    "currentPassword": "Current Password",
+                    "newPassword": "New Password",
+                    "confirmPassword": "Confirm New Password",
+                    "update": "Update Password"
+                },
+                "billing": {
+                    "title": "Subscription Details",
+                    "currentPlan": "Current Plan",
+                    "status": "Subscription Status",
+                    "nextBilling": "Next Billing Date",
+                    "active": "Active",
+                    "expired": "Expired",
+                    "upgrade": "Upgrade Plan"
+                },
+                "toast": {
+                    "success": "Changes saved successfully",
+                    "error": "Error saving changes",
+                    "fetchError": "Failed to load business data"
+                }
+            }
+        },
+        "staff": {
+            "dashboard": {
+                "title": "Staff Dashboard",
+                "subtitle": "Welcome back! Here is your schedule for today.",
+                "stats": {
+                    "appointments": "Today's Appointments",
+                    "hours": "Work Hours",
+                    "completed": "Completed Customers"
+                },
+                "schedule": {
+                    "title": "Today's Schedule",
+                    "viewAll": "View Full Schedule"
+                },
+                "status": {
+                    "inProgress": "In Progress",
+                    "upcoming": "Upcoming",
+                    "completed": "Completed"
+                }
+            },
+            "schedule": {
+                "title": "My Schedule",
+                "subtitle": "View and manage your work appointments for today.",
+                "confirmed": "Confirmed",
+                "station": "Main Station",
+                "addBreak": "Add Break Time"
+            },
+            "customers": {
+                "title": "Customer List",
+                "subtitle": "View customers you have served and their special notes.",
+                "searchPlaceholder": "Search customer...",
+                "lastVisit": "Last Visit",
+                "notes": "Staff Notes",
+                "call": "Call",
+                "message": "Message"
+            }
+        }
+    },
+    "Contact": {
+        "title": "Let's Build the",
+        "titleHighlight": "Future Together",
+        "subtitle": "Have a question or a project in mind? Our team is here to help you navigate your digital transformation.",
+        "info": {
+            "email": "Email",
+            "phone": "Phone",
+            "office": "Office"
+        },
+        "form": {
+            "fullName": "Full Name",
+            "fullNamePlaceholder": "John Doe",
+            "email": "Email Address",
+            "emailPlaceholder": "john@example.com",
+            "subject": "Subject",
+            "subjectPlaceholder": "How can we help?",
+            "message": "Message",
+            "messagePlaceholder": "Tell us about your project...",
+            "submit": "Send Message"
+        },
+        "page": {
+            "title": "Contact Us",
+            "subtitle": "Have questions? We're here to help you build the future of your business."
+        }
+    }
+}

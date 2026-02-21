@@ -3,8 +3,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { HiMail, HiPhone, HiLocationMarker, HiArrowRight } from "react-icons/hi";
+import { useTranslations } from "next-intl";
 
 const Contact = () => {
+    const t = useTranslations("Contact");
+    const tInfo = useTranslations("Contact.info");
+    const tForm = useTranslations("Contact.form");
+
     return (
         <section id="contact" className="py-24 bg-[#050505] text-white relative overflow-hidden">
             {/* Abstract Background Element */}
@@ -20,8 +25,8 @@ const Contact = () => {
                             viewport={{ once: true }}
                             className="text-4xl md:text-5xl font-black mb-8"
                         >
-                            Let&apos;s Build the <br />
-                            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-500 to-purple-500">Future Together</span>
+                            {t("title")} <br />
+                            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-500 to-purple-500">{t("titleHighlight")}</span>
                         </motion.h2>
                         <motion.p
                             initial={{ opacity: 0, x: -20 }}
@@ -30,14 +35,14 @@ const Contact = () => {
                             transition={{ delay: 0.1 }}
                             className="text-zinc-400 text-lg mb-12 max-w-md"
                         >
-                            Have a question or a project in mind? Our team is here to help you navigate your digital transformation.
+                            {t("subtitle")}
                         </motion.p>
 
                         <div className="space-y-8">
                             {[
-                                { icon: <HiMail />, label: "Email", val: "hello@myplatform.com" },
-                                { icon: <HiPhone />, label: "Phone", val: "+1 (555) 000-0000" },
-                                { icon: <HiLocationMarker />, label: "Office", val: "Silicon Valley, CA" }
+                                { icon: <HiMail />, label: tInfo("email"), val: "mahmmodaqaad@gmil.com" },
+                                { icon: <HiPhone />, label: tInfo("phone"), val: "+970 599 23041" },
+                                { icon: <HiLocationMarker />, label: tInfo("office"), val: "Palestine, Gaza" }
                             ].map((item, i) => (
                                 <motion.div
                                     key={i}
@@ -69,35 +74,35 @@ const Contact = () => {
                         <form className="space-y-6">
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-zinc-400 px-1">Full Name</label>
+                                    <label className="text-sm font-medium text-zinc-400 px-1">{tForm("fullName")}</label>
                                     <input
                                         type="text"
-                                        placeholder="John Doe"
+                                        placeholder={tForm("fullNamePlaceholder")}
                                         className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-zinc-400 px-1">Email Address</label>
+                                    <label className="text-sm font-medium text-zinc-400 px-1">{tForm("email")}</label>
                                     <input
                                         type="email"
-                                        placeholder="john@example.com"
+                                        placeholder={tForm("emailPlaceholder")}
                                         className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all"
                                     />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-zinc-400 px-1">Subject</label>
+                                <label className="text-sm font-medium text-zinc-400 px-1">{tForm("subject")}</label>
                                 <input
                                     type="text"
-                                    placeholder="How can we help?"
+                                    placeholder={tForm("subjectPlaceholder")}
                                     className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-zinc-400 px-1">Message</label>
+                                <label className="text-sm font-medium text-zinc-400 px-1">{tForm("message")}</label>
                                 <textarea
                                     rows={4}
-                                    placeholder="Tell us about your project..."
+                                    placeholder={tForm("messagePlaceholder")}
                                     className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all resize-none"
                                 />
                             </div>
@@ -105,7 +110,7 @@ const Contact = () => {
                                 type="submit"
                                 className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-600/20 transition-all flex items-center justify-center gap-3 group"
                             >
-                                Send Message
+                                {tForm("submit")}
                                 <HiArrowRight className="group-hover:translate-x-2 transition-transform" />
                             </button>
                         </form>

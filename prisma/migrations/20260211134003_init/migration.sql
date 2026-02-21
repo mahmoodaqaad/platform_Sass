@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Business" ADD COLUMN     "planActive" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "subscriptionEnd" TIMESTAMP(3),
+ADD COLUMN     "subscriptionStart" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
