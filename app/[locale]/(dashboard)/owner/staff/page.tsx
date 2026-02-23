@@ -6,14 +6,9 @@ import { HiOutlineUsers, HiOutlineUserPlus, HiOutlineEnvelope, HiOutlineLockClos
 import Button from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { useTranslations } from "next-intl"
+import { Staff } from "@/lib/types"
 
-interface Staff {
-    id: string;
-    name: string;
-    email: string;
-    createdAt: string;
-    memberId: string;
-}
+
 
 const OwnerStaffPage = () => {
     const t = useTranslations("D.owner.staff");

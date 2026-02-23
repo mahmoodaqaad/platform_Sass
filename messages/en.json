@@ -506,6 +506,18 @@
                     "dataIntegrity": "Data Integrity",
                     "availability": "Availability",
                     "downloadReport": "Download Full Technical Report"
+                },
+                "revenue": {
+                    "title": "Platform Revenue",
+                    "subtitle": "Analyze subscription income and cross-platform transaction volume.",
+                    "totalGMV": "Total Platform Volume (GMV)",
+                    "estimatedMRR": "Estimated MRR (Subscriptions)",
+                    "activeSubs": "Active Subscriptions",
+                    "topBusinesses": "Top Businesses by Volume",
+                    "recentActivity": "Recent Subscriber Activity",
+                    "chartTitle": "Revenue & Growth Trends",
+                    "subscriptionRevenue": "Platform Income",
+                    "platformThroughput": "Total Volume"
                 }
             }
         },
@@ -733,6 +745,22 @@
                     "success": "Changes saved successfully",
                     "error": "Error saving changes",
                     "fetchError": "Failed to load business data"
+                },
+                "revenue": {
+                    "title": "Revenue System",
+                    "subtitle": "Track your sales and business growth in detail.",
+                    "totalRevenue": "Total Revenue",
+                    "averageOrder": "Avg. Order Value",
+                    "totalOrders": "Total Orders",
+                    "revenueTrend": "Revenue Trend",
+                    "topServices": "Top Services",
+                    "transactions": {
+                        "title": "Transaction History",
+                        "customer": "Customer",
+                        "amount": "Amount",
+                        "date": "Date",
+                        "status": "Status"
+                    }
                 }
             }
         },
@@ -760,7 +788,10 @@
                 "subtitle": "View and manage your work appointments for today.",
                 "confirmed": "Confirmed",
                 "station": "Main Station",
-                "addBreak": "Add Break Time"
+                "addBreak": "Add Break Time",
+                "duration": "{duration} min",
+                "complete": "Complete",
+                "cancel": "Cancel"
             },
             "customers": {
                 "title": "Customer List",

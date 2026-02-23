@@ -79,6 +79,37 @@ export const PATCH = async (req: NextRequest) => {
             return NextResponse.json({ message: "Appointment not found" }, { status: 404 });
         }
 
+        // Logic for automatic revenue generation
+        if (status === 'COMPLETED' && appointment.status !== 'COMPLETED') {
+            // Fetch service details for the price
+            const service = await prisma.service.findUnique({
+                where: { id: appointment.serviceId }
+            });
+
+            if (service) {
+                await prisma.$transaction([
+                    prisma.appointment.update({
+                        where: { id: appointmentId },
+                        data: { status }
+                    }),
+                    prisma.order.upsert({
+                        where: { id: appointmentId }, // Use appointmentId as Order ID to link them and prevent duplicates
+                        create: {
+                            id: appointmentId,
+                            total: service.price,
+                            status: 'PAID',
+                            businessId: appointment.businessId,
+                            customerId: appointment.customerId
+                        },
+                        update: {
+                            status: 'PAID'
+                        }
+                    })
+                ]);
+                return NextResponse.json({ message: "Appointment completed and revenue recorded." });
+            }
+        }
+
         const updatedAppointment = await prisma.appointment.update({
             where: { id: appointmentId },
             data: { status }

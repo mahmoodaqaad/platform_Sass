@@ -2,10 +2,9 @@ import { prisma } from "@/Tools/db";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "@/Tools/Types";
+import { TierConfig } from "@/lib/types";
 
-interface TierConfig {
-    services: number;
-}
+
 
 type TiersConfig = Record<string, TierConfig>;
 

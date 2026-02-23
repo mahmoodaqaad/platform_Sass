@@ -9,16 +9,9 @@ import axios from "axios";
 import Image from "next/image";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { useTranslations } from "next-intl";
+import { Service } from "@/lib/types";
 
-interface Service {
-    id: string;
-    name: string;
-    description?: string;
-    duration: number;
-    price: number | string;
-    image?: string;
-    isActive: boolean;
-}
+
 
 export default function ServicesPage() {
     const t = useTranslations("D.owner.services");

@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import { HiOutlineCloudUpload, HiOutlineX } from "react-icons/hi";
 import Image from "next/image";
 import axios from "axios";
+import { UploadProps } from "@/lib/types";
 
-interface LogoUploadProps {
-    value: string;
-    onChange: (value: string) => void;
-    onUploading?: (uploading: boolean) => void;
-}
 
-const LogoUpload = ({ value, onChange, onUploading }: LogoUploadProps) => {
+
+const LogoUpload = ({ value, onChange, onUploading }: UploadProps) => {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(value);
 

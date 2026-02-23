@@ -27,31 +27,9 @@ import Modles from "@/components/Modles"
 import Input from "@/components/ui/Input"
 import Select from "@/components/ui/Select"
 import { useTranslations, useLocale } from "next-intl"
+import { Business, UserEmail } from "@/lib/types"
 
-interface Business {
-    id: string
-    name: string
-    slug: string
-    ownerName: string
-    ownerEmail: string
-    staffCount: number
-    serviceCount: number
-    plan: string
-    planActive: boolean
-    subscriptionEnd: string | null
-    status: string
-    createdAt: string
-    type: string
-    description: string
-    address: string
-    phone: string
-    logo?: string
-}
 
-interface UserEmail {
-    email: string;
-    name: string | null;
-}
 
 export default function BusinessesPage() {
     const t = useTranslations("D.admin.businesses");
@@ -72,7 +50,6 @@ export default function BusinessesPage() {
     const [addForm, setAddForm] = useState({
         name: "", slug: "", ownerEmail: "", type: "", description: "", address: "", phone: "", status: "", logo: "", numMonth: "", plan: ""
     })
-console.log(businesses);
 
     useEffect(() => {
         fetchBusinesses()
@@ -136,7 +113,7 @@ console.log(businesses);
     const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            const res = await axios.post("/api/admin/businesses", addForm)
+      await axios.post("/api/admin/businesses", addForm)
 
             setShowAddModal(false)
             setAddForm({ name: "", slug: "", ownerEmail: "", type: "", description: "", address: "", phone: "", status: "", logo: "", numMonth: "", plan: "" })

@@ -18,27 +18,8 @@ import {
 import axios from "axios"
 import { toast } from "react-toastify"
 import { useTranslations, useLocale } from "next-intl"
+import { Appointment, Customer, Service } from "@/lib/types"
 
-interface Service {
-    id: string;
-    name: string;
-    price: number;
-    duration: number;
-}
-
-interface Customer {
-    id: string;
-    name: string;
-    email: string;
-}
-
-interface Appointment {
-    id: string;
-    startTime: string;
-    status: "CONFIRMED" | "PENDING" | "COMPLETED" | "CANCELLED";
-    service: Service;
-    customer: Customer;
-}
 
 const Input = ({ label, icon, ...props }: { label: string; icon: React.ReactNode;[key: string]: any }) => (
     <div className="space-y-2 group">

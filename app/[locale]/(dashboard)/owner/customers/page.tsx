@@ -15,6 +15,8 @@ import {
 } from "react-icons/hi2"
 import axios from "axios"
 import { useTranslations } from "next-intl"
+import { Customer } from "@/lib/types"
+import Link from "next/link"
 
 const Input = ({ label, icon, ...props }: { label: string, icon: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>) => (
     <div className="space-y-2 group">
@@ -29,16 +31,7 @@ const Input = ({ label, icon, ...props }: { label: string, icon: React.ReactNode
     </div>
 )
 
-interface Customer {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    notes?: string;
-    bookingCount: number;
-    totalSpent: number;
-    status: "VIP" | "REGULAR" | "NEW";
-}
+
 
 const CustomersPage = () => {
     const t = useTranslations("D.owner.customers");
@@ -207,15 +200,15 @@ const CustomersPage = () => {
                                             </select>
                                         </div>
                                         <div className="flex flex-col gap-2 mt-4">
-                                            <a href={`mailto:${customer.email}`} className="text-zinc-500 text-sm font-medium hover:text-white transition-colors flex items-center gap-2">
+                                            <Link href={`mailto:${customer.email}`} className="text-zinc-500 text-sm font-medium hover:text-white transition-colors flex items-center gap-2">
                                                 <HiOutlineEnvelope />
                                                 {customer.email}
-                                            </a>
+                                            </Link>
                                             {customer.phone && (
-                                                <a href={`tel:${customer.phone}`} className="text-zinc-500 text-sm font-medium hover:text-white transition-colors flex items-center gap-2">
+                                                <Link href={`tel:${customer.phone}`} className="text-zinc-500 text-sm font-medium hover:text-white transition-colors flex items-center gap-2">
                                                     <HiOutlinePhone />
                                                     {customer.phone}
-                                                </a>
+                                                </Link>
                                             ) || (
                                                     <span className="text-zinc-700 text-sm italic font-medium flex items-center gap-2">
                                                         <HiOutlinePhone />

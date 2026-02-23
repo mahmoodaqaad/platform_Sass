@@ -8,24 +8,8 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { Link } from "@/i18n/routing"
 import { useTranslations } from "next-intl"
+import { Settings } from "@/lib/types"
 
-interface TiersConfig {
-    [key: string]: {
-        services: number;
-        members: number;
-        appointments: number;
-    }
-}
-
-interface Settings {
-    platformName: string;
-    supportEmail: string;
-    supportPhone: string;
-    registrationOpen: boolean;
-    currency: string;
-    commissionRate: number;
-    tiersConfig: TiersConfig;
-}
 
 const AdminSettings = () => {
     const t = useTranslations("D.admin.settings");

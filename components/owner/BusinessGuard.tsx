@@ -3,16 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { HiOutlineExclamationCircle, HiOutlineClock, HiOutlineBan, HiOutlineTrash } from "react-icons/hi";
 import { motion } from "framer-motion";
+import { BusinessGuardProps, BusinessStatus } from "@/lib/types";
 
-interface BusinessGuardProps {
-    children: React.ReactNode;
-}
-
-interface BusinessStatus {
-    exists: boolean;
-    status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING";
-    name?: string;
-}
 
 export default function BusinessGuard({ children }: BusinessGuardProps) {
     const [statusData, setStatusData] = useState<BusinessStatus | null>(null);

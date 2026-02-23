@@ -19,32 +19,9 @@ import { MdOutlineWorkOutline, MdCalendarMonth } from "react-icons/md"
 import Input from "@/components/ui/Input"
 import Select from "@/components/ui/Select"
 import { useTranslations, useLocale } from "next-intl"
+import { BusinessDetail } from "@/lib/types"
 
-interface BusinessDetail {
-    id: string
-    name: string
-    slug: string
-    plan: string
-    planActive: boolean
-    subscriptionStart: string
-    subscriptionEnd: string | null
-    status: string
-    type: string
-    description: string | null
-    address: string | null
-    phone: string | null
-    logo: string | null
-    createdAt: string
-    owner: {
-        name: string
-        email: string
-    }
-    _count: {
-        services: number
-        members: number
-        appointments: number
-    }
-}
+
  
 export default function BusinessDetailPage() {
     const { id } = useParams()

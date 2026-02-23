@@ -15,22 +15,10 @@ import axios from "axios";
 import SubscriptionWarning from "@/components/owner/SubscriptionWarning";
 import { toast } from "react-toastify"
 import { useTranslations, useLocale } from "next-intl";
+import { AppointmentData, BusinessData } from "@/lib/types";
+import { Link } from "@/i18n/routing";
 
-interface BusinessData {
-    name: string;
-    plan: string;
-    subscriptionEnd: string | null;
-    remindersEnabled?: boolean;
-    marketingAutomation?: boolean;
-}
 
-interface AppointmentData {
-    id: string;
-    customer: { name: string };
-    service: { name: string };
-    startTime: string;
-    status: 'CONFIRMED' | 'PENDING' | 'CANCELLED';
-}
 
 export default function OwnerDashboard() {
     const t = useTranslations("D.owner.overview");
@@ -152,23 +140,32 @@ export default function OwnerDashboard() {
                     subscriptionEnd={business.subscriptionEnd}
                 />
             )}
-
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {statCards.map((stat, i) => (
-                    <div key={i} className="p-8 rounded-4xl bg-zinc-900 border border-white/5 hover:border-indigo-500/20 transition-all group">
-                        <p className="text-zinc-500 font-bold text-xs uppercase tracking-widest mb-4">{stat.name}</p>
-                        <div className="flex items-end justify-between">
-                            <h3 className="text-3xl font-black text-white tracking-tight">{stat.value}</h3>
-                            {stat.change && (
-                                <div className={`flex items-center gap-1 text-xs font-black ${stat.color} bg-white/5 px-3 py-1 rounded-full border border-white/5`}>
-                                    {stat.trend === "up" ? <HiArrowSmUp /> : stat.trend === "down" ? <HiArrowSmDown /> : null}
-                                    {stat.change}
-                                </div>
-                            )}
+                {statCards.map((stat, i) => {
+                    const CardContent = (
+                        <div className="p-8 rounded-4xl bg-zinc-900 border border-white/5 hover:border-indigo-500/20 transition-all group h-full cursor-pointer">
+                            <p className="text-zinc-500 font-bold text-xs uppercase tracking-widest mb-4">{stat.name}</p>
+                            <div className="flex items-end justify-between">
+                                <h3 className="text-3xl font-black text-white tracking-tight">{stat.value}</h3>
+                                {stat.change && (
+                                    <div className={`flex items-center gap-1 text-xs font-black ${stat.color} bg-white/5 px-3 py-1 rounded-full border border-white/5`}>
+                                        {stat.trend === "up" ? <HiArrowSmUp /> : stat.trend === "down" ? <HiArrowSmDown /> : null}
+                                        {stat.change}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+
+                    return stat.name === tStats("revenue") ? (
+                        <Link key={i} href="/owner/revenue" className="block transform hover:scale-[1.02] transition-transform">
+                            {CardContent}
+                        </Link>
+                    ) : (
+                        <div key={i}>{CardContent}</div>
+                    );
+                })}
             </div>
 
             <div className="grid lg:grid-cols-3 gap-8">
@@ -193,11 +190,11 @@ export default function OwnerDashboard() {
                                         <div>
                                             <div className="flex items-center gap-3 mb-1">
                                                 <p className="text-white font-bold text-lg">{app.customer?.name || "Unknown"}</p>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter ${app.status === 'CONFIRMED' ? 'bg-emerald-500/10 text-emerald-400' :
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter ${app.status === 'CONFIRMED' || app.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-400' :
                                                     app.status === 'PENDING' ? 'bg-amber-500/10 text-amber-400' :
                                                         'bg-zinc-500/10 text-zinc-400'
                                                     }`}>
-                                                    {tAppStatus(app.status.toLowerCase() as any)}
+                                                    {tAppStatus(app.status?.toLowerCase() as any || 'pending')}
                                                 </span>
                                             </div>
                                             <p className="text-zinc-500 font-medium text-sm flex items-center gap-2">

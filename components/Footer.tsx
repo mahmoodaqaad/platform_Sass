@@ -5,14 +5,9 @@ import Link from "next/link";
 import axios from "axios";
 import { SiTeal, SiLinkedin, SiGithub, SiWhatsapp } from "react-icons/si";
 import { useTranslations } from "next-intl";
+import { PublicSettings } from "@/lib/types";
 
-interface PublicSettings {
-    platformName: string;
-    supportEmail: string;
-    supportPhone: string;
-    currency: string;
-    tiersConfig: Record<string, any>;
-}
+
 
 const Footer = () => {
     const [settings, setSettings] = React.useState<PublicSettings | null>(null);

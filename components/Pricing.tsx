@@ -6,15 +6,9 @@ import { HiCheck, HiStar } from "react-icons/hi";
 import axios from "axios";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
+import { Tier } from "@/lib/types";
 
-interface Tier {
-    name: string;
-    price: string | number;
-    description: string;
-    features: string[];
-    button: string;
-    popular: boolean;
-}
+
 
 const Pricing = () => {
     const [plans, setPlans] = useState<Tier[]>([]);

@@ -8,33 +8,9 @@ import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Modles from '@/components/Modles'
 import { useTranslations, useLocale } from 'next-intl'
+import { Business, User } from '@/lib/types'
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    createdAt: string;
-    ownedBusinesses?: {
-        id: string;
-        name: string;
-        slug: string;
-        type: string;
-    }[];
-    memberships?: {
-        businessId: string;
-        business: {
-            id: string;
-            name: string;
-        };
-    }[];
-}
 
-interface Business {
-    id: string;
-    name: string;
-    slug: string;
-}
 
 const AdminUsers = () => {
     const t = useTranslations("D.admin.users");

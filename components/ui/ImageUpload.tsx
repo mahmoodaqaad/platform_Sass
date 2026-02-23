@@ -4,15 +4,11 @@ import React, { useState } from "react";
 import { HiOutlineCloudUpload, HiOutlineX, HiOutlinePhotograph } from "react-icons/hi";
 import Image from "next/image";
 import axios from "axios";
+import { UploadProps } from "@/lib/types";
 
-interface ImageUploadProps {
-    value: string;
-    onChange: (value: string) => void;
-    onUploading?: (uploading: boolean) => void;
-    label?: string;
-}
 
-const ImageUpload = ({ value, onChange, onUploading, label = "صورة الخدمة" }: ImageUploadProps) => {
+
+const ImageUpload = ({ value, onChange, onUploading, label = "صورة الخدمة" }: UploadProps) => {
     const [uploading, setUploading] = useState(false);
     const [preview, setPreview] = useState(value);
 

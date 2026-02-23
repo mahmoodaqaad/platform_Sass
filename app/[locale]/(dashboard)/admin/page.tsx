@@ -6,25 +6,9 @@ import { HiOutlineOfficeBuilding } from 'react-icons/hi'
 import axios from 'axios'
 import { motion } from 'framer-motion'
 import { useTranslations, useLocale } from 'next-intl'
+import { RecentUser, Stat } from '@/lib/types'
 
-interface Stat {
-    name: string;
-    value: string;
-    icon: any;
-    color: string;
-    bg: string;
-    change?: string;
-    active?: number;
-    type: string;
-}
 
-interface RecentUser {
-    id: string;
-    name: string;
-    role: string;
-    status: string;
-    createdAt: string;
-}
 
 const AdminOverview = () => {
     const t = useTranslations("D.admin.overview");
@@ -35,6 +19,14 @@ const AdminOverview = () => {
     const [health, setHealth] = useState({ database: 0, responseTime: "0ms", dbLatency: "0ms", integrityScore: 100 })
     const [loading, setLoading] = useState(true)
 
+    interface ApiStat {
+        name: string;
+        value: string;
+        type: string;
+        change?: number;
+        active?: number;
+    }
+
     useEffect(() => {
         const fetchStats = async () => {
             try {
@@ -43,8 +35,8 @@ const AdminOverview = () => {
                 const { stats: apiStats, recentUsers: apiUsers, health: apiHealth } = res.data
 
                 // Map icons and colors to backend data
-                const mappedStats = apiStats.map((s: any) => {
-                    const base = { name: s.name, value: s.value, type: s.type }
+                const mappedStats = apiStats.map((s: ApiStat) => {
+                    const base = { name: s.name, value: s.value, type: s.type } as Stat;
                     if (s.type === "users") return { ...base, icon: HiOutlineUserGroup, color: "text-blue-400", bg: "bg-blue-500/10", change: s.change }
                     if (s.type === "businesses") return { ...base, icon: HiOutlineOfficeBuilding, color: "text-indigo-400", bg: "bg-indigo-500/10", active: s.active }
                     if (s.type === "revenue") return { ...base, icon: HiOutlineCurrencyDollar, color: "text-emerald-400", bg: "bg-emerald-500/10" }
@@ -85,38 +77,49 @@ const AdminOverview = () => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="p-8 rounded-[2rem] bg-zinc-900 border border-white/5 hover:border-indigo-500/20 transition-all group"
-                    >
-                        <div className={`w-14 h-14 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mb-6 border border-white/5`}>
-                            {stat.icon && <stat.icon className="text-2xl" />}
-                        </div>
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-zinc-500 font-bold text-xs uppercase tracking-widest mb-1">
-                                    {t(`stats.${stat.type}` as any)}
-                                </p>
-                                <h3 className="text-3xl font-black text-white">{stat.value}</h3>
+                {stats.map((stat, i) => {
+                    const CardContent = (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="p-8 rounded-[2rem] bg-zinc-900 border border-white/5 hover:border-indigo-500/20 transition-all group h-full"
+                        >
+                            <div className={`w-14 h-14 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mb-6 border border-white/5`}>
+                                {stat.icon && <stat.icon className="text-2xl" />}
                             </div>
-                            {stat.change && (
-                                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-lg font-black">
-                                    {t("stats.thisMonth", {count:stat.change})}
-                                </span>
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="text-zinc-500 font-bold text-xs uppercase tracking-widest mb-1">
+                                        {t(`stats.${stat.type}` as "stats.users" | "stats.businesses" | "stats.revenue" | "stats.growth")}
+                                    </p>
+                                    <h3 className="text-3xl font-black text-white">{stat.value}</h3>
+                                </div>
+                                {stat.change && (
+                                    <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-lg font-black">
+                                        {t("stats.thisMonth", { count: stat.change })}
+                                    </span>
+                                )}
+                            </div>
+                            {stat.active !== undefined && (
+                                <p className="text-[10px] text-zinc-600 mt-4 font-bold flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                                    {t("stats.activeNow", { count: stat.active })}
+                                </p>
                             )}
-                        </div>
-                        {stat.active !== undefined && (
-                            <p className="text-[10px] text-zinc-600 mt-4 font-bold flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                                {t("stats.activeNow", { count: stat.active })}
-                            </p>
-                        )}
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    );
+
+                    if (stat.type === "revenue") {
+                        return (
+                            <Link key={i} href="/admin/revenue" className="block h-full">
+                                {CardContent}
+                            </Link>
+                        );
+                    }
+
+                    return <div key={i}>{CardContent}</div>;
+                })}
             </div>
 
             <div className="grid lg:grid-cols-3 gap-8">
@@ -143,7 +146,7 @@ const AdminOverview = () => {
                                         <h4 className="text-white font-bold group-hover:text-indigo-300 transition-colors">{user.name}</h4>
                                         <div className="flex items-center gap-2 mt-0.5">
                                             <span className="text-zinc-600 text-[10px] font-black uppercase tracking-widest">
-                                                {tRoles(user.role.toLowerCase() as any)}
+                                                {tRoles(user.role.toLowerCase() as 'admin' | 'owner' | 'staff' | 'customer')}
                                             </span>
                                             <span className="w-1 h-1 bg-zinc-700 rounded-full" />
                                             <span className="text-zinc-600 text-[10px] font-medium">{new Date(user.createdAt).toLocaleDateString(locale)}</span>
