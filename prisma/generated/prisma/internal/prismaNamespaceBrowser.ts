@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Business: 'Business',
+  BusinessSection: 'BusinessSection',
   Member: 'Member',
   Service: 'Service',
   Appointment: 'Appointment',
@@ -112,10 +113,27 @@ export const BusinessScalarFieldEnum = {
   AllPaied: 'AllPaied',
   status: 'status',
   marketingAutomation: 'marketingAutomation',
-  remindersEnabled: 'remindersEnabled'
+  remindersEnabled: 'remindersEnabled',
+  templateId: 'templateId',
+  themeColor: 'themeColor'
 } as const
 
 export type BusinessScalarFieldEnum = (typeof BusinessScalarFieldEnum)[keyof typeof BusinessScalarFieldEnum]
+
+
+export const BusinessSectionScalarFieldEnum = {
+  id: 'id',
+  businessId: 'businessId',
+  type: 'type',
+  title: 'title',
+  content: 'content',
+  images: 'images',
+  order: 'order',
+  isActive: 'isActive',
+  settings: 'settings'
+} as const
+
+export type BusinessSectionScalarFieldEnum = (typeof BusinessSectionScalarFieldEnum)[keyof typeof BusinessSectionScalarFieldEnum]
 
 
 export const MemberScalarFieldEnum = {

@@ -77,7 +77,6 @@ export default function ServicesPage() {
             const url = "/api/services";
             const method = editingService ? "PATCH" : "POST";
             const payload = editingService ? { ...formData, id: editingService.id } : formData;
-
             const res = await fetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
@@ -223,8 +222,10 @@ export default function ServicesPage() {
 
             {/* Empty State */}
             {services.length === 0 && !loading && (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <div className="w-24 h-24 bg-zinc-900/50 rounded-full flex items-center justify-center mb-6 text-zinc-800 border-2 border-dashed border-zinc-800">
+                <div className="flex flex-col items-center justify-center py-20 text-center cursor-pointer">
+                    <div onClick={() => {
+                        setShowModal(true)
+                    }} className="w-24 h-24 bg-zinc-900/50 rounded-full flex items-center justify-center mb-6 text-zinc-800 border-2 border-dashed border-zinc-800">
                         <HiPlus className="text-4xl" />
                     </div>
                     <h3 className="text-2xl font-black text-white">{tEmpty("title")}</h3>
@@ -274,7 +275,7 @@ export default function ServicesPage() {
                                     <Input label={tModal("duration")} icon={<HiClock />} type="number" value={formData.duration} onChange={(e) => setFormData({ ...formData, duration: e.target.value })} required />
                                     <Input label={tModal("price")} icon={<HiCurrencyDollar />} type="number" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} required />
                                 </div>
-                                <Button type="submit" isLoading={isUploading} disabled={isUploading} className="w-full py-4 text-sm font-black bg-indigo-600 hover:bg-indigo-500">
+                                <Button type="submit" isLoading={isUploading} disabled={isUploading} className="w-full py-4 text-sm font-black bg-indigo-600 hover:bg-indigo-500" theme={""}>
                                     {editingService ? tModal("update") : tModal("save")}
                                 </Button>
                             </form>

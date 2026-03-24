@@ -23,6 +23,7 @@
         "success": "تم بنجاح",
         "pricing": "الباقات",
         "contact": "تواصل معنا",
+        "explore": "استكشف",
         "Modals": {
             "delete": {
                 "title": "هل أنت متأكد؟",
@@ -46,7 +47,8 @@
         "customerList": "قائمة العملاء",
         "businesses": "الأعمال",
         "orgSettings": "إعدادات المنظمة",
-        "settings": "الاعدادات"
+        "settings": "الاعدادات",
+        "websiteBuilder": "منشئ الموقع"
     },
     "Roles": {
         "admin": "المدير العام",
@@ -106,7 +108,17 @@
         "growth": "النمو",
         "global": "عالمي",
         "nexus": "ترابط",
-        "secure": "آمن"
+        "secure": "آمن",
+        "demoSuccess": "تم محاكاة الحجز بنجاح!",
+        "demoLive": "عرض حي",
+        "goToDashboard": "الذهاب للوحة التحكم",
+        "viewPricing": "مشاهدة الباقات",
+        "selectService": "اختر الخدمة لتجربة الحجز",
+        "services": {
+            "consultation": "استشارة تقنية",
+            "design": "تصميم هويّة",
+            "maintenance": "صيانة أنظمة"
+        }
     },
     "Landing": {
         "Features": {
@@ -141,27 +153,33 @@
             }
         },
         "Pricing": {
-            "titlePrefix": "خطة",
-            "titleHighlight": "الأسعار المناسبة لك",
-            "subtitle": "ابدأ مجاناً وقم بالترقية مع نمو عملك. لا توجد رسوم خفية.",
-            "mostPopular": "الأكثر شعبية",
+            "titlePrefix": "خطط تناسب",
+            "titleHighlight": "طموحك",
+            "subtitle": "اختر الخطة المناسبة لعملك وابدأ اليوم. يمكنك الترقية أو الإلغاء في أي وقت.",
+            "mostPopular": "الأكثر رواجاً",
             "month": "/شهرياً",
+            "upgrade": "ترقية الآن",
+            "currentPlan": "خطتك الحالية",
             "plans": {
                 "basic": {
                     "name": "Basic",
+                    "price": "0",
                     "description": "مثالية للمشاريع الصغيرة والبدايات.",
                     "button": "ابدأ مجاناً",
                     "features": {
                         "services": "حتى {services} خدمات",
                         "members": "{members} موظفين",
                         "appointments": "{appointments} حجز شهرياً",
-                        "support": "دعم مجتمعي"
+                        "support": "دعم مجتمعي",
+                        "limit_staff": "موظف واحد (المالك)",
+                        "limit_services": "خدمتين كحد أقصى"
                     }
                 },
                 "pro": {
                     "name": "Pro",
+                    "price": "49",
                     "description": "الحزمة المتكاملة للنمو والتوسع.",
-                    "button": "جرب Pro مجاناً",
+                    "button": "اشترك الآن",
                     "features": {
                         "services": "حتى {services} خدمات",
                         "members": "{members} موظفين",
@@ -172,6 +190,7 @@
                 },
                 "business": {
                     "name": "Business",
+                    "price": "99",
                     "description": "حلول متكاملة للشركات المتوسطة والكبری.",
                     "button": "اشترك الآن",
                     "features": {
@@ -709,6 +728,10 @@
                     "phone": "رقم الهاتف",
                     "address": "العنوان",
                     "descriptionLabel": "وصف العمل",
+                    "slug": "رابط العمل",
+                    "defaultLanguage": "لغة الصفحة العامة",
+                    "arabic": "العربية",
+                    "english": "الإنجليزية",
                     "descriptionPlaceholder": "اكتب وصفاً مختصراً لعملك...",
                     "save": "حفظ التغييرات"
                 },
@@ -761,6 +784,32 @@
                         "date": "التاريخ",
                         "status": "الحالة"
                     }
+                }
+            },
+            "websiteBuilder": {
+                "title": "منشئ الموقع",
+                "subtitle": "قم بتخصيص صفحة الحجز العامة الخاصة بك",
+                "template": "قالب التصميم",
+                "themeColor": "اللون الأساسي",
+                "sections": "الأقسام المخصصة",
+                "addSection": "إضافة قسم جديد",
+                "modern": "عصري",
+                "classic": "كلاسيكي",
+                "save": "حفظ التغييرات",
+                "success": "تم حفظ التغييرات بنجاح",
+                "error": "حدث خطأ أثناء الحفظ",
+                "sectionType": "نوع القسم",
+                "sectionTitle": "عنوان القسم",
+                "sectionContent": "المحتوى",
+                "cancel": "إلغاء",
+                "edit": "تعديل",
+                "delete": "حذف",
+                "types": {
+                    "HERO": "القسم الرئيسي (Hero)",
+                    "ABOUT": "من نحن",
+                    "GALLERY": "معرض الصور",
+                    "TESTIMONIALS": "آراء العملاء",
+                    "SERVICES": "الخدمات"
                 }
             }
         },
@@ -827,6 +876,49 @@
         "page": {
             "title": "تواصل معنا",
             "subtitle": "هل لديك أسئلة؟ نحن هنا لمساعدتك في بناء مستقبل عملك."
+        }
+    },
+    "Onboarding": {
+        "title": "إنشاء النشاط التجاري",
+        "subtitle": "قم بإعداد نشاطك التجاري للبدء",
+        "freeBadge": "باقة مجانية",
+        "fields": {
+            "name": "اسم النشاط",
+            "slug": "الرابط المخصص (Slug)",
+            "description": "الوصف",
+            "phone": "رقم الهاتف",
+            "address": "العنوان"
+        },
+        "typeLabel": "نوع النشاط",
+        "types": {
+            "SALON": "صالون",
+            "CLINIC": "عيادة",
+            "SPA": "سبا",
+            "GYM": "نادي رياضي",
+            "RESTAURANT": "مطعم",
+            "HOTEL": "فندق",
+            "STORE": "متجر",
+            "OTHER": "آخر"
+        },
+        "submit": "إنشاء النشاط التجاري",
+        "unexpectedError": "حدث خطأ غير متوقع."
+    },
+    "Explore": {
+        "title": "استكشف أفضل الأعمال",
+        "subtitle": "ابحث عن الخدمات التي تحتاجها واحجز موعدك بسهولة",
+        "searchPlaceholder": "ابحث باسم العمل أو الوصف...",
+        "allCategories": "الكل",
+        "visitWebsite": "زيارة الموقع",
+        "noResults": "لم يتم العثور على نتائج للبحث الحالي",
+        "categories": {
+            "SALON": "صالونات",
+            "CLINIC": "عيادات",
+            "SPA": "سبا",
+            "GYM": "صالات رياضية",
+            "RESTAURANT": "مطاعم",
+            "HOTEL": "فنادق",
+            "STORE": "متاجر",
+            "OTHER": "أخرى"
         }
     }
 }

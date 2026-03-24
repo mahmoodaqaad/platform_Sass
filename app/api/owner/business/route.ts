@@ -38,6 +38,7 @@ export const GET = async (req: NextRequest) => {
                 marketingAutomation: true,
                 status: true,
                 type: true,
+                // defaultLanguage: true,
                 _count: {
                     select: {
                         services: true,
@@ -53,6 +54,7 @@ export const GET = async (req: NextRequest) => {
         return NextResponse.json(business);
     } catch (error) {
         console.error("Fetch owner business error:", error);
+
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
 };
@@ -63,13 +65,16 @@ export const PATCH = async (req: NextRequest) => {
 
     try {
         const data = await req.json();
-        const { name, description, address, phone, logo, remindersEnabled, marketingAutomation } = data;
+        const { name, description, address, phone, slug, logo, remindersEnabled, marketingAutomation, defaultLanguage } = data;
 
         const business = await prisma.business.findFirst({
             where: { ownerId }
         });
 
         if (!business) return NextResponse.json({ message: "Business not found" }, { status: 404 });
+
+        const isSlugExist = await prisma.business.findFirst({ where: { slug, NOT: { id: business.id } } })
+        if (isSlugExist) return NextResponse.json({ message: "هذا الرابط مستخدم " }, { status: 400 });
 
         const updated = await prisma.business.update({
             where: { id: business.id },
@@ -78,9 +83,11 @@ export const PATCH = async (req: NextRequest) => {
                 description,
                 address,
                 phone,
+                slug,
                 logo,
                 remindersEnabled,
-                marketingAutomation
+                marketingAutomation,
+                // defaultLanguage
             }
         });
 

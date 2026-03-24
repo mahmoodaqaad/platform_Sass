@@ -13,7 +13,8 @@ import {
     HiUsers,
     HiCog,
     HiShieldCheck,
-    HiOutlineOfficeBuilding
+    HiOutlineOfficeBuilding,
+    HiOutlineGlobeAlt
 } from "react-icons/hi";
 import Logout from "../Logout";
 import { User } from "@/prisma/generated/prisma/client";
@@ -55,6 +56,7 @@ const Sidebar = () => {
                 { name: t("services"), icon: <HiShoppingBag />, href: "/owner/services" },
                 { name: t("staff"), icon: <HiUsers />, href: "/owner/staff" },
                 { name: t("customers"), icon: <HiUsers />, href: "/owner/customers" },
+                { name: t("websiteBuilder"), icon: <HiOutlineGlobeAlt />, href: "/owner/website" },
                 { name: t("settings"), icon: <HiCog />, href: "/owner/settings" },
             ];
         }
@@ -87,10 +89,10 @@ const Sidebar = () => {
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 className="absolute -right-3 top-10 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white border-2 border-zinc-950 z-20 hover:scale-110 transition-transform"
             >
-        
 
-                    <HiChevronLeft className={`transition-transform duration-300  ${isCollapsed ? 'rotate-180' : ''}`} />
-                
+
+                <HiChevronLeft className={`transition-transform duration-300  ${isCollapsed ? 'rotate-180' : ''}`} />
+
             </button>
 
             {/* Brand */}

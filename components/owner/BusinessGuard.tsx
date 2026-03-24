@@ -9,7 +9,7 @@ import { BusinessGuardProps, BusinessStatus } from "@/lib/types";
 export default function BusinessGuard({ children }: BusinessGuardProps) {
     const [statusData, setStatusData] = useState<BusinessStatus | null>(null);
     const [loading, setLoading] = useState(true);
-
+    console.log(statusData);
     useEffect(() => {
         const checkStatus = async () => {
             try {
@@ -56,9 +56,9 @@ export default function BusinessGuard({ children }: BusinessGuardProps) {
                 >
                     <HiOutlineTrash className="text-5xl" />
                 </motion.div>
-                <h2 className="text-3xl font-black text-white mb-4">العمل غير موجود</h2>
+                <h2 className="text-3xl font-black text-white mb-4">العمل غير موجود او هناك مشكلة في السيرفر</h2>
                 <p className="text-zinc-500 max-w-md text-lg leading-relaxed">
-                    يبدو أن هذا العمل تم حذفه من النظام. لا يمكنك الوصول إلى لوحة التحكم حالياً.
+                    يبدو أن هذا العمل تم حذفه من النظام او هناك مشكلة في السيرفر. لا يمكنك الوصول إلى لوحة التحكم حالياً.
                     يرجى التواصل مع الدعم الفني إذا كنت تعتقد أن هذا خطأ.
                 </p>
             </div>

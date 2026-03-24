@@ -33,7 +33,6 @@ export default function OwnerDashboard() {
     const [recentAppointments, setRecentAppointments] = useState<AppointmentData[]>([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState<any>(null);
-
     const fetchData = async () => {
         try {
             const [bizRes, statsRes, appointmentsRes] = await Promise.all([
@@ -41,6 +40,8 @@ export default function OwnerDashboard() {
                 axios.get("/api/owner/stats"),
                 axios.get("/api/owner/appointments?limit=8")
             ]);
+            console.log(statsRes);
+            
             setBusiness(bizRes.data);
             setStats(statsRes.data);
             setRecentAppointments(appointmentsRes.data.appointments || []);
@@ -176,7 +177,7 @@ export default function OwnerDashboard() {
                             <HiSparkles className="text-indigo-400" />
                             {tRecent("title")}
                         </h3>
-                        <button className="text-zinc-500 text-xs font-black uppercase hover:text-white transition-colors tracking-widest">{tRecent("viewAll")}</button>
+                        <Link href={"/owner/appointments"} className="text-zinc-500 text-xs font-black uppercase hover:text-blue-500 transition-colors tracking-widest">{tRecent("viewAll")}</Link>
                     </div>
 
                     {recentAppointments.length > 0 ? (

@@ -23,6 +23,7 @@
         "success": "Success",
         "pricing": "Pricing",
         "contact": "Contact",
+        "explore": "Explore",
         "Modals": {
             "delete": {
                 "title": "Are you sure?",
@@ -46,7 +47,8 @@
         "customerList": "Customer List",
         "businesses": "Businesses",
         "orgSettings": "Organization Settings",
-        "settings": "Settings"
+        "settings": "Settings",
+        "websiteBuilder": "Website Builder"
     },
     "Roles": {
         "admin": "General Manager",
@@ -106,7 +108,17 @@
         "growth": "Growth",
         "global": "GLOBAL",
         "nexus": "NEXUS",
-        "secure": "SECURE"
+        "secure": "SECURE",
+        "demoSuccess": "Booking simulated successfully!",
+        "demoLive": "LIVE DEMO",
+        "goToDashboard": "Go to Dashboard",
+        "viewPricing": "View Pricing",
+        "selectService": "Select a service to test the flow",
+        "services": {
+            "consultation": "Tech Consultation",
+            "design": "Brand Design",
+            "maintenance": "System Audit"
+        }
     },
     "Landing": {
         "Features": {
@@ -141,27 +153,33 @@
             }
         },
         "Pricing": {
-            "titlePrefix": "Pricing",
-            "titleHighlight": "Plan",
-            "subtitle": "Start free and upgrade as you grow. No hidden fees.",
+            "titlePrefix": "Plans that fit",
+            "titleHighlight": "Your Ambition",
+            "subtitle": "Choose the right plan for your business and start today. Upgrade or cancel anytime.",
             "mostPopular": "Most Popular",
             "month": "/month",
+            "upgrade": "Upgrade Now",
+            "currentPlan": "Current Plan",
             "plans": {
                 "basic": {
                     "name": "Basic",
+                    "price": "0",
                     "description": "Perfect for small projects and starters.",
                     "button": "Start for Free",
                     "features": {
                         "services": "Up to {services} services",
                         "members": "{members} staff members",
                         "appointments": "{appointments} bookings/mo",
-                        "support": "Community Support"
+                        "support": "Community Support",
+                        "limit_staff": "1 member (Owner)",
+                        "limit_services": "Max 2 services"
                     }
                 },
                 "pro": {
                     "name": "Pro",
+                    "price": "49",
                     "description": "The complete package for growth and scaling.",
-                    "button": "Try Pro Free",
+                    "button": "Subscribe Now",
                     "features": {
                         "services": "Up to {services} services",
                         "members": "{members} staff members",
@@ -172,6 +190,7 @@
                 },
                 "business": {
                     "name": "Business",
+                    "price": "99",
                     "description": "Complete solutions for mid-to-large companies.",
                     "button": "Subscribe Now",
                     "features": {
@@ -708,6 +727,10 @@
                     "name": "Business Name",
                     "phone": "Phone Number",
                     "address": "Address",
+                    "slug": "slug",
+                    "defaultLanguage": "Public Page Language",
+                    "arabic": "Arabic",
+                    "english": "English",
                     "descriptionLabel": "Business Description",
                     "descriptionPlaceholder": "Write a short description of your business...",
                     "save": "Save Changes"
@@ -761,6 +784,32 @@
                         "date": "Date",
                         "status": "Status"
                     }
+                }
+            },
+            "websiteBuilder": {
+                "title": "Website Builder",
+                "subtitle": "Customize your public booking page",
+                "template": "Design Template",
+                "themeColor": "Theme Color",
+                "sections": "Custom Sections",
+                "addSection": "Add New Section",
+                "modern": "Modern",
+                "classic": "Classic",
+                "save": "Save Changes",
+                "success": "Changes saved successfully",
+                "error": "Error saving changes",
+                "sectionType": "Section Type",
+                "sectionTitle": "Section Title",
+                "sectionContent": "Content",
+                "cancel": "Cancel",
+                "edit": "Edit",
+                "delete": "Delete",
+                "types": {
+                    "HERO": "Hero Section",
+                    "ABOUT": "About Us",
+                    "GALLERY": "Gallery",
+                    "TESTIMONIALS": "Testimonials",
+                    "SERVICES": "Services"
                 }
             }
         },
@@ -827,6 +876,49 @@
         "page": {
             "title": "Contact Us",
             "subtitle": "Have questions? We're here to help you build the future of your business."
+        }
+    },
+    "Onboarding": {
+        "title": "Create your business",
+        "subtitle": "Set up your business to get started",
+        "freeBadge": "FREE PLAN",
+        "fields": {
+            "name": "Business Name",
+            "slug": "Custom URL (Slug)",
+            "description": "Description",
+            "phone": "Phone Number",
+            "address": "Address"
+        },
+        "typeLabel": "Business Type",
+        "types": {
+            "SALON": "Salon",
+            "CLINIC": "Clinic",
+            "SPA": "Spa",
+            "GYM": "Gym",
+            "RESTAURANT": "Restaurant",
+            "HOTEL": "Hotel",
+            "STORE": "Store",
+            "OTHER": "Other"
+        },
+        "submit": "Create Business",
+        "unexpectedError": "An unexpected error occurred."
+    },
+    "Explore": {
+        "title": "Explore Best Businesses",
+        "subtitle": "Find the services you need and book your appointment easily",
+        "searchPlaceholder": "Search by business name or description...",
+        "allCategories": "All",
+        "visitWebsite": "Visit Website",
+        "noResults": "No results found for your search",
+        "categories": {
+            "SALON": "Salons",
+            "CLINIC": "Clinics",
+            "SPA": "Spa",
+            "GYM": "Gym",
+            "RESTAURANT": "Restaurants",
+            "HOTEL": "Hotels",
+            "STORE": "Store",
+            "OTHER": "Other"
         }
     }
 }

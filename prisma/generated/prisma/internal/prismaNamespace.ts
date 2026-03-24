@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Business: 'Business',
+  BusinessSection: 'BusinessSection',
   Member: 'Member',
   Service: 'Service',
   Appointment: 'Appointment',
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "business" | "member" | "service" | "appointment" | "product" | "order" | "orderItem" | "customer" | "globalSettings"
+    modelProps: "user" | "business" | "businessSection" | "member" | "service" | "appointment" | "product" | "order" | "orderItem" | "customer" | "globalSettings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -558,6 +559,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BusinessCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BusinessCountAggregateOutputType> | number
+        }
+      }
+    }
+    BusinessSection: {
+      payload: Prisma.$BusinessSectionPayload<ExtArgs>
+      fields: Prisma.BusinessSectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BusinessSectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BusinessSectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>
+        }
+        findFirst: {
+          args: Prisma.BusinessSectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BusinessSectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>
+        }
+        findMany: {
+          args: Prisma.BusinessSectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>[]
+        }
+        create: {
+          args: Prisma.BusinessSectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>
+        }
+        createMany: {
+          args: Prisma.BusinessSectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BusinessSectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>[]
+        }
+        delete: {
+          args: Prisma.BusinessSectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>
+        }
+        update: {
+          args: Prisma.BusinessSectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.BusinessSectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BusinessSectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BusinessSectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.BusinessSectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BusinessSectionPayload>
+        }
+        aggregate: {
+          args: Prisma.BusinessSectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBusinessSection>
+        }
+        groupBy: {
+          args: Prisma.BusinessSectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BusinessSectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BusinessSectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BusinessSectionCountAggregateOutputType> | number
         }
       }
     }
@@ -1225,10 +1300,27 @@ export const BusinessScalarFieldEnum = {
   AllPaied: 'AllPaied',
   status: 'status',
   marketingAutomation: 'marketingAutomation',
-  remindersEnabled: 'remindersEnabled'
+  remindersEnabled: 'remindersEnabled',
+  templateId: 'templateId',
+  themeColor: 'themeColor'
 } as const
 
 export type BusinessScalarFieldEnum = (typeof BusinessScalarFieldEnum)[keyof typeof BusinessScalarFieldEnum]
+
+
+export const BusinessSectionScalarFieldEnum = {
+  id: 'id',
+  businessId: 'businessId',
+  type: 'type',
+  title: 'title',
+  content: 'content',
+  images: 'images',
+  order: 'order',
+  isActive: 'isActive',
+  settings: 'settings'
+} as const
+
+export type BusinessSectionScalarFieldEnum = (typeof BusinessSectionScalarFieldEnum)[keyof typeof BusinessSectionScalarFieldEnum]
 
 
 export const MemberScalarFieldEnum = {
@@ -1496,20 +1588,6 @@ export type ListEnumBusinessStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
- * Reference to a field of type 'MemberRole'
- */
-export type EnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole'>
-    
-
-
-/**
- * Reference to a field of type 'MemberRole[]'
- */
-export type ListEnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1520,6 +1598,34 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'MemberRole'
+ */
+export type EnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole'>
+    
+
+
+/**
+ * Reference to a field of type 'MemberRole[]'
+ */
+export type ListEnumMemberRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MemberRole[]'>
     
 
 
@@ -1548,20 +1654,6 @@ export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'OrderStatus[]'
  */
 export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1675,6 +1767,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   business?: Prisma.BusinessOmit
+  businessSection?: Prisma.BusinessSectionOmit
   member?: Prisma.MemberOmit
   service?: Prisma.ServiceOmit
   appointment?: Prisma.AppointmentOmit

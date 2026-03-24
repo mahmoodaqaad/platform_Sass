@@ -113,7 +113,7 @@ export default function BusinessesPage() {
     const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-      await axios.post("/api/admin/businesses", addForm)
+            await axios.post("/api/admin/businesses", addForm)
 
             setShowAddModal(false)
             setAddForm({ name: "", slug: "", ownerEmail: "", type: "", description: "", address: "", phone: "", status: "", logo: "", numMonth: "", plan: "" })

@@ -198,7 +198,7 @@ const CheckoutContent = () => {
                             </div>
                             <div className="flex justify-between items-center text-emerald-400 font-medium font-mono" dir="ltr">
                                 <span>Discount:</span>
-                                <span>-${(currentPlan.price * selectedDuration) - (currentPlan.price * selectedDuration - (durations.find(d => d.value === selectedDuration)?.discount || 0) * (currentPlan.price * selectedDuration) / 100)}.00</span>
+                                <span>-${((currentPlan.price * selectedDuration) - (currentPlan.price * selectedDuration - (durations.find(d => d.value === selectedDuration)?.discount || 0) * (currentPlan.price * selectedDuration) / 100)).toFixed(2)}</span>
                             </div>
                             {upgradeDiscount > 0 && (
                                 <div className="flex justify-between items-center text-amber-400 font-medium font-mono" dir="ltr">

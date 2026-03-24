@@ -20,13 +20,18 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
   const [userRole, setUserRole] = useState("");
   const [isRegistrationOpen, setIsRegistrationOpen] = useState<boolean | null>(null);
+  const [redirectAfter, setRedirectAfter] = useState<string | null>(null);
 
   React.useEffect(() => {
-    // Capture plan from URL
+    // Capture plan and redirect from URL
     const params = new URLSearchParams(window.location.search);
     const plan = params.get("plan");
+    const redirect = params.get("redirect");
     if (plan) {
       sessionStorage.setItem("selected_plan", plan);
+    }
+    if (redirect) {
+      setRedirectAfter(redirect);
     }
   }, []);
 
@@ -60,11 +65,18 @@ const Register = () => {
       setUserRole(user.role);
 
       setTimeout(() => {
-        // Redirection based on role
-        if (user.role === "ADMIN") router.push("/admin");
-        else if (user.role === "OWNER") router.push("/onboarding");
-        else if (user.role === "STAFF") router.push("/staff");
-        else router.push("/");
+        // Use redirect param if provided, otherwise fall back to role
+        if (redirectAfter) {
+          router.push(redirectAfter as never);
+        } else if (user.role === "ADMIN") {
+          router.push("/admin");
+        } else if (user.role === "OWNER") {
+          router.push("/onboarding");
+        } else if (user.role === "STAFF") {
+          router.push("/staff");
+        } else {
+          router.push("/");
+        }
       }, 1500);
     } catch (e: unknown) {
       console.error(e);

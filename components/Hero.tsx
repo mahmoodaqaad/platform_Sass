@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "@/i18n/routing";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import {
     HiArrowRight,
     HiChartBar,
@@ -13,12 +13,16 @@ import {
     HiGlobeAlt,
     HiLightningBolt,
     HiBriefcase,
-    HiShieldCheck
+    HiShieldCheck,
 } from "react-icons/hi";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
     const t = useTranslations("Hero");
+    const locale = useLocale();
+    const router = useRouter();
     const [platformName, setPlatformName] = React.useState("Platform");
+    const [user, setUser] = React.useState<{ role: string } | null>(null);
 
     React.useEffect(() => {
         const fetchSettings = async () => {
@@ -29,17 +33,52 @@ const Hero = () => {
                 console.error("Hero settings fetch error:", err);
             }
         };
+
+        const checkAuth = async () => {
+            try {
+                const res = await axios.get("/api/auth/me");
+                if (res.data.authenticated) {
+                    setUser(res.data.user);
+                }
+            } catch {
+                setUser(null);
+            }
+        };
+
         fetchSettings();
+        checkAuth();
     }, []);
+
+    const handleStartFree = async () => {
+        // Pre-select Basic plan in sessionStorage
+        sessionStorage.setItem("selected_plan", "BASIC");
+        sessionStorage.setItem("subscription_duration", "");
+        sessionStorage.setItem("user_allpaides", "0");
+
+        // If already logged in → go directly to onboarding
+        if (user) {
+            router.push(`/${locale}/onboarding`);
+        } else { 
+            // Not logged in → register first, then redirect to onboarding
+            router.push(`/${locale}/register?redirect=${locale}/onboarding`);
+        }
+    };
+
+    const getDashboardLink = () => {
+        if (!user) return null;
+        if (user.role === "ADMIN") return `${locale}/admin`;
+        if (user.role === "STAFF") return `${locale}/staff`;
+        if (user.role === "OWNER") return `${locale}/owner`;
+        return null;
+    };
+
+    const dashboardLink = getDashboardLink();
 
     return (
         <section className="relative min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden bg-[#050505] text-white">
-            {/* Background Gradients & Grid - Human-Made Feel */}
+            {/* Background Gradients & Grid */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {/* 1. Base Gradient Mesh */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] bg-linear-to-b from-indigo-500/10 via-transparent to-transparent opacity-60" />
-
-                {/* 2. Complex SVG Grid Pattern */}
                 <div
                     className="absolute inset-0 opacity-[0.15]"
                     style={{
@@ -54,8 +93,6 @@ const Hero = () => {
                         backgroundSize: '40px 40px'
                     }}
                 />
-
-                {/* 3. Interactive Glowing Junctions (Static for performance, but visually deep) */}
                 <div className="absolute inset-0">
                     {[20, 40, 60, 80].map((x) => (
                         [10, 30, 50, 70, 90].map((y) => (
@@ -67,8 +104,6 @@ const Hero = () => {
                         ))
                     ))}
                 </div>
-
-                {/* 4. Large Cinematic Glows */}
                 <div className="absolute -top-40 left-1/4 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse" />
                 <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[120px] animate-pulse [animation-delay:2s]" />
             </div>
@@ -112,18 +147,29 @@ const Hero = () => {
                         transition={{ duration: 0.6, delay: 0.3 }}
                         className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
                     >
+                        {dashboardLink ? (
+                            <Link
+                                href={dashboardLink}
+                                className="px-8 py-4 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group shadow-2xl shadow-white/5"
+                            >
+                                {t("goToDashboard")}
+                                <HiArrowRight className="group-hover:translate-x-1 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={handleStartFree}
+                                className="px-8 py-4 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group shadow-2xl shadow-white/5"
+                            >
+                                {t("getStartedFree")}
+                                <HiArrowRight className="group-hover:translate-x-1 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
+                            </button>
+                        )}
                         <Link
-                            href="/register"
-                            className="px-8 py-4 bg-white text-black hover:bg-zinc-200 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group shadow-2xl shadow-white/5"
+                            href="#pricing"
+                            className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 rounded-xl font-bold transition-all flex items-center justify-center gap-2 group"
                         >
-                            {t("getStartedFree")}
-                            <HiArrowRight className="group-hover:translate-x-1 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
-                        </Link>
-                        <Link
-                            href="#demo"
-                            className="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 rounded-xl font-bold transition-all flex items-center justify-center"
-                        >
-                            {t("requestDemo")}
+                            {t("viewPricing")}
+                            <HiChartBar className="group-hover:scale-110 transition-transform" />
                         </Link>
                     </motion.div>
 
@@ -141,14 +187,13 @@ const Hero = () => {
                     </motion.div>
                 </div>
 
-                {/* The "Human-Made" Dashboard Visual */}
+                {/* Dashboard Visual */}
                 <motion.div
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
                     className="relative mx-auto mt-10 max-w-6xl"
                 >
-                    {/* Main Dashboard Container */}
                     <div className="relative z-10 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden aspect-video flex">
                         {/* Sidebar */}
                         <div className="w-16 md:w-60 border-r border-zinc-900 bg-zinc-950/50 p-4 hidden md:flex flex-col gap-6">
@@ -166,7 +211,6 @@ const Hero = () => {
 
                         {/* Content Area */}
                         <div className="flex-1 p-6 md:p-10 flex flex-col gap-8">
-                            {/* Header */}
                             <div className="flex justify-between items-center">
                                 <div className="space-y-2">
                                     <div className="h-4 w-32 bg-zinc-800 rounded-full" />
@@ -178,7 +222,7 @@ const Hero = () => {
                                 </div>
                             </div>
 
-                            {/* Grid of Stats */}
+                            {/* Stats */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {[
                                     { label: t("activeUsers"), val: "12,402", icon: <HiUsers className="text-indigo-400" /> },
@@ -198,7 +242,7 @@ const Hero = () => {
                                 ))}
                             </div>
 
-                            {/* Main Chart Area */}
+                            {/* Chart */}
                             <div className="flex-1 rounded-2xl bg-zinc-900/30 border border-zinc-800/30 p-6 flex flex-col gap-4">
                                 <div className="flex justify-between">
                                     <div className="h-4 w-40 bg-zinc-800 rounded-full" />
@@ -214,7 +258,7 @@ const Hero = () => {
                                             initial={{ height: 0 }}
                                             animate={{ height: `${h}%` }}
                                             transition={{ duration: 1, delay: 1 + i * 0.05 }}
-                                            className="flex-1 bg-linear-to-t from-indigo-500 to-indigo-400/50 rounded-t-sm"
+                                            className="flex-1 rounded-t-sm bg-linear-to-t from-indigo-500 to-indigo-400/50"
                                         />
                                     ))}
                                 </div>
@@ -222,12 +266,12 @@ const Hero = () => {
                         </div>
                     </div>
 
-                    {/* Decorative Layers for Depth */}
+                    {/* Decorative Layers */}
                     <div className="absolute top-10 -right-10 w-full h-full border border-zinc-800 rounded-2xl -z-10 translate-x-4 translate-y-4 opacity-50" />
                     <div className="absolute top-10 -right-10 w-full h-full border border-zinc-800 rounded-2xl -z-20 translate-x-8 translate-y-8 opacity-20" />
                 </motion.div>
             </div>
-        </section >
+        </section>
     );
 };
 

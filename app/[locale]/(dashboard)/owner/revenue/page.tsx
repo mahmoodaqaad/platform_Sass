@@ -43,7 +43,7 @@ interface MonthlyData {
 }
 
 export default function RevenuePage() {
-    const t = useTranslations("D.owner.revenue");
+    const t = useTranslations("D.owner.settings.revenue");
     const locale = useLocale();
     const dateLocale = locale === 'ar' ? ar : enUS;
 

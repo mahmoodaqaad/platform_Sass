@@ -55,7 +55,7 @@ const Logout = ({ dash = true, setUser, isCollapsed }: { dash: boolean, setUser:
                                 <HiX className="text-4xl text-red-500" />
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-2">{t("logout.title")}</h3>
-                            <p className="text-zinc-400 mb-8 font-medium">{t("logout.subtitle") }</p>
+                            <p className="text-zinc-400 mb-8 font-medium">{t("logout.subtitle")}</p>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <button

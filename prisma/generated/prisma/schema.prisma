@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String     @id @default(cuid())
+  email           String     @unique
+  name            String?
+  role            Role       @default(USER)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  password        String?
+  image           String?
+  ownedBusinesses Business[]
+  memberships     Member[]
+}
+
+model Business {
+  id                  String            @id @default(cuid())
+  name                String
+  slug                String            @unique
+  type                BusinessType      @default(OTHER)
+  ownerId             String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  address             String?
+  description         String?
+  logo                String?
+  phone               String?
+  planActive          Boolean           @default(true)
+  subscriptionEnd     DateTime?
+  subscriptionStart   DateTime          @default(now())
+  plan                PLAN              @default(BASIC)
+  status              BusinessStatus    @default(ACTIVE)
+  marketingAutomation Boolean           @default(false)
+  remindersEnabled    Boolean           @default(false)
+  AllPaied            Decimal           @default(0.0)
+  templateId          String            @default("modern")
+  themeColor          String?
+  defaultLanguage     String            @default("ar")
+  appointments        Appointment[]
+  owner               User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  sections            BusinessSection[]
+  customers           Customer[]
+  members             Member[]
+  orders              Order[]
+  products            Product[]
+  services            Service[]
+}
+
+model BusinessSection {
+  id         String   @id @default(cuid())
+  businessId String
+  type       String
+  title      String?
+  content    String?
+  images     String[]
+  order      Int      @default(0)
+  isActive   Boolean  @default(true)
+  settings   String?
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Member {
+  id         String     @id @default(cuid())
+  role       MemberRole @default(STAFF)
+  userId     String
+  businessId String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  business   Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  duration     Int
+  price        Decimal
+  businessId   String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  image        String?
+  isActive     Boolean       @default(true)
+  appointments Appointment[]
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id         String            @id @default(cuid())
+  startTime  DateTime
+  endTime    DateTime
+  status     AppointmentStatus @default(PENDING)
+  serviceId  String
+  businessId String
+  customerId String
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  business   Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer   Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service    Service           @relation(fields: [serviceId], references: [id])
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal
+  stock       Int         @default(0)
+  images      String[]
+  businessId  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  business    Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  total      Decimal
+  status     OrderStatus @default(PENDING)
+  businessId String
+  customerId String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  business   Business    @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  quantity  Int
+  price     Decimal
+  orderId   String
+  productId String
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Customer {
+  id           String        @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  businessId   String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  status       String        @default("New")
+  notes        String?
+  bookingCount Int           @default(0)
+  appointments Appointment[]
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  orders       Order[]
+
+  @@unique([email, businessId])
+}
+
+model GlobalSettings {
+  id               String   @id @default("global")
+  platformName     String   @default("Booking SaaS")
+  supportEmail     String   @default("support@example.com")
+  supportPhone     String?
+  registrationOpen Boolean  @default(true)
+  currency         String   @default("USD")
+  commissionRate   Decimal  @default(10.0)
+  tiersConfig      Json?
+  updatedAt        DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+  OWNER
+  STAFF
+  CUSTOMER
+}
+
+enum BusinessType {
+  SALON
+  CLINIC
+  SPA
+  GYM
+  RESTAURANT
+  HOTEL
+  STORE
+  OTHER
+}
+
+enum PLAN {
+  BASIC
+  PRO
+  BUSINESS
+  ENTERPRISE
+}
+
+enum BusinessStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum MemberRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}

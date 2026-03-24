@@ -50,6 +50,11 @@ export type User = Prisma.UserModel
  */
 export type Business = Prisma.BusinessModel
 /**
+ * Model BusinessSection
+ * 
+ */
+export type BusinessSection = Prisma.BusinessSectionModel
+/**
  * Model Member
  * 
  */

@@ -40,6 +40,24 @@ export const POST = async (req: NextRequest) => {
         const start = new Date(startTime);
         const end = new Date(start.getTime() + service.duration * 60000);
 
+        // Conflict Prevention
+        const overlappingAppointment = await prisma.appointment.findFirst({
+            where: {
+                businessId: business.id,
+                status: { in: ["PENDING", "CONFIRMED"] },
+                AND: [
+                    { startTime: { lt: end } },
+                    { endTime: { gt: start } }
+                ]
+            }
+        });
+
+        if (overlappingAppointment) {
+            return NextResponse.json({
+                message: "يوجد موعد آخر متداخل في هذا الوقت. يرجى اختيار وقت آخر."
+            }, { status: 409 });
+        }
+
         // Find or create customer for this business
         const customer = await prisma.customer.upsert({
             where: { email_businessId: { email: customerEmail, businessId: business.id } },

@@ -62,7 +62,7 @@ export const GET = async (req: NextRequest) => {
         });
 
         // 4. Pending Orders
-        const pendingOrders = await prisma.order.count({
+        const pendingOrders = await prisma.appointment.count({
             where: { businessId, status: "PENDING" }
         });
 

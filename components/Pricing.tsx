@@ -17,6 +17,7 @@ const Pricing = () => {
     const router = useRouter();
     const t = useTranslations("Landing.Pricing");
 
+    // Initial mount effects
     useEffect(() => {
         const checkAuth = async () => {
             try {
@@ -37,21 +38,25 @@ const Pricing = () => {
                 if (tiersConfig) {
                     const mappedPlans = [
                         {
+                            key: "BASIC",
                             name: t("plans.basic.name"),
-                            price: "0",
+                            price: t("plans.basic.price"),
                             description: t("plans.basic.description"),
                             features: [
                                 t("plans.basic.features.services", { services: tiersConfig.BASIC.services }),
                                 t("plans.basic.features.members", { members: tiersConfig.BASIC.members }),
                                 t("plans.basic.features.appointments", { appointments: tiersConfig.BASIC.appointments }),
+                                t("plans.basic.features.limit_staff"),
+                                t("plans.basic.features.limit_services"),
                                 t("plans.basic.features.support")
                             ],
                             button: t("plans.basic.button"),
                             popular: false
                         },
                         {
+                            key: "PRO",
                             name: t("plans.pro.name"),
-                            price: "49",
+                            price: t("plans.pro.price"),
                             description: t("plans.pro.description"),
                             features: [
                                 t("plans.pro.features.services", { services: tiersConfig.PRO.services }),
@@ -64,8 +69,9 @@ const Pricing = () => {
                             popular: true
                         },
                         {
+                            key: "BUSINESS",
                             name: t("plans.business.name"),
-                            price: "99",
+                            price: t("plans.business.price"),
                             description: t("plans.business.description"),
                             features: [
                                 t("plans.business.features.services", { services: tiersConfig?.BUSINESS?.services }),
@@ -78,6 +84,7 @@ const Pricing = () => {
                             popular: false
                         },
                         {
+                            key: "ENTERPRISE",
                             name: t("plans.enterprise.name"),
                             price: t("plans.enterprise.price"),
                             description: t("plans.enterprise.description"),
@@ -101,8 +108,17 @@ const Pricing = () => {
             }
         };
 
+        checkAuth();
+        fetchPricing();
+    }, [t]);
+
+    // React to user auth to fetch business plan
+    useEffect(() => {
         const fetchBusiness = async () => {
-            if (!user) return;
+            if (!user) {
+                setBusinessPlan(null);
+                return;
+            }
             try {
                 const res = await axios.get("/api/owner/business");
                 setBusinessPlan(res.data.plan);
@@ -111,10 +127,8 @@ const Pricing = () => {
             }
         };
 
-        checkAuth();
-        fetchPricing();
         fetchBusiness();
-    }, [t, user]);
+    }, [user]);
 
     const [businessPlan, setBusinessPlan] = useState<string | null>(null);
 
@@ -126,8 +140,9 @@ const Pricing = () => {
             return;
         }
 
-        const isUpgrade = sessionStorage.getItem("upgrade_mode") === "true";
+        const isUpgrade = !!businessPlan;
         sessionStorage.setItem("selected_plan", plan);
+        sessionStorage.setItem("upgrade_mode", isUpgrade ? "true" : "false");
 
         if (isUpgrade) {
             router.push(`/checkout?plan=${plan}&mode=upgrade`);
@@ -211,18 +226,18 @@ const Pricing = () => {
                             </ul>
 
                             <button
-                                onClick={() => handlePlanClick(plan.name === t("plans.basic.name") ? "BASIC" : plan.name === t("plans.pro.name") ? "PRO" : plan.name === t("plans.business.name") ? "BUSINESS" : "ENTERPRISE")}
-                                disabled={(plan.name === t("plans.basic.name") ? "BASIC" : plan.name === t("plans.pro.name") ? "PRO" : plan.name === t("plans.business.name") ? "BUSINESS" : "ENTERPRISE") === businessPlan}
-                                className={`w-full py-4 rounded-2xl font-bold transition-all text-center ${(plan.name === t("plans.basic.name") ? "BASIC" : plan.name === t("plans.pro.name") ? "PRO" : plan.name === t("plans.business.name") ? "BUSINESS" : "ENTERPRISE") === businessPlan
+                                onClick={() => handlePlanClick(plan.key)}
+                                disabled={plan.key === businessPlan}
+                                className={`w-full py-4 rounded-2xl font-bold transition-all text-center ${plan.key === businessPlan
                                     ? "bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700"
                                     : plan.popular
                                         ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20"
                                         : "bg-white/5 hover:bg-white/10 text-white border border-white/10"
                                     }`}
                             >
-                                {(plan.name === t("plans.basic.name") ? "BASIC" : plan.name === t("plans.pro.name") ? "PRO" : plan.name === t("plans.business.name") ? "BUSINESS" : "ENTERPRISE") === businessPlan
-                                    ? "خطتك الحالية"
-                                    : plan.button}
+                                {plan.key === businessPlan
+                                    ? t("currentPlan")
+                                    : businessPlan ? t("upgrade") : plan.button}
                             </button>
                         </motion.div>
                     ))}

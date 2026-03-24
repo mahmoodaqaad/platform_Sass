@@ -31,12 +31,29 @@ export const GET = async (req: NextRequest) => {
             where: {
                 businessId: business.id
             },
+            include: {
+                _count: {
+                    select: { appointments: true }
+                },
+                orders: {
+                    where: { status: "PAID" },
+                    select: { total: true }
+                }
+            },
             orderBy: {
                 createdAt: 'desc'
             }
         });
 
-        return NextResponse.json(customers);
+        const formattedCustomers = customers.map(customer => ({
+            ...customer,
+            bookingCount: customer._count.appointments,
+            totalSpent: customer.orders.reduce((acc, order) => acc + Number(order.total), 0),
+            orders: undefined, // remove raw orders from response
+            _count: undefined  // remove raw count object
+        }));
+
+        return NextResponse.json(formattedCustomers);
     } catch (error) {
         console.error("Fetch customers error:", error);
         return NextResponse.json({ message: "حدث خطأ أثناء تحميل بيانات العملاء" }, { status: 500 });

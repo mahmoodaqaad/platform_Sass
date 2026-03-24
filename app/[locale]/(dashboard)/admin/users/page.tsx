@@ -311,13 +311,13 @@ const AdminUsers = () => {
             {/* Modals */}
             <AnimatePresence>
                 {(showAddModal || showEditModal) && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-y-auto min-h-screen">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => { setShowAddModal(false); setShowEditModal(false); }}
-                            className="absolute inset-0 bg-zinc-950/90 backdrop-blur-md"
+                            className="absolute  inset-0 bg-zinc-950/90 backdrop-blur-md "
                         />
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}

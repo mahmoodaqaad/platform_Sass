@@ -62,6 +62,7 @@ const AppointmentsPage = () => {
     const [customers, setCustomers] = useState<Customer[]>([])
     const [selectedCustomerId, setSelectedCustomerId] = useState<string>("")
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
+    const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null)
 
     const [filter, setFilter] = useState("all") // Changed default filter to key
     const [formData, setFormData] = useState({
@@ -102,6 +103,21 @@ const AppointmentsPage = () => {
             fetchData();
         } catch {
             toast.error(tActions("updateError"));
+        }
+    };
+
+    const toggleMenu = (id: string, e: React.MouseEvent) => {
+        if (activeMenuId === id) {
+            setActiveMenuId(null);
+            setMenuPosition(null);
+        } else {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setActiveMenuId(id);
+            // Position the menu below the button, aligned to the right edge (or left if RTL)
+            setMenuPosition({
+                top: rect.bottom + window.scrollY,
+                left: locale === 'ar' ? rect.left : rect.right - 192 // 192px is w-48
+            });
         }
     };
 
@@ -285,23 +301,34 @@ const AppointmentsPage = () => {
                                                     {/* More Actions Dropdown */}
                                                     <div className="relative">
                                                         <button
-                                                            onClick={() => setActiveMenuId(activeMenuId === app.id ? null : app.id)}
+                                                            onClick={(e) => toggleMenu(app.id, e)}
                                                             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${activeMenuId === app.id ? 'bg-indigo-600 text-white' : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'}`}
                                                         >
                                                             <HiOutlineEllipsisVertical className="text-xl" />
                                                         </button>
 
-                                                        {activeMenuId === app.id && (
+                                                        {activeMenuId === app.id && menuPosition && (
                                                             <>
                                                                 <div
                                                                     className="fixed inset-0 z-40"
-                                                                    onClick={() => setActiveMenuId(null)}
+                                                                    onClick={() => {
+                                                                        setActiveMenuId(null);
+                                                                        setMenuPosition(null);
+                                                                    }}
                                                                 />
-                                                                <div className="absolute right-0 mt-2 w-48 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl z-50 overflow-hidden py-2" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                                                                <div
+                                                                    className="fixed mt-2 w-48 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl z-50 overflow-hidden py-2"
+                                                                    dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                                                                    style={{
+                                                                        top: menuPosition.top - window.scrollY,
+                                                                        left: menuPosition.left
+                                                                    }}
+                                                                >
                                                                     <button
                                                                         onClick={() => {
                                                                             handleStatusUpdate(app.id, 'COMPLETED');
                                                                             setActiveMenuId(null);
+                                                                            setMenuPosition(null);
                                                                         }}
                                                                         className="w-full px-4 py-3 text-start text-sm font-bold text-blue-400 hover:bg-blue-500/10 flex items-center justify-between group transition-colors"
                                                                     >
@@ -312,6 +339,7 @@ const AppointmentsPage = () => {
                                                                         onClick={() => {
                                                                             handleStatusUpdate(app.id, 'PENDING');
                                                                             setActiveMenuId(null);
+                                                                            setMenuPosition(null);
                                                                         }}
                                                                         className="w-full px-4 py-3 text-start text-sm font-bold text-orange-400 hover:bg-orange-500/10 flex items-center justify-between group transition-colors"
                                                                     >
@@ -322,6 +350,7 @@ const AppointmentsPage = () => {
                                                                         onClick={() => {
                                                                             handleStatusUpdate(app.id, 'PENDING'); // or RESET
                                                                             setActiveMenuId(null);
+                                                                            setMenuPosition(null);
                                                                         }}
                                                                         className="w-full px-4 py-3 text-start text-sm font-bold text-zinc-500 hover:bg-white/5 flex items-center justify-between group transition-colors border-t border-white/5 mt-1"
                                                                     >
@@ -439,6 +468,7 @@ const AppointmentsPage = () => {
                                     </Select>
                                     <div className="md:col-span-2">
                                         <Input
+
                                             label={t("manualBooking.startTime")}
                                             icon={<HiOutlineClock />}
                                             type="datetime-local"

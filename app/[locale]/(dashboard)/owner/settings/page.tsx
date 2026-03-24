@@ -4,11 +4,14 @@ import { motion } from "framer-motion"
 import { HiOutlineCog6Tooth, HiOutlineBuildingOffice, HiOutlineBell, HiOutlineShieldCheck, HiOutlineCreditCard, HiOutlineLockClosed, HiOutlineEnvelope, HiOutlineMegaphone } from "react-icons/hi2"
 import Button from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
+import Select from "@/components/ui/Select"
 import LogoUpload from "@/components/dashboard/LogoUpload"
 import axios from "axios"
 import { toast } from "react-toastify"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { BiLink } from "react-icons/bi"
 
 const SettingsPage = () => {
     const t = useTranslations("D.owner.settings");
@@ -28,9 +31,11 @@ const SettingsPage = () => {
         description: "",
         address: "",
         phone: "",
+        slug: "",
         logo: "",
         remindersEnabled: false,
-        marketingAutomation: false
+        marketingAutomation: false,
+        defaultLanguage: ""
     })
 
     const [passwordData, setPasswordData] = useState({
@@ -50,10 +55,12 @@ const SettingsPage = () => {
                 name: biz.name || "",
                 description: biz.description || "",
                 address: biz.address || "",
+                slug: biz.slug || "",
                 phone: biz.phone || "",
                 logo: biz.logo || "",
                 remindersEnabled: biz.remindersEnabled || false,
-                marketingAutomation: biz.marketingAutomation || false
+                marketingAutomation: biz.marketingAutomation || false,
+                defaultLanguage: biz.defaultLanguage || ""
             })
             setBusinessStat(biz)
         } catch (error) {
@@ -178,6 +185,25 @@ const SettingsPage = () => {
                                     className="md:col-span-2"
                                     value={formData.address}
                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                />
+                                <Input
+                                    label={tBusiness("slug")}
+                                    icon={<HiOutlineBuildingOffice />}
+                                    className="md:col-span-2"
+                                    value={formData.slug}
+                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                                >
+                                    <Link target="_blank" href={"/"+formData.slug} className="p-3 text-2xl hover:scale-125 transition-transform"><BiLink /></Link>
+                                </Input>
+                                <Select
+                                    label={tBusiness("defaultLanguage")}
+                                    options={[
+                                        { value: "ar", label: tBusiness("arabic") },
+                                        { value: "en", label: tBusiness("english") },
+                                    ]}
+                                    value={formData.defaultLanguage}
+                                    onChange={(e) => setFormData({ ...formData, defaultLanguage: e.target.value })}
+                                    className="md:col-span-2"
                                 />
                             </div>
 

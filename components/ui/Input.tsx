@@ -9,7 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: string;
 }
 
-const Input = ({ label, icon, error, ...props }: InputProps) => {
+const Input = ({ label, icon, error, children, ...props }: InputProps) => {
     const [isFocused, setIsFocused] = useState(false);
     const [hasValue, setHasValue] = useState(!!props.value || !!props.defaultValue);
 
@@ -62,6 +62,8 @@ const Input = ({ label, icon, error, ...props }: InputProps) => {
                             {label}
                         </label>
                     </div>
+
+                    {children}
                 </div>
             </div>
 

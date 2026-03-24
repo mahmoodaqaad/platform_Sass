@@ -167,6 +167,7 @@ export interface PublicSettings {
     tiersConfig: Record<string, any>;
 }
 export interface Tier {
+    key: string;
     name: string;
     price: string | number;
     description: string;
