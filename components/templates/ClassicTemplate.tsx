@@ -6,6 +6,7 @@ import { HiOutlineClock } from "react-icons/hi";
 import Button from "@/components/ui/Button";
 import SectionRenderer from "@/components/builder/SectionRenderer";
 import BookingModal from "@/components/modals/BookingModal";
+import { useTranslations } from "next-intl";
 
 interface Props {
     business: any;
@@ -22,6 +23,7 @@ const COLOR_MAP: Record<string, any> = {
 };
 
 export default function ClassicTemplate({ business, sections }: Props) {
+    const t = useTranslations("Public");
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedService, setSelectedService] = useState<any>(null);
 
@@ -37,7 +39,7 @@ export default function ClassicTemplate({ business, sections }: Props) {
     };
 
     return (
-        <main className="min-h-screen bg-stone-50 text-stone-900 font-serif selection:bg-stone-200">
+        <main className="min-h-screen bg-stone-50 text-stone-900 font-serif selection:bg-stone-200" dir={business.defaultLanguage === 'ar' ? 'rtl' : 'ltr'}>
             {/* Header */}
             <header className="border-b border-stone-200 bg-white sticky top-0 z-50">
                 <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -52,7 +54,7 @@ export default function ClassicTemplate({ business, sections }: Props) {
                         <span className="font-bold text-xl tracking-tight">{business?.name}</span>
                     </div>
                     <nav className="hidden md:flex gap-8 text-sm font-medium text-stone-500">
-                        <a href="#services" className="hover:text-stone-900 transition-colors">Services</a>
+                        <a href="#services" className="hover:text-stone-900 transition-colors">{t("services")}</a>
                         {sections.filter(s => s.isActive && s.type !== 'HERO').map(s => (
                             <a key={s.id} href={`#section-${s.id}`} className="hover:text-stone-900 transition-colors">
                                 {s.title || 'Section'}
@@ -61,8 +63,9 @@ export default function ClassicTemplate({ business, sections }: Props) {
                     </nav>
                     <Button
                         theme={business.themeColor}
+                        onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
                         className={`px-6 py-2 ${bgThemeClass} text-white rounded-md shadow-sm text-sm`}>
-                        Book Now
+                        {t("bookNow")}
                     </Button>
                 </div>
             </header>
@@ -80,8 +83,8 @@ export default function ClassicTemplate({ business, sections }: Props) {
             <div className="max-w-6xl mx-auto py-24 px-6">
                 <section id="services">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-stone-900 mb-4">Our Services</h2>
-                        <p className="text-stone-500 text-lg">Select a service to schedule your visit.</p>
+                        <h2 className="text-4xl font-bold text-stone-900 mb-4">{t("ourServices")}</h2>
+                        <p className="text-stone-500 text-lg">{t("servicesDesc")}</p>
                         <div className={`w-20 h-1 ${bgThemeClass} mx-auto mt-6 rounded-full opacity-50`} />
                     </div>
                     {
@@ -103,12 +106,12 @@ export default function ClassicTemplate({ business, sections }: Props) {
                                         )}
                                         <div className="p-8 flex flex-col flex-1">
                                             <h3 className="text-xl font-bold text-stone-900 mb-3">{service.name}</h3>
-                                            <p className="text-stone-500 text-sm mb-8 flex-1">{service.description || "A premium offering designed specifically for your needs."}</p>
+                                            <p className="text-stone-500 text-sm mb-8 flex-1">{service.description || t("serviceDefaultDesc")}</p>
 
                                             <div className="space-y-6">
                                                 <div className="flex justify-between items-center text-sm font-medium pb-4 border-b border-stone-100">
-                                                    <span className="text-stone-500 flex items-center gap-2"><HiOutlineClock /> Duration</span>
-                                                    <span className="text-stone-900">{service.duration} minutes</span>
+                                                    <span className="text-stone-500 flex items-center gap-2"><HiOutlineClock /> {t("duration", { min: '' }).split(' ')[1] || 'Duration'}</span>
+                                                    <span className="text-stone-900">{service.duration} {t("duration", { min: '' }).split(' ')[0] || 'minutes'}</span>
                                                 </div>
                                                 <div className="flex justify-between items-center text-sm font-medium pb-6">
                                                     <span className="text-stone-500">Price</span>
@@ -119,7 +122,7 @@ export default function ClassicTemplate({ business, sections }: Props) {
                                                     onClick={() => handleBook(service)}
                                                     className={`w-full py-3 ${bgThemeClass} text-white rounded-md group-hover:bg-opacity-90`}
                                                 >
-                                                    Select Service
+                                                    {t("selectService")}
                                                 </Button>
                                             </div>
                                         </div>
@@ -132,7 +135,7 @@ export default function ClassicTemplate({ business, sections }: Props) {
                             :
                             <div className="text-center w-full">
 
-                                <p className=" font-extrabold text-3xl text-red-400 italic">No service Yet</p>
+                                <p className=" font-extrabold text-3xl text-red-400 italic">{t("noServices")}</p>
                                 <hr className="mt-3 w-48 text-red-400 mx-auto" />
                             </div>
                     }
@@ -149,7 +152,7 @@ export default function ClassicTemplate({ business, sections }: Props) {
                         <span className="font-bold text-white tracking-wider uppercase text-sm">{business?.name}</span>
                     </div>
                     <p className="text-sm">
-                        &copy; {new Date().getFullYear()} {business.name}. All rights reserved.
+                        &copy; {new Date().getFullYear()} {business.name}. {t("allRightsReserved")}
                     </p>
                 </div>
             </footer>

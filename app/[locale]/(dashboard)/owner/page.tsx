@@ -32,7 +32,12 @@ export default function OwnerDashboard() {
     const [business, setBusiness] = useState<BusinessData | null>(null);
     const [recentAppointments, setRecentAppointments] = useState<AppointmentData[]>([]);
     const [loading, setLoading] = useState(true);
-    const [stats, setStats] = useState<any>(null);
+    const [stats, setStats] = useState<{
+        revenue: { value: string | number; change: string; trend: string };
+        appointments: { value: string | number; change: string; trend: string };
+        customers: { value: string | number; change: string; trend: string };
+        pendingOrders: { value: string | number };
+    } | null>(null);
     const fetchData = async () => {
         try {
             const [bizRes, statsRes, appointmentsRes] = await Promise.all([
@@ -71,15 +76,7 @@ export default function OwnerDashboard() {
         }
     };
 
-    const handleStatusUpdate = async (appointmentId: string, status: 'CONFIRMED' | 'CANCELLED') => {
-        try {
-            await axios.patch("/api/owner/appointments", { appointmentId, status });
-            toast.success(t("statusUpdated")); // You might want to add this key or reuse generic success
-            fetchData();
-        } catch {
-            toast.error(t("statusUpdateFailed")); // Add key
-        }
-    };
+
 
     const statCards = [
         {
@@ -123,22 +120,22 @@ export default function OwnerDashboard() {
     return (
         <div className="space-y-10">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-4xl font-black text-white">{t("title", { name: business?.name || "Member" })}</h1>
+                    <h1 className="text-3xl md:text-4xl font-black text-white">{t("title", { name: business?.name || "Member" })}</h1>
                     <p className="text-zinc-500 mt-2 font-medium">{t("subtitle")}</p>
                 </div>
-                <Button className="py-3! px-6! text-sm font-bold bg-indigo-600 hover:bg-indigo-500">
+                <Button theme="primary" className="w-full md:w-auto py-3! px-6! text-sm font-bold shadow-lg shadow-indigo-600/20">
                     <HiPlus className="text-xl" />
                     {t("quickAction")}
                 </Button>
             </div>
 
             {/* Subscription Warning */}
-            {business && (
+            {business && business.plan && (
                 <SubscriptionWarning
-                    plan={business.plan}
-                    subscriptionEnd={business.subscriptionEnd}
+                    plan={business.plan as "BASIC" | "PRO" | "BUSINESS" | "ENTERPRISE"}
+                    subscriptionEnd={business.subscriptionEnd ? new Date(business.subscriptionEnd) : null}
                 />
             )}
             {/* Stats Grid */}
@@ -195,7 +192,7 @@ export default function OwnerDashboard() {
                                                     app.status === 'PENDING' ? 'bg-amber-500/10 text-amber-400' :
                                                         'bg-zinc-500/10 text-zinc-400'
                                                     }`}>
-                                                    {tAppStatus(app.status?.toLowerCase() as any || 'pending')}
+                                                    {tAppStatus((app.status?.toLowerCase() as "pending" | "confirmed" | "cancelled" | "completed") || 'pending')}
                                                 </span>
                                             </div>
                                             <p className="text-zinc-500 font-medium text-sm flex items-center gap-2">
@@ -208,10 +205,10 @@ export default function OwnerDashboard() {
                                     <div className="flex items-center gap-8 relative z-10">
                                         <div className="text-left">
                                             <p className="text-white font-black text-lg">
-                                                {new Date(app.startTime).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
+                                                {app.startTime ? new Date(app.startTime).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : "--:--"}
                                             </p>
                                             <p className="text-zinc-500 text-xs font-bold uppercase tracking-tight">
-                                                {new Date(app.startTime).toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' })}
+                                                {app.startTime ? new Date(app.startTime).toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' }) : "---"}
                                             </p>
                                         </div>
                                     </div>

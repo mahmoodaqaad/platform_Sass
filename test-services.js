@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); const prisma = new PrismaClient(); async function main() { const services = await prisma.service.findMany({orderBy:{createdAt:'desc'}, take: 5}); console.log(services); } main().catch(console.error).finally(() => process.exit(0));

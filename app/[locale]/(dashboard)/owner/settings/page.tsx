@@ -33,6 +33,7 @@ const SettingsPage = () => {
         phone: "",
         slug: "",
         logo: "",
+        isAccountIsGoogle: false,
         remindersEnabled: false,
         marketingAutomation: false,
         defaultLanguage: ""
@@ -58,6 +59,7 @@ const SettingsPage = () => {
                 slug: biz.slug || "",
                 phone: biz.phone || "",
                 logo: biz.logo || "",
+                isAccountIsGoogle: biz.isAccountIsGoogle || false,
                 remindersEnabled: biz.remindersEnabled || false,
                 marketingAutomation: biz.marketingAutomation || false,
                 defaultLanguage: biz.defaultLanguage || ""
@@ -70,6 +72,7 @@ const SettingsPage = () => {
             setLoading(false)
         }
     }, [tToast, setBusinessStat])
+    console.log(formData);
 
     useEffect(() => {
         fetchBusiness()
@@ -93,11 +96,15 @@ const SettingsPage = () => {
             return toast.error("Passwords do not match")
         }
         setSaving(true)
+        // if accout google => 304 else 200
         try {
-            await axios.post("/api/auth/change-password", {
+            const res = await axios.post("/api/auth/change-password", {
+                accept: formData.isAccountIsGoogle ? 304 : 200,
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword
             })
+            console.log(res);
+            setFormData({ ...formData, isAccountIsGoogle: false })
             toast.success("Password updated successfully")
             setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" })
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -186,15 +193,17 @@ const SettingsPage = () => {
                                     value={formData.address}
                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                 />
-                                <Input
-                                    label={tBusiness("slug")}
-                                    icon={<HiOutlineBuildingOffice />}
-                                    className="md:col-span-2"
-                                    value={formData.slug}
-                                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                >
-                                    <Link target="_blank" href={"/"+formData.slug} className="p-3 text-2xl hover:scale-125 transition-transform"><BiLink /></Link>
-                                </Input>
+                                <div className="md:col-span-2 relative" dir="ltr">
+                                    <Input
+                                        label={tBusiness("slug")}
+                                        icon={<HiOutlineBuildingOffice />}
+                                        className="text-left"
+                                        value={formData.slug}
+                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+                                    >
+                                        <Link target="_blank" href={`/${formData.defaultLanguage || "ar"}/${formData.slug}`} className="p-3 text-2xl hover:scale-125 transition-transform"><BiLink /></Link>
+                                    </Input>
+                                </div>
                                 <Select
                                     label={tBusiness("defaultLanguage")}
                                     options={[
@@ -292,13 +301,16 @@ const SettingsPage = () => {
                             className="space-y-8 relative"
                         >
                             <div className="grid grid-cols-1 gap-6">
-                                <Input
-                                    label={tSecurity("currentPassword")}
-                                    type="password"
-                                    icon={<HiOutlineLockClosed />}
-                                    value={passwordData.currentPassword}
-                                    onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                                />
+                                {
+                                    !formData.isAccountIsGoogle &&
+                                    <Input
+                                        label={tSecurity("currentPassword")}
+                                        type="password"
+                                        icon={<HiOutlineLockClosed />}
+                                        value={passwordData.currentPassword}
+                                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                                    />
+                                }
                                 <Input
                                     label={tSecurity("newPassword")}
                                     type="password"

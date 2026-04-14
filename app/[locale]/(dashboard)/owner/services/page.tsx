@@ -11,13 +11,9 @@ import ImageUpload from "@/components/ui/ImageUpload";
 import { useTranslations } from "next-intl";
 import { Service } from "@/lib/types";
 
-
-
 export default function ServicesPage() {
     const t = useTranslations("D.owner.services");
     const tEmpty = useTranslations("D.owner.services.empty");
-    const tModal = useTranslations("D.owner.services.modal");
-    const tDelete = useTranslations("D.owner.services.delete");
 
     const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState(true);
@@ -26,6 +22,7 @@ export default function ServicesPage() {
     const [editingService, setEditingService] = useState<Service | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null);
+    const [defaultLang, setDefaultLang] = useState("ar");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -36,16 +33,85 @@ export default function ServicesPage() {
         isActive: true
     });
 
+    const dictModal = {
+        ar: {
+            addTitle: "إضافة خدمة جديدة",
+            editTitle: "تعديل الخدمة",
+            addSubtitle: "أدخل تفاصيل الخدمة الجديدة أدناه",
+            editSubtitle: "قم بتعديل تفاصيل الخدمة",
+            name: "اسم الخدمة",
+            description: "وصف الخدمة",
+            duration: "المدة (بالدقائق)",
+            price: "السعر",
+            save: "حفظ الخدمة",
+            update: "تحديث الخدمة",
+            error: "حدث خطأ، يرجى المحاولة مرة أخرى"
+        },
+        en: {
+            addTitle: "Add New Service",
+            editTitle: "Edit Service",
+            addSubtitle: "Enter the details of the new service below",
+            editSubtitle: "Update the service details",
+            name: "Service Name",
+            description: "Service Description",
+            duration: "Duration (minutes)",
+            price: "Price",
+            save: "Save Service",
+            update: "Update Service",
+            error: "An error occurred, please try again"
+        }
+    };
+
+    const dictDelete = {
+        ar: {
+            title: "حذف الخدمة",
+            confirm: "تأكيد الحذف",
+            cancel: "إلغاء"
+        },
+        en: {
+            title: "Delete Service",
+            confirm: "Confirm Delete",
+            cancel: "Cancel"
+        }
+    };
+
+    const tMod = (key: keyof typeof dictModal.en) => dictModal[defaultLang as keyof typeof dictModal]?.[key] || dictModal.en[key];
+    const tDel = (key: string, props?: { name?: string }) => {
+        if (key === "description") {
+            return defaultLang === "en" 
+                ? `Are you sure you want to delete the service "${props?.name || ''}"? This action cannot be undone.`
+                : `هل أنت متأكد من حذف الخدمة "${props?.name || ''}"؟ لا يمكن التراجع عن هذا الإجراء.`;
+        }
+        return dictDelete[defaultLang as keyof typeof dictDelete]?.[key as keyof typeof dictDelete.en] || dictDelete.en[key as keyof typeof dictDelete.en];
+    };
+
+    const dir = defaultLang === "ar" ? "rtl" : "ltr";
+
     const fetchServices = useCallback(async () => {
         try {
-            const res = await axios.get(`/api/services${showArchived ? "?archived=true" : ""}`);
+            const separator = showArchived ? "&" : "?";
+            const res = await axios.get(`/api/services${showArchived ? "?archived=true" : ""}${separator}t=${new Date().getTime()}`);
             setServices(res.data || []);
         } finally {
             setLoading(false);
         }
     }, [showArchived]);
 
-    useEffect(() => { fetchServices(); }, [fetchServices]);
+    const fetchBusiness = useCallback(async () => {
+        try {
+            const res = await axios.get('/api/owner/business');
+            if (res.data?.business?.defaultLanguage) {
+                setDefaultLang(res.data.business.defaultLanguage);
+            }
+        } catch (error) {
+            console.error("Error fetching business language", error);
+        }
+    }, []);
+
+    useEffect(() => { 
+        fetchBusiness();
+        fetchServices(); 
+    }, [fetchBusiness, fetchServices]);
 
     const [error, setError] = useState<string | null>(null);
 
@@ -53,10 +119,10 @@ export default function ServicesPage() {
         if (service) {
             setEditingService(service);
             setFormData({
-                name: service.name,
+                name: service.name || "",
                 description: service.description || "",
-                duration: service.duration.toString(),
-                price: service.price.toString(),
+                duration: (service.duration || 30).toString(),
+                price: (service.price || 0).toString(),
                 image: service.image || "",
                 isActive: service.isActive ?? true
             });
@@ -88,11 +154,11 @@ export default function ServicesPage() {
                 setShowModal(false);
                 fetchServices();
             } else {
-                setError(data.message || tModal("error"));
+                setError(data.message || tMod("error"));
             }
         } catch (error) {
             console.error(error);
-            setError(tModal("error"));
+            setError(tMod("error"));
         }
     };
 
@@ -104,7 +170,7 @@ export default function ServicesPage() {
             setServiceToDelete(null);
             fetchServices();
         } catch {
-            alert(tModal("error"));
+            alert(tMod("error"));
         }
     };
 
@@ -113,33 +179,33 @@ export default function ServicesPage() {
             await axios.patch("/api/services", { id: service.id, isActive: true });
             fetchServices();
         } catch {
-            alert(tModal("error"));
+            alert(tMod("error"));
         }
     };
 
     return (
         <div className="space-y-10">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-black text-white">{t("title")}</h1>
-                    <p className="text-zinc-500 mt-1">{t("subtitle")}</p>
+                    <h1 className="text-3xl md:text-4xl font-black text-white">{t("title")}</h1>
+                    <p className="text-zinc-500 mt-2 font-medium">{t("subtitle")}</p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                     <div className="flex p-1 bg-zinc-900/80 rounded-2xl border border-white/5">
                         <button
                             onClick={() => setShowArchived(false)}
-                            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${!showArchived ? "bg-indigo-600 text-white shadow-lg" : "text-zinc-500 hover:text-white"}`}
+                            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-black transition-all ${!showArchived ? "bg-indigo-600 text-white shadow-lg" : "text-zinc-500 hover:text-white"}`}
                         >
                             {t("active")}
                         </button>
                         <button
                             onClick={() => setShowArchived(true)}
-                            className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${showArchived ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-500 hover:text-white"}`}
+                            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-black transition-all ${showArchived ? "bg-zinc-800 text-white shadow-lg" : "text-zinc-500 hover:text-white"}`}
                         >
                             {t("archived")}
                         </button>
                     </div>
-                    <Button onClick={() => handleOpenModal()} className="py-3! px-6! text-sm bg-indigo-600 hover:bg-indigo-500 font-bold">
+                    <Button onClick={() => handleOpenModal()} className="py-3! px-6! text-sm bg-indigo-600 hover:bg-indigo-500 font-bold shadow-lg shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-2">
                         <HiPlus className="text-xl" />
                         {t("addService")}
                     </Button>
@@ -152,8 +218,8 @@ export default function ServicesPage() {
                         <div className="h-48 bg-zinc-800 relative overflow-hidden">
                             {service.image ? (
                                 <Image
-                                    src={service.image}
-                                    alt={service.name}
+                                    src={service.image || "/placeholder-service.jpg"}
+                                    alt={service.name || "Service"}
                                     unoptimized
                                     width={400}
                                     height={200}
@@ -165,7 +231,7 @@ export default function ServicesPage() {
                                 </div>
                             )}
                             <div className="absolute top-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10">
-                                {t("duration", { min: service.duration })}
+                                {t("duration", { min: service.duration || 0 })}
                             </div>
                             {!service.isActive && (
                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center">
@@ -243,14 +309,17 @@ export default function ServicesPage() {
                             className="absolute inset-0 bg-zinc-950/90 backdrop-blur-md"
                         />
                         <motion.div
+                            dir={dir}
                             initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-lg bg-zinc-900 border border-white/10 rounded-[3rem] p-10 shadow-2xl overflow-y-auto max-h-[90vh]"
+                            className="relative w-full max-w-lg bg-zinc-900 border border-white/10 rounded-3xl md:rounded-[3rem] p-6 md:p-10 shadow-2xl overflow-y-auto max-h-[90vh] no-scrollbar"
                         >
-                            <div className="absolute top-0 left-0 p-8">
-                                <button onClick={() => setShowModal(false)} className="text-zinc-500 hover:text-white transition-colors text-xl">✕</button>
+                            <div className="absolute top-4 right-4 md:top-8 md:start-8 md:right-auto">
+                                <button onClick={() => setShowModal(false)} className="text-zinc-500 hover:text-white transition-colors text-xl p-2 bg-white/5 rounded-xl">✕</button>
                             </div>
-                            <h2 className="text-3xl font-black text-white mb-2">{editingService ? tModal("editTitle") : tModal("addTitle")}</h2>
-                            <p className="text-zinc-500 text-sm mb-10 font-medium">{editingService ? tModal("editSubtitle") : tModal("addSubtitle")}</p>
+                            <div className="mt-8 md:mt-0">
+                                <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{editingService ? tMod("editTitle") : tMod("addTitle")}</h2>
+                                <p className="text-zinc-500 text-sm mb-10 font-medium">{editingService ? tMod("editSubtitle") : tMod("addSubtitle")}</p>
+                            </div>
 
                             {error && (
                                 <motion.div
@@ -264,19 +333,19 @@ export default function ServicesPage() {
                             )}
 
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <Input label={tModal("name")} icon={<HiPlus />} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+                                <Input label={tMod("name")} icon={<HiPlus />} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
                                 <ImageUpload
                                     value={formData.image}
                                     onChange={(val) => setFormData({ ...formData, image: val })}
                                     onUploading={setIsUploading}
                                 />
-                                <Input label={tModal("description")} icon={<HiDocumentText />} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+                                <Input label={tMod("description")} icon={<HiDocumentText />} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
                                 <div className="grid grid-cols-2 gap-4">
-                                    <Input label={tModal("duration")} icon={<HiClock />} type="number" value={formData.duration} onChange={(e) => setFormData({ ...formData, duration: e.target.value })} required />
-                                    <Input label={tModal("price")} icon={<HiCurrencyDollar />} type="number" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} required />
+                                    <Input label={tMod("duration")} icon={<HiClock />} type="number" value={formData.duration} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, duration: e.target.value })} required />
+                                    <Input label={tMod("price")} icon={<HiCurrencyDollar />} type="number" value={formData.price} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, price: e.target.value })} required />
                                 </div>
-                                <Button type="submit" isLoading={isUploading} disabled={isUploading} className="w-full py-4 text-sm font-black bg-indigo-600 hover:bg-indigo-500" theme={""}>
-                                    {editingService ? tModal("update") : tModal("save")}
+                                <Button type="submit" isLoading={isUploading} disabled={isUploading} className="w-full py-4 text-sm font-black bg-indigo-600 hover:bg-indigo-500">
+                                    {editingService ? tMod("update") : tMod("save")}
                                 </Button>
                             </form>
                         </motion.div>
@@ -294,15 +363,16 @@ export default function ServicesPage() {
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         />
                         <motion.div
+                            dir={dir}
                             initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }}
                             className="relative w-full max-w-md bg-zinc-900 border border-red-500/20 rounded-[2.5rem] p-10 shadow-2xl text-center"
                         >
                             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
                                 <HiTrash className="text-4xl" />
                             </div>
-                            <h2 className="text-2xl font-black text-white mb-2">{tDelete("title")}</h2>
+                            <h2 className="text-2xl font-black text-white mb-2">{tDel("title")}</h2>
                             <p className="text-zinc-400 text-sm mb-10 leading-relaxed font-medium">
-                                {tDelete("description", { name: serviceToDelete?.name })}
+                                {tDel("description", { name: serviceToDelete?.name })}
                             </p>
 
                             <div className="flex flex-col gap-3">
@@ -310,13 +380,13 @@ export default function ServicesPage() {
                                     onClick={confirmDelete}
                                     className="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-bold"
                                 >
-                                    {tDelete("confirm")}
+                                    {tDel("confirm")}
                                 </Button>
                                 <button
                                     onClick={() => setShowDeleteModal(false)}
                                     className="w-full py-4 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white rounded-2xl font-bold transition-all"
                                 >
-                                    {tDelete("cancel")}
+                                    {tDel("cancel")}
                                 </button>
                             </div>
                         </motion.div>

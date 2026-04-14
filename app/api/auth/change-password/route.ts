@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/Tools/db";
-import { jwtVerify } from "jose";
 import bcrypt from "bcrypt";
+import { getAuthUser } from "@/Tools/getAuthUser";
 
 async function getUserId(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "secret");
-        const { payload } = await jwtVerify(token, secret);
-        return payload.id as string;
-    } catch {
-        return null;
-    }
+    const authUser = await getAuthUser(req);
+    return authUser ? authUser.id : null;
 }
 
 export const POST = async (req: NextRequest) => {
@@ -20,24 +13,28 @@ export const POST = async (req: NextRequest) => {
     if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     try {
-        const { currentPassword, newPassword } = await req.json();
-
-        if (!currentPassword || !newPassword) {
-            return NextResponse.json({ message: "Missing fields" }, { status: 400 });
+        const { accept, currentPassword, newPassword } = await req.json();
+        if (accept !== 304) {
+            if ((!currentPassword || !newPassword)) {
+                return NextResponse.json({ message: "Missing fields" }, { status: 400 });
+            }
         }
 
         const user = await prisma.user.findUnique({
             where: { id: userId },
             select: { password: true }
         });
+        if (accept !== 304) {
 
-        if (!user || !user.password) {
-            return NextResponse.json({ message: "User not found" }, { status: 404 });
+            if (!user || !user.password) {
+                return NextResponse.json({ message: "User not found" }, { status: 404 });
+            }
         }
-
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-        if (!isPasswordValid) {
-            return NextResponse.json({ message: "Current password incorrect" }, { status: 401 });
+        if (accept !== 304) {
+            const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+            if (!isPasswordValid && accept != 304) {
+                return NextResponse.json({ message: "Current password incorrect" }, { status: 401 });
+            }
         }
 
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);

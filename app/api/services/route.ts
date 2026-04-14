@@ -1,7 +1,8 @@
 import { prisma } from "@/Tools/db";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import { JwtPayload } from "@/Tools/Types";
+import { revalidatePath } from "next/cache";
+export const dynamic = 'force-dynamic';
+import { getAuthUser } from "@/Tools/getAuthUser";
 import { TierConfig } from "@/lib/types";
 
 
@@ -10,16 +11,14 @@ type TiersConfig = Record<string, TierConfig>;
 
 export const GET = async (req: NextRequest) => {
     try {
-        const token = req.cookies.get("myplatform_token")?.value;
-        if (!token) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        const authUser = await getAuthUser(req);
+        if (!authUser) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
 
         const { searchParams } = new URL(req.url);
         const includeArchived = searchParams.get("archived") === "true";
 
         const business = await prisma.business.findFirst({
-            where: { ownerId: decoded.id },
+            where: { ownerId: authUser.id },
             include: {
                 services: {
                     where: includeArchived ? {} : { isActive: true },
@@ -43,10 +42,8 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => {
     try {
-        const token = req.cookies.get("myplatform_token")?.value;
-        if (!token) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        const authUser = await getAuthUser(req);
+        if (!authUser) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
         const body = await req.json();
         const { name, description, duration, price, image } = body;
 
@@ -55,7 +52,7 @@ export const POST = async (req: NextRequest) => {
         }
 
         const business = await prisma.business.findFirst({
-            where: { ownerId: decoded.id },
+            where: { ownerId: authUser.id },
             include: { _count: { select: { services: { where: { isActive: true } } } } }
         });
 
@@ -86,6 +83,8 @@ export const POST = async (req: NextRequest) => {
             }
         });
 
+        revalidatePath("/", "layout"); // Force global cache invalidation to ensure UI reflects new service.
+
         return NextResponse.json({ message: "تم إضافة الخدمة بنجاح!", service }, { status: 201 });
     } catch (error) {
         console.error("Add service error:", error);
@@ -95,17 +94,15 @@ export const POST = async (req: NextRequest) => {
 
 export const DELETE = async (req: NextRequest) => {
     try {
-        const token = req.cookies.get("myplatform_token")?.value;
-        if (!token) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        const authUser = await getAuthUser(req);
+        if (!authUser) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
         const { searchParams } = new URL(req.url);
         const serviceId = searchParams.get("id");
 
         if (!serviceId) return NextResponse.json({ message: "المعرف مفقود" }, { status: 400 });
 
         const business = await prisma.business.findFirst({
-            where: { ownerId: decoded.id },
+            where: { ownerId: authUser.id },
             select: { id: true }
         });
 
@@ -116,6 +113,8 @@ export const DELETE = async (req: NextRequest) => {
             data: { isActive: false }
         });
 
+        revalidatePath("/", "layout");
+
         return NextResponse.json({ message: "تم أرشفة الخدمة بنجاح" });
     } catch {
         return NextResponse.json({ message: "حدث خطأ أثناء الحذف" }, { status: 500 });
@@ -124,17 +123,15 @@ export const DELETE = async (req: NextRequest) => {
 
 export const PATCH = async (req: NextRequest) => {
     try {
-        const token = req.cookies.get("myplatform_token")?.value;
-        if (!token) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        const authUser = await getAuthUser(req);
+        if (!authUser) return NextResponse.json({ message: "غير مصرح لك" }, { status: 401 });
         const body = await req.json();
         const { id, name, description, duration, price, image, isActive } = body;
 
         if (!id) return NextResponse.json({ message: "المعرف مفقود" }, { status: 400 });
 
         const business = await prisma.business.findFirst({
-            where: { ownerId: decoded.id },
+            where: { ownerId: authUser.id },
             select: { id: true }
         });
 
@@ -151,6 +148,8 @@ export const PATCH = async (req: NextRequest) => {
                 isActive: isActive !== undefined ? isActive : undefined
             }
         });
+
+        revalidatePath("/", "layout");
 
         return NextResponse.json({ message: "تم تحديث الخدمة بنجاح" });
     } catch (error) {

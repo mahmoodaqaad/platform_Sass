@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/Tools/db";
-import { jwtVerify } from "jose";
+import { getAuthUser } from "@/Tools/getAuthUser";
 
 async function getOwnerId(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        if (payload.role !== "OWNER") return null;
-        return payload.id as string;
-    } catch {
-        return null;
-    }
+    const authUser = await getAuthUser(req);
+    if (!authUser || (authUser.role !== "OWNER" && authUser.role !== "ADMIN")) return null;
+    return authUser.id;
 }
 
 // Helper: parse settings string to object safely
@@ -64,14 +57,13 @@ export const POST = async (req: NextRequest) => {
         });
 
         if (!business) return NextResponse.json({ message: "Business not found" }, { status: 404 });
-
         // Check if section already exists with this type
         let section = type
-            ? await prisma.businessSection.findFirst({
-                where: { businessId: business.id, type }
-            })
-            : null;
-
+        ? await prisma.businessSection.findFirst({
+            where: { businessId: business.id, type }
+        })
+        : null;
+        
         if (!section) {
             section = await prisma.businessSection.create({
                 data: {
@@ -82,7 +74,7 @@ export const POST = async (req: NextRequest) => {
                     images: Array.isArray(images) ? images : [],
                     order: Number(order) || 0,
                     isActive: isActive !== false,
-                    settings: settings ? settings : {}
+                    settings: settings ? JSON.stringify(settings) : "{}"
                 }
             });
         }

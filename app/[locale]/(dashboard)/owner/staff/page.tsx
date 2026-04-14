@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { useTranslations } from "next-intl"
 import { Staff } from "@/lib/types"
+import { toast } from "react-toastify"
 
 
 
@@ -19,8 +20,9 @@ const OwnerStaffPage = () => {
     const [staff, setStaff] = useState<Staff[]>([])
     const [loading, setLoading] = useState(true)
     const [showAddModal, setShowAddModal] = useState(false)
+    const [selectedItem, setSelectedItem] = useState<Staff | null>(null)
     const [formData, setFormData] = useState({ name: "", email: "", password: "" })
-
+    const [showDleteModal, setShowDeleteModal] = useState(false)
     const fetchStaff = async () => {
         try {
             const res = await axios.get("/api/owner/staff")
@@ -51,7 +53,20 @@ const OwnerStaffPage = () => {
             setError(error.response?.data?.message || tModal("error"))
         }
     }
+    const handleDeleteStaff = async (id: number | string) => {
+        try {
 
+
+            await axios.delete(`/api/owner/staff?staffId=${id}`)
+            toast.success("successfully Deleted staff")
+            setShowDeleteModal(false)
+            setSelectedItem(null)
+            fetchStaff()
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
     return (
         <div className="space-y-10">
             {/* Header */}
@@ -103,11 +118,14 @@ const OwnerStaffPage = () => {
 
                             <div className="flex items-center justify-between pt-6 border-t border-white/5">
                                 <div className="text-right">
-                                    <p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest mb-1">{tCard("joined")}</p>
+                                    <p className="wtext-zinc-600 text-[10px] font-black uppercase tracking-widest mb-1">{tCard("joined")}</p>
                                     <p className="text-zinc-400 text-xs font-bold">{new Date(s.createdAt).toLocaleDateString()}</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="p-3 bg-red-400/5 hover:bg-red-400/10 rounded-xl text-red-400/50 hover:text-red-400 transition-all border border-red-400/10">
+                                    <button onClick={() => {
+                                        setShowDeleteModal(true)
+                                        setSelectedItem(s)
+                                    }} className="p-3 bg-red-400/5 hover:bg-red-400/10 rounded-xl text-red-400/50 hover:text-red-400 transition-all border border-red-400/10">
                                         <HiOutlineTrash className="text-xl" />
                                     </button>
                                 </div>
@@ -185,6 +203,46 @@ const OwnerStaffPage = () => {
                         </motion.div>
                     </div>
                 )}
+            </AnimatePresence>
+            {/* delete model  */}
+            <AnimatePresence>
+                {
+                    showDleteModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setShowDeleteModal(false)}
+                                className="absolute inset-0 bg-zinc-950/90 backdrop-blur-md"
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="relative bg-zinc-900 border border-white/5 rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl"
+                            >
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center">
+                                        <HiOutlineTrash className="text-2xl text-red-400" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white">{tModal("delete.title")}</h3>
+                                        <p className="text-zinc-500 text-xs font-medium">{tModal("delete.description", { name: selectedItem?.name })}</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <Button type="button" variant="outline" className="flex-1 py-4 text-sm font-black" onClick={() => setShowDeleteModal(false)}>
+                                        {tModal("delete.cancel")}
+                                    </Button>
+                                    <Button type="button" className="flex-1 py-4 text-sm font-black bg-red-500 hover:bg-red-400" onClick={() => handleDeleteStaff(selectedItem?.id)}>
+                                        {tModal("delete.confirm")}
+                                    </Button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )
+                }
             </AnimatePresence>
         </div>
     )

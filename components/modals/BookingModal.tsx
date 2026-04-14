@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 
 interface BookingModalProps {
     isOpen: boolean;
@@ -16,6 +17,8 @@ interface BookingModalProps {
 }
 
 const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps) => {
+    const t = useTranslations("Public.BookingModal");
+    const tPublic = useTranslations("Public");
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         customerName: "",
@@ -29,7 +32,7 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
         e.preventDefault();
 
         if (!formData.date || !formData.time) {
-            toast.error("Please select a date and time");
+            toast.error(t("dateError"));
             return;
         }
 
@@ -47,11 +50,11 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                 startTime
             });
 
-            toast.success("Booking request sent! We will contact you soon.");
+            toast.success(t("success"));
             onClose();
         } catch (error: any) {
             console.error("Booking error:", error);
-            toast.error(error.response?.data?.message || "Failed to create booking");
+            toast.error(error.response?.data?.message || t("error"));
         } finally {
             setLoading(false);
         }
@@ -81,6 +84,7 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         className="relative w-full max-w-lg bg-zinc-950 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+                        dir={business.defaultLanguage === 'ar' ? 'rtl' : 'ltr'}
                     >
                         {/* Header */}
                         <div className={`p-8 ${bgClass} text-white relative`}>
@@ -91,11 +95,11 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                             >
                                 <HiOutlineXMark className="text-xl" />
                             </button>
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-2">Service Booking</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-2">{t("title")}</p>
                             <h2 className="text-3xl font-black">{service.name}</h2>
                             <div className="flex items-center gap-4 mt-6 opacity-90 text-sm font-bold">
                                 <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                                    <HiOutlineClock className="text-lg" /> {service.duration} Min
+                                    <HiOutlineClock className="text-lg" /> {tPublic("duration", { min: service.duration })}
                                 </span>
                                 <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
                                 <span className="text-xl font-black">${service.price.toString()}</span>
@@ -107,7 +111,7 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                        <HiOutlineCalendarDays className={textClass} /> Select Date
+                                        <HiOutlineCalendarDays className={textClass} /> {t("selectDate")}
                                     </label>
                                     <input
                                         type="date"
@@ -120,7 +124,7 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                                        <HiOutlineClock className={textClass} /> Select Time
+                                        <HiOutlineClock className={textClass} /> {t("selectTime")}
                                     </label>
                                     <input
                                         type="time"
@@ -134,10 +138,10 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
 
                             <div className="space-y-1">
                                 <Input
-                                    label="Your Name"
+                                    label={t("yourName")}
                                     required
                                     icon={<HiOutlineUser />}
-                                    placeholder="Enter your full name"
+                                    placeholder={t("namePlaceholder")}
                                     value={formData.customerName}
                                     onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                                 />
@@ -145,22 +149,22 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
 
                             <div className="space-y-1">
                                 <Input
-                                    label="Email Address"
+                                    label={t("email")}
                                     type="email"
                                     required
                                     icon={<HiOutlineEnvelope />}
-                                    placeholder="Enter your email"
+                                    placeholder={t("emailPlaceholder")}
                                     value={formData.customerEmail}
                                     onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
                                 />
                             </div>
                             <div className="space-y-1">
                                 <Input
-                                    label="Phone Number"
+                                    label={t("phone")}
                                     type="tel"
                                     required
                                     icon={<HiOutlinePhone />}
-                                    placeholder="Enter your phone number"
+                                    placeholder={t("phonePlaceholder")}
                                     value={formData.customerPhone}
                                     onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
                                 />
@@ -173,11 +177,11 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                                     isLoading={loading}
                                     className={`w-full py-5 rounded-[1.5rem] font-black tracking-widest text-xs ${bgClass} hover:opacity-90 transition-opacity`}
                                 >
-                                    CONFIRM BOOKING
+                                    {t("confirm")}
                                 </Button>
                             </div>
                             <p className="text-center text-[9px] text-zinc-600 font-bold uppercase tracking-tighter">
-                                By booking you agree to our terms and conditions.
+                                {t("terms")}
                             </p>
                         </form>
                     </motion.div>

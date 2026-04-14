@@ -711,7 +711,13 @@
                     "email": "Email Address",
                     "password": "Temporary Password",
                     "submit": "Create Staff Account",
-                    "error": "An unexpected error occurred"
+                    "error": "An unexpected error occurred",
+                    "delete": {
+                        "title": "Are you sure?",
+                        "description": "Staff \"{name}\" will be deleted.",
+                        "confirm": "Yes, Delete",
+                        "cancel": "Cancel"
+                    }
                 }
             },
             "settings": {
@@ -919,6 +925,35 @@
             "HOTEL": "Hotels",
             "STORE": "Store",
             "OTHER": "Other"
+        }
+    },
+    "Public": {
+        "bookNow": "Book Now",
+        "ourServices": "Our Services",
+        "servicesDesc": "Pick a service to start your booking.",
+        "serviceDefaultDesc": "Professional service tailored to your needs.",
+        "duration": "{min} MIN",
+        "durationLabel": "Duration",
+        "book": "Book",
+        "selectService": "Select Service",
+        "allRightsReserved": "All rights reserved.",
+        "services": "Services",
+        "noServices": "No services yet",
+        "BookingModal": {
+            "title": "Service Booking",
+            "selectDate": "Select Date",
+            "selectTime": "Select Time",
+            "yourName": "Your Name",
+            "namePlaceholder": "Enter your full name",
+            "email": "Email Address",
+            "emailPlaceholder": "Enter your email",
+            "phone": "Phone Number",
+            "phonePlaceholder": "Enter your phone number",
+            "confirm": "CONFIRM BOOKING",
+            "terms": "By booking you agree to our terms and conditions.",
+            "success": "Booking request sent! We will contact you soon.",
+            "error": "Failed to create booking",
+            "dateError": "Please select a date and time"
         }
     }
 }

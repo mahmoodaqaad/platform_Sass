@@ -1,18 +1,15 @@
-import { prisma } from "@/Tools/db";
+import prisma from "@/Tools/db";
+import { getAuthUser } from "@/Tools/getAuthUser";
 import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify } from "jose";
 
 // Helper to verify owner and get their business
 async function getOwnerBusiness(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        if (payload.role !== "OWNER") return null;
+    const authUser = await getAuthUser(req);
+    if (!authUser || (authUser.role !== "OWNER" && authUser.role !== "ADMIN")) return null;
 
+    try {
         const business = await prisma.business.findFirst({
-            where: { ownerId: payload.id as string }
+            where: { ownerId: authUser.id }
         });
         return business;
     } catch (error) {

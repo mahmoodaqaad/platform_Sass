@@ -60,7 +60,7 @@ const Hero = () => {
             router.push(`/${locale}/onboarding`);
         } else { 
             // Not logged in → register first, then redirect to onboarding
-            router.push(`/${locale}/register?redirect=${locale}/onboarding`);
+            router.push(`/${locale}/register?redirect=/onboarding`);
         }
     };
 

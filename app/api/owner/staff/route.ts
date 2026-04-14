@@ -1,20 +1,12 @@
+import { getAuthUser } from "@/Tools/getAuthUser";
+import prisma from "@/Tools/db";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/Tools/db";
-import { jwtVerify } from "jose";
 import bcrypt from "bcrypt";
-
 // Helper to get owner ID
 async function getOwnerId(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        if (payload.role !== "OWNER") return null;
-        return payload.id as string;
-    } catch {
-        return null;
-    }
+    const authUser = await getAuthUser(req);
+    if (!authUser || (authUser.role !== "OWNER" && authUser.role !== "ADMIN")) return null;
+    return authUser.id;
 }
 
 // Helper to verify owner and get their business
@@ -90,7 +82,7 @@ export const POST = async (req: NextRequest) => {
         };
 
         const limit = tiers[plan]?.members || 1;
-        if (business._count.members >= limit+1) {
+        if (business._count.members >= limit + 1) {
             return NextResponse.json({
                 message: `لقد وصلت للحد الأقصى من الموظفين المتاح في باقة ${plan} (${limit} موظفين). يرجى ترقية الباقة لإضافة المزيد.`
             }, { status: 403 });
@@ -144,3 +136,42 @@ export const POST = async (req: NextRequest) => {
         return NextResponse.json({ message: "حدث خطأ أثناء إضافة الموظف، يرجى المحاولة لاحقاً" }, { status: 500 });
     }
 };
+
+export const DELETE = async (req: NextRequest) => {
+
+
+    try {
+        const ownerId = await getOwnerId(req)
+        if (!ownerId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+        const business = await getOwnerBusinessById(ownerId)
+        if (!business) return NextResponse.json({ message: "No business found" }, { status: 404 });
+        const { searchParams } = new URL(req.url);
+
+        const staffId = searchParams.get("staffId")
+        if (!staffId) return NextResponse.json({ message: "No staff id found" }, { status: 404 });
+        const member = await prisma.member.findFirst({
+            where: {
+                userId: staffId,
+                businessId: business.id
+            }
+        });
+
+        if (!member) {
+            return NextResponse.json({ staffId, businessId: business.id });
+        }
+        await prisma.member.delete({
+            where: {
+                userId_businessId: {
+                    userId: staffId,
+                    businessId: business.id
+                }
+            }
+        });
+
+        return NextResponse.json({ message: "delete staff successfully" });
+    } catch (error) {
+        console.log(error);
+
+    }
+}

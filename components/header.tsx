@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Link, usePathname } from "@/i18n/routing";
+import {  usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import axios from "axios";
 import Logout from "./Logout";
 import { User } from "@/prisma/generated/prisma/client";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
@@ -18,7 +20,7 @@ const Header = () => {
     const [platformName, setPlatformName] = useState("Platform");
     const pathname = usePathname();
     const t = useTranslations("Common");
-    const tNav = useTranslations("Navigation");
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -32,25 +34,37 @@ const Header = () => {
         fetchSettings();
     }, []);
 
-    // Fetch user status
+    // Sync NextAuth session to user state
     useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const res = await axios.get("/api/auth/me");
-                if (res.data.authenticated) {
-                    setUser(res.data.user);
-                } else {
+        if (status === "authenticated" && session?.user) {
+            setUser({
+                // @ts-ignore
+                id: session.user.id || "",
+                name: session.user.name || "",
+                email: session.user.email || "",
+                // @ts-ignore
+                role: session.user.role || "USER",
+            } as any);
+            setLoading(false);
+        } else if (status === "unauthenticated") {
+            // Only fetch from legacy API if NextAuth says unauthenticated
+            const checkAuth = async () => {
+                try {
+                    const res = await axios.get("/api/auth/me");
+                    if (res.data.authenticated) {
+                        setUser(res.data.user);
+                    } else {
+                        setUser(null);
+                    }
+                } catch {
                     setUser(null);
+                } finally {
+                    setLoading(false);
                 }
-            } catch {
-                // Not authenticated
-                setUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-        checkAuth();
-    }, [pathname]);
+            };
+            checkAuth();
+        }
+    }, [pathname, session, status]);
 
     // Detect scroll for glassmorphism effect
     useEffect(() => {
@@ -130,15 +144,31 @@ const Header = () => {
                 {/* Desktop Navigation - Hidden on Auth Pages */}
                 {!isAuthPage && (
                     <nav className="hidden md:flex items-center gap-8">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-white/70 hover:text-white transition-colors text-sm font-medium"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className={`relative text-sm font-medium transition-colors duration-200 ${isActive ? "text-white" : "text-white/70 hover:text-white"
+                                        }`}
+                                >
+                                    {link.name}
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="activeNav"
+                                            className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-indigo-500 rounded-full"
+                                            initial={false}
+                                            transition={{
+                                                type: "spring",
+                                                stiffness: 380,
+                                                damping: 30
+                                            }}
+                                        />
+                                    )}
+                                </Link>
+                            );
+                        })}
                     </nav>
                 )}
 
@@ -210,16 +240,22 @@ const Header = () => {
                         className="md:hidden bg-black/95 backdrop-blur-lg border-b border-white/10 overflow-hidden"
                     >
                         <div className="px-6 py-8 flex flex-col gap-6">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className="text-xl font-medium text-white/80 hover:text-white"
-                                >
-                                    {link.name}
-                                </Link>
-                            ))}
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.href;
+                                return (
+                                    <Link
+                                        key={link.name}
+                                        href={link.href}
+                                        onClick={() => setIsOpen(false)}
+                                        className={`text-xl font-medium transition-all ${isActive
+                                                ? "text-white bg-white/10 px-4 py-2 rounded-xl border-l-4 border-indigo-500"
+                                                : "text-white/80 hover:text-white px-4 py-2"
+                                            }`}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                );
+                            })}
                             <hr className="border-white/10" />
                             <div className="flex flex-col gap-4">
                                 {user ? (

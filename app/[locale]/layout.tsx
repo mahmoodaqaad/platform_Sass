@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Header from "@/components/header";
 import { ToastContainer } from "react-toastify"
-// import { SessionProvider } from "next-auth/react";
+import NextAuthSessionProvider from '@/components/NextAuthSessionProvider';
 
 // Note: Header might need to be inside the provider if it uses translations, 
 // or pass translations to it. Usually putting Provider at top level is easiest.
@@ -41,11 +41,13 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
 
-          <NextIntlClientProvider messages={messages}>
-            <ToastContainer theme='colored' />
-            <Header />
-            {children}
-          </NextIntlClientProvider>
+          <NextAuthSessionProvider>
+            <NextIntlClientProvider messages={messages}>
+              <ToastContainer theme='colored' />
+              <Header />
+              {children}
+            </NextIntlClientProvider>
+          </NextAuthSessionProvider>
       </body>
     </html>
   );

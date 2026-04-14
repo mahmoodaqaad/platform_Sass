@@ -5,6 +5,7 @@ import { HiOutlineClock } from "react-icons/hi";
 import Button from "@/components/ui/Button";
 import SectionRenderer from "@/components/builder/SectionRenderer";
 import BookingModal from "@/components/modals/BookingModal";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface Props {
@@ -18,10 +19,11 @@ const COLOR_MAP: Record<string, any> = {
     rose: { text: "text-rose-400", bg: "bg-rose-600", border: "border-rose-500/50", shadow: "shadow-rose-500/25", from: "from-rose-600/20" },
     purple: { text: "text-purple-400", bg: "bg-purple-600", border: "border-purple-500/50", shadow: "shadow-purple-500/25", from: "from-purple-600/20" },
     orange: { text: "text-orange-400", bg: "bg-orange-600", border: "border-orange-500/50", shadow: "shadow-orange-500/25", from: "from-orange-600/20" },
-
+    zinc: { text: "text-zinc-400", bg: "bg-zinc-800", border: "border-zinc-700", shadow: "shadow-zinc-500/10", from: "from-zinc-800/20" },
 };
 
 export default function ModernTemplate({ business, sections }: Props) {
+    const t = useTranslations("Public");
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedService, setSelectedService] = useState<any>(null);
 
@@ -37,7 +39,7 @@ export default function ModernTemplate({ business, sections }: Props) {
     };
 
     return (
-        <main className="min-h-screen bg-[#050505] text-white font-sans pt-20">
+        <main className="min-h-screen bg-[#050505] text-white font-sans pt-20" dir={business.defaultLanguage === 'ar' ? 'rtl' : 'ltr'}>
             {/* Template Header */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-md border-b border-white/5 py-4">
                 <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -55,12 +57,13 @@ export default function ModernTemplate({ business, sections }: Props) {
                         <h1 className="text-xl font-black tracking-tighter">{business.name}</h1>
                     </div>
 
-                    <button
+                    <Button
+                        theme={business.themeColor}
                         onClick={() => document.getElementById('services-section')?.scrollIntoView({ behavior: 'smooth' })}
-                        className={`px-6 py-2 rounded-full text-sm font-bold ${bgThemeClass} hover:opacity-90 transition-opacity`}
+                        className={`px-6 py-2 rounded-full text-sm font-bold ${bgThemeClass} hover:opacity-90 transition-opacity whitespace-nowrap`}
                     >
-                        Book Now
-                    </button>
+                        {t("bookNow")}
+                    </Button>
                 </div>
             </header>
 
@@ -76,8 +79,8 @@ export default function ModernTemplate({ business, sections }: Props) {
                 <section>
                     <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                         <div>
-                            <h2 className="text-4xl font-black mb-2">Our Services</h2>
-                            <p className="text-zinc-500 text-lg">Pick a service to start your booking.</p>
+                            <h2 className="text-4xl font-black mb-2">{t("ourServices")}</h2>
+                            <p className="text-zinc-500 text-lg">{t("servicesDesc")}</p>
                         </div>
                     </div>
 
@@ -98,12 +101,12 @@ export default function ModernTemplate({ business, sections }: Props) {
                                 )}
                                 <div className="p-8 flex flex-col flex-1">
                                     <h3 className="text-2xl font-bold mb-4">{service.name}</h3>
-                                    <p className="text-zinc-500 text-sm line-clamp-2 mb-8">{service.description || "Professional service tailored to your needs."}</p>
+                                    <p className="text-zinc-500 text-sm line-clamp-2 mb-8">{service.description || t("serviceDefaultDesc")}</p>
 
                                     <div className="flex items-center justify-between mt-auto pt-6 border-t border-zinc-800/50">
                                         <div className="space-y-1">
                                             <div className="flex items-center gap-2 text-zinc-400 text-xs font-bold uppercase tracking-wider">
-                                                <HiOutlineClock /> {service.duration} MIN
+                                                <HiOutlineClock /> {t("duration", { min: service.duration })}
                                             </div>
                                             <div className={`text-3xl font-black ${themeClass}`}>
                                                 ${service.price.toString()}
@@ -114,7 +117,7 @@ export default function ModernTemplate({ business, sections }: Props) {
                                             onClick={() => handleBook(service)}
                                             className={`px-6! py-3! text-sm bg-${business.themeColor}-600! hover:opacity-90`}
                                         >
-                                            Book
+                                            {t("book")}
                                         </Button>
                                     </div>
                                 </div>
@@ -125,7 +128,7 @@ export default function ModernTemplate({ business, sections }: Props) {
             </div>
 
             <footer className="border-t border-white/5 py-10 mt-20 text-center text-zinc-600 text-sm">
-                &copy; {new Date().getFullYear()} {business.name}. All rights reserved.
+                &copy; {new Date().getFullYear()} {business.name}. {t("allRightsReserved")}
             </footer>
 
             {selectedService && (

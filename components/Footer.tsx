@@ -56,22 +56,22 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-[#050505] border-t border-zinc-900 pt-20 pb-10">
+        <footer className="bg-[#050505] border-t border-zinc-900 pt-16 md:pt-20 pb-10">
             <div className="container mx-auto px-6">
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 md:mb-20">
                     {/* Brand */}
-                    <div className="col-span-1 lg:col-span-1">
+                    <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
                         <Link href="/" className="flex items-center gap-2 mb-6 group">
                             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                                 <span className="text-white font-black">M</span>
                             </div>
                             <span className="text-xl font-bold tracking-tight">{settings?.platformName || "Platform"}</span>
                         </Link>
-                        <p className="text-zinc-500 text-sm leading-relaxed mb-8">
+                        <p className="text-zinc-500 text-sm leading-relaxed mb-8 max-w-xs">
                             {t("brandDesc")}
                         </p>
-                        <div className="flex gap-4">
-                            {[{ Icon: SiTeal, link: "" }, { Icon: SiLinkedin }, { Icon: SiGithub }, { Icon: SiWhatsapp }].map(({ Icon, link }, i) => (
+                        <div className="flex gap-4 justify-center sm:justify-start">
+                            {[{ Icon: SiTeal }, { Icon: SiLinkedin }, { Icon: SiGithub }, { Icon: SiWhatsapp }].map(({ Icon }, i) => (
                                 <Link
                                     key={i}
                                     href="#"
@@ -85,7 +85,7 @@ const Footer = () => {
 
                     {/* Links */}
                     {linksSection.map((col, i) => (
-                        <div key={i}>
+                        <div key={i} className="flex flex-col items-center text-center sm:items-start sm:text-left">
                             <h4 className="font-bold mb-6 text-sm uppercase tracking-widest text-zinc-300">
                                 {col.title}
                             </h4>
@@ -102,19 +102,20 @@ const Footer = () => {
                     ))}
                 </div>
 
-                <div className="flex flex-col md:row items-center justify-between pt-10 border-t border-zinc-900 gap-6 text-zinc-600 text-xs">
+                <div className="flex flex-col md:flex-row items-center justify-between pt-10 border-t border-zinc-900 gap-6 text-zinc-600 text-[10px] md:text-xs text-center md:text-left">
                     <p>{t("rights", { year: new Date().getFullYear(), platform: settings?.platformName || "Platform" })}</p>
-                    <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                        {t("status")}
+                    <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                            {t("status")}
+                        </div>
+                        <div className="flex items-center">
+                            {t("createdBy")}
+                            <span className="text-sky-500 mx-1 font-bold" >
+                                Mahmood aqaad
+                            </span>
+                        </div>
                     </div>
-                    <div className="flex items-center">
-                        {t("createdBy")}
-                        <span className="text-sky-500 mx-1 font-bold" >
-                            Mahmood aqaad
-                        </span>
-                    </div>
-
                 </div>
             </div>
         </footer>

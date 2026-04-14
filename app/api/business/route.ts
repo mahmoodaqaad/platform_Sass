@@ -1,17 +1,14 @@
 import { prisma } from "@/Tools/db";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import { JwtPayload } from "@/Tools/Types";
+import { getAuthUser } from "@/Tools/getAuthUser";
 
 export const POST = async (req: NextRequest) => {
     try {
-        const token = req.cookies.get("myplatform_token")?.value;
-        if (!token) {
+        const authUser = await getAuthUser(req);
+        if (!authUser) {
             return NextResponse.json({ message: "غير مصرح لك بالوصول" }, { status: 401 });
         }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-        const userId = decoded.id;
+        const userId = authUser.id;
 
         const body = await req.json();
         const { name, slug, type, description, address, phone, plan, duration, AllPaied } = body;

@@ -5,7 +5,7 @@ import React from "react";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "outline" | "ghost";
     isLoading?: boolean;
-    theme: string
+    theme?: string
 }
 
 const Button = ({ children, variant = "primary", isLoading, className = "", theme = "indigo", ...props }: ButtonProps) => {

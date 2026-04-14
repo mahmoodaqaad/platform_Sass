@@ -1,19 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/Tools/db";
-import { jwtVerify } from "jose";
 import { startOfMonth, subMonths, endOfMonth, format } from "date-fns";
+import { getAuthUser } from "@/Tools/getAuthUser";
 
 async function verifyAdmin(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return false;
-
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        return payload.role === "ADMIN";
-    } catch (error) {
-        return false;
-    }
+    const authUser = await getAuthUser(req);
+    return authUser?.role === "ADMIN";
 }
 
 export const GET = async (req: NextRequest) => {

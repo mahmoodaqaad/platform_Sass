@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import LogoUpload from "@/components/dashboard/LogoUpload";
 import { useTranslations, useLocale } from "next-intl";
+import { signOut } from "next-auth/react";
 
 const BUSINESS_TYPES = [
     { value: "SALON", icon: MdContentCut },
@@ -87,6 +88,7 @@ export default function OnboardingPage() {
             sessionStorage.removeItem("subscription_duration");
             sessionStorage.removeItem("user_allpaides");
 
+            await signOut({ redirect: false });
             await axios.post("/api/auth/logout");
             router.push(`/${locale}/login?redirect=true`);
         } catch (err: unknown) {

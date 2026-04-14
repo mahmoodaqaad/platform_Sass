@@ -711,7 +711,13 @@
                     "email": "البريد الإلكتروني",
                     "password": "كلمة المرور المؤقتة",
                     "submit": "تثبيت الموظف",
-                    "error": "حدث خطأ غير متوقع"
+                    "error": "حدث خطأ غير متوقع",
+                    "delete": {
+                        "title": "هل أنت متأكد؟",
+                        "description": "سيتم حذف الموظف \"{name}\"",
+                        "confirm": "نعم، قم بالحذف",
+                        "cancel": "تراجع"
+                    }
                 }
             },
             "settings": {
@@ -919,6 +925,35 @@
             "HOTEL": "فنادق",
             "STORE": "متاجر",
             "OTHER": "أخرى"
+        }
+    },
+    "Public": {
+        "bookNow": "احجز الآن",
+        "ourServices": "خدماتنا",
+        "servicesDesc": "اختر خدمة لبدء الحجز الخاص بك.",
+        "serviceDefaultDesc": "خدمة احترافية مصممة خصيصاً لاحتياجاتك.",
+        "duration": "{min} دقيقة",
+        "durationLabel": "المدة",
+        "book": "حجز",
+        "selectService": "اختيار الخدمة",
+        "allRightsReserved": "جميع الحقوق محفوظة.",
+        "services": "الخدمات",
+        "noServices": "لا توجد خدمات بعد",
+        "BookingModal": {
+            "title": "حجز خدمة",
+            "selectDate": "اختر التاريخ",
+            "selectTime": "اختر الوقت",
+            "yourName": "اسمك",
+            "namePlaceholder": "أدخل اسمك الكامل",
+            "email": "البريد الإلكتروني",
+            "emailPlaceholder": "أدخل بريدك الإلكتروني",
+            "phone": "رقم الهاتف",
+            "phonePlaceholder": "أدخل رقم هاتفك",
+            "confirm": "تأكيد الحجز",
+            "terms": "بإتمام الحجز أنت توافق على الشروط والأحكام الخاصة بنا.",
+            "success": "تم إرسال طلب الحجز! سنتواصل معك قريباً.",
+            "error": "فشل إنشاء الحجز",
+            "dateError": "يرجى اختيار التاريخ والوقت"
         }
     }
 }

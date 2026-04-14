@@ -1,18 +1,10 @@
+import prisma from "@/Tools/db";
+import { getAuthUser } from "@/Tools/getAuthUser";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/Tools/db";
-import { jwtVerify } from "jose";
-
 async function getOwnerId(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        if (payload.role !== "OWNER") return null;
-        return payload.id as string;
-    } catch {
-        return null;
-    }
+    const authUser = await getAuthUser(req);
+    if (!authUser || (authUser.role !== "OWNER" && authUser.role !== "ADMIN")) return null;
+    return authUser.id;
 }
 
 export const GET = async (req: NextRequest) => {

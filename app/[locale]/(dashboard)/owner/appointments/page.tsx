@@ -74,12 +74,7 @@ const AppointmentsPage = () => {
 
     const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = React.useCallback(async () => {
         try {
             const [booksRes, servRes, custRes] = await Promise.all([
                 axios.get("/api/owner/appointments"),
@@ -91,11 +86,19 @@ const AppointmentsPage = () => {
             setServices(Array.isArray(servRes.data) ? servRes.data : [])
             setCustomers(Array.isArray(custRes.data) ? custRes.data : [])
         } catch {
-            toast.error(t("table.loading")) // Reuse loading error or generic error
+            toast.error(t("table.loading"))
         } finally {
             setLoading(false)
         }
-    }
+    }, [t]);
+
+    useEffect(() => {
+        setMounted(true);
+        const loadData = async () => {
+            await fetchData();
+        };
+        loadData();
+    }, [fetchData]);
     const handleStatusUpdate = async (appointmentId: string, status: string) => {
         try {
             await axios.patch("/api/owner/appointments", { appointmentId, status });
@@ -130,7 +133,7 @@ const AppointmentsPage = () => {
         const isDuplicate = appointments.some(app =>
             app.customer?.email === formData.customerEmail &&
             app.service?.id === formData.serviceId &&
-            new Date(app.startTime).getTime() === new Date(formData.startTime).getTime()
+            app.startTime && new Date(app.startTime).getTime() === new Date(formData.startTime).getTime()
         );
 
         if (isDuplicate) {
@@ -160,26 +163,26 @@ const AppointmentsPage = () => {
         }
     }
 
-    const filterOptions = ["all", "today", "pending", "completed"];
+    const filterOptions: Array<"all" | "today" | "pending" | "completed"> = ["all", "today", "pending", "completed"];
 
     return (
         <div className="space-y-10">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-4xl font-black text-white flex items-center gap-4">
+                    <h1 className="text-3xl md:text-4xl font-black text-white flex items-center gap-4">
                         <HiOutlineCalendar className="text-indigo-500" />
                         {t("title")}
                     </h1>
                     <p className="text-zinc-500 mt-2 font-medium">{t("subtitle")}</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                     <button className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold transition-all border border-white/5">
                         {t("report")}
                     </button>
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold shadow-lg shadow-indigo-600/20 transition-all active:scale-95 flex items-center gap-2"
+                        className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold shadow-lg shadow-indigo-600/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         <HiOutlinePlus className="text-xl" />
                         {t("newBooking")}
@@ -189,21 +192,21 @@ const AppointmentsPage = () => {
 
             {/* Content Card */}
             <div className="bg-zinc-900 border border-white/5 rounded-4xl  shadow-2xl">
-                <div className="p-10 border-b border-white/5 flex items-center justify-between bg-white/2">
-                    <h3 className="text-xl font-bold text-white uppercase tracking-widest opacity-50">{t("table.listTitle")}</h3>
-                    <div className="flex gap-2">
+                <div className="p-6 md:p-10 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-white/2">
+                    <h3 className="text-sm md:text-xl font-bold text-white uppercase tracking-widest opacity-50">{t("table.listTitle")}</h3>
+                    <div className="flex flex-wrap gap-2">
                         {filterOptions.map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setFilter(tab)}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === tab ? "bg-white text-black" : "text-zinc-500 hover:text-white"}`}>
+                                className={`px-4 py-2 rounded-xl text-[10px] md:text-xs font-bold transition-all ${filter === tab ? "bg-white text-black" : "text-zinc-500 hover:text-white"}`}>
                                 {tStatus(tab as any)}
                             </button>
                         ))}
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-start"> {/* Removed dir="rtl" */}
                         <thead className="bg-white/1">
                             <tr>
@@ -216,7 +219,7 @@ const AppointmentsPage = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            <AnimatePresence>
+                            <AnimatePresence mode="wait">
                                 {loading ? (
                                     <tr><td colSpan={6} className="px-8 py-20 text-center text-zinc-500 font-bold">{t("table.loading")}</td></tr>
                                 ) : (() => {
@@ -226,7 +229,7 @@ const AppointmentsPage = () => {
                                         if (filter === "completed") return app.status === "COMPLETED";
                                         if (filter === "today") {
                                             const today = new Date().toLocaleDateString(locale);
-                                            const appDate = new Date(app.startTime).toLocaleDateString(locale);
+                                            const appDate = app.startTime ? new Date(app.startTime).toLocaleDateString(locale) : "";
                                             return today === appDate;
                                         }
                                         return true;
@@ -262,11 +265,11 @@ const AppointmentsPage = () => {
                                                 <div className="flex flex-col gap-1">
                                                     <p className="text-white font-bold flex items-center gap-2">
                                                         <HiOutlineCalendar className="text-indigo-400" />
-                                                        {new Date(app.startTime).toLocaleDateString(locale)}
+                                                        {app.startTime ? new Date(app.startTime).toLocaleDateString(locale) : "---"}
                                                     </p>
                                                     <p className="text-zinc-500 text-sm font-medium flex items-center gap-2">
                                                         <HiOutlineClock className="text-zinc-500" />
-                                                        {new Date(app.startTime).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
+                                                        {app.startTime ? new Date(app.startTime).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : "--:--"}
                                                     </p>
                                                 </div>
                                             </td>
@@ -274,8 +277,8 @@ const AppointmentsPage = () => {
                                                 <span className="text-white font-black">${app.service?.price}</span>
                                             </td>
                                             <td className="px-8 py-8">
-                                                <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border ${getStatusStyle(app.status)}`}>
-                                                    {tStatus(app.status.toLowerCase() as any)}
+                                                <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border ${getStatusStyle(app.status || "")}`}>
+                                                    {tStatus((app.status?.toLowerCase() as "pending" | "confirmed" | "cancelled" | "completed") || "pending")}
                                                 </span>
                                             </td>
                                             <td className="px-8 py-8">
@@ -370,6 +373,79 @@ const AppointmentsPage = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden p-4 space-y-4">
+                    {(() => {
+                        const filtered = appointments.filter(app => {
+                            if (filter === "all") return true;
+                            if (filter === "pending") return app.status === "PENDING";
+                            if (filter === "completed") return app.status === "COMPLETED";
+                            if (filter === "today") {
+                                const today = new Date().toLocaleDateString(locale);
+                                const appDate = app.startTime ? new Date(app.startTime).toLocaleDateString(locale) : "";
+                                return today === appDate;
+                            }
+                            return true;
+                        });
+
+                        if (loading) return <div className="py-10 text-center text-zinc-500 font-bold">{t("table.loading")}</div>;
+                        if (filtered.length === 0) return <div className="py-10 text-center text-zinc-500 font-bold">{t("table.noResults")}</div>;
+
+                        return filtered.map((app) => (
+                            <div key={app.id} className="bg-white/2 border border-white/5 rounded-3xl p-6 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-linear-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-indigo-500/20">
+                                        <HiOutlineUser className="text-xl text-indigo-400" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-white font-bold text-lg truncate">{app.customer?.name}</p>
+                                        <p className="text-zinc-500 text-xs truncate">{app.customer?.email}</p>
+                                    </div>
+                                    <div className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border ${getStatusStyle(app.status || "")}`}>
+                                        {tStatus((app.status?.toLowerCase() as any) || "pending")}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
+                                    <div className="space-y-1">
+                                        <p className="text-zinc-500 text-[10px] font-bold uppercase">{t("table.service")}</p>
+                                        <p className="text-white font-bold text-sm tracking-tight">{app.service?.name}</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-zinc-500 text-[10px] font-bold uppercase">{t("table.price")}</p>
+                                        <p className="text-white font-black text-sm">${app.service?.price}</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-zinc-500 text-[10px] font-bold uppercase text-nowrap">{t("table.dateTime")}</p>
+                                        <p className="text-white font-bold text-sm">{app.startTime ? new Date(app.startTime).toLocaleDateString(locale) : "---"}</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-zinc-500 text-[10px] font-bold uppercase">{t("table.dateTime")}</p>
+                                        <p className="text-white font-bold text-sm">{app.startTime ? new Date(app.startTime).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : "--:--"}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleStatusUpdate(app.id, 'CONFIRMED')}
+                                        className="flex-1 py-3 bg-emerald-500/10 text-emerald-400 rounded-xl font-bold text-xs hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+                                        disabled={app.status === 'CONFIRMED'}
+                                    >
+                                        {tActions("confirm")}
+                                    </button>
+                                    <button
+                                        onClick={() => handleStatusUpdate(app.id, 'CANCELLED')}
+                                        className="flex-1 py-3 bg-rose-500/10 text-rose-400 rounded-xl font-bold text-xs hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                                        disabled={app.status === 'CANCELLED'}
+                                    >
+                                        {tActions("cancel")}
+                                    </button>
+                                </div>
+                            </div>
+                        ));
+                    })()}
+                </div>
             </div>
 
             {/* Manual Booking Modal */}
@@ -387,18 +463,20 @@ const AppointmentsPage = () => {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="bg-zinc-950 border border-zinc-800 w-full max-w-2xl rounded-[3rem] shadow-2xl relative overflow-hidden"
+                            className="bg-zinc-950 border border-zinc-800 w-full max-w-2xl rounded-3xl md:rounded-[3rem] shadow-2xl relative overflow-hidden"
                         >
-                            <div className="p-12 relative max-h-[90vh] overflow-y-auto">
+                            <div className="p-6 md:p-12 relative max-h-[90vh] overflow-y-auto no-scrollbar">
                                 <button
                                     onClick={() => setShowAddModal(false)}
-                                    className="absolute top-8 left-8 p-3 hover:bg-zinc-900 rounded-2xl text-zinc-500 transition-all"
+                                    className="absolute top-4 right-4 md:top-8 md:right-auto md:left-8 p-3 hover:bg-zinc-900 rounded-2xl text-zinc-500 transition-all z-10"
                                 >
                                     <HiOutlineXMark className="text-2xl" />
                                 </button>
 
-                                <h2 className="text-3xl font-black text-white mb-2">{t("manualBooking.title")}</h2>
-                                <p className="text-zinc-500 text-sm mb-10 font-medium italic">{t("manualBooking.subtitle")}</p>
+                                <div className="mt-8 md:mt-0">
+                                    <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t("manualBooking.title")}</h2>
+                                    <p className="text-zinc-500 text-sm mb-10 font-medium italic">{t("manualBooking.subtitle")}</p>
+                                </div>
 
                                 <form onSubmit={handleAddBooking} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-2">
@@ -406,7 +484,7 @@ const AppointmentsPage = () => {
                                             label={t("manualBooking.selectCustomer")}
                                             icon={<HiOutlineUser />}
                                             value={selectedCustomerId}
-                                            onChange={(e: any) => {
+                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                                                 const id = e.target.value;
                                                 setSelectedCustomerId(id);
                                                 if (id) {
@@ -414,8 +492,8 @@ const AppointmentsPage = () => {
                                                     if (cust) {
                                                         setFormData({
                                                             ...formData,
-                                                            customerName: cust.name,
-                                                            customerEmail: cust.email
+                                                            customerName: cust.name || "",
+                                                            customerEmail: cust.email || ""
                                                         });
                                                     }
                                                 }
@@ -434,7 +512,7 @@ const AppointmentsPage = () => {
                                             label={t("manualBooking.customerName")}
                                             icon={<HiOutlineUser />}
                                             value={formData.customerName}
-                                            onChange={(e: any) => {
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 setFormData({ ...formData, customerName: e.target.value });
                                                 if (selectedCustomerId) setSelectedCustomerId(""); // Reset if manually editing
                                             }}
@@ -449,7 +527,7 @@ const AppointmentsPage = () => {
                                         name="email"
 
                                         value={formData.customerEmail}
-                                        onChange={(e: any) => {
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                             setFormData({ ...formData, customerEmail: e.target.value });
                                             if (selectedCustomerId) setSelectedCustomerId(""); // Reset if manually editing
                                         }}
@@ -460,7 +538,7 @@ const AppointmentsPage = () => {
                                         label={t("manualBooking.service")}
                                         icon={<HiOutlineShoppingBag />}
                                         value={formData.serviceId}
-                                        onChange={(e: any) => setFormData({ ...formData, serviceId: e.target.value })}
+                                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, serviceId: e.target.value })}
                                         required
                                     >
                                         <option value="">{t("manualBooking.selectService")}</option>
@@ -473,7 +551,7 @@ const AppointmentsPage = () => {
                                             icon={<HiOutlineClock />}
                                             type="datetime-local"
                                             value={formData.startTime}
-                                            onChange={(e: any) => setFormData({ ...formData, startTime: e.target.value })}
+                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, startTime: e.target.value })}
                                             required
                                         />
                                     </div>

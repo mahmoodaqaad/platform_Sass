@@ -1,18 +1,14 @@
+import { getAuthUser } from "@/Tools/getAuthUser";
 import prisma from "@/Tools/db";
-import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
-
 // Helper to verify staff and get their business
 async function getStaffBusiness(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        if (payload.role !== "STAFF") return null;
+    const authUser = await getAuthUser(req);
+    if (!authUser || authUser.role !== "STAFF") return null;
 
+    try {
         const membership = await prisma.member.findFirst({
-            where: { userId: payload.id as string },
+            where: { userId: authUser.id },
             include: { business: true }
         });
 

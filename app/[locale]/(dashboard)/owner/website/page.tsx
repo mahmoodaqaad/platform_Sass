@@ -8,7 +8,17 @@ import SettingPanel from "@/components/builder/SettingPanel";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
+import DesktopOnlyGuard from "@/components/builder/DesktopOnlyGuard";
+
+interface SectionSettings {
+    [key: string]: string | number | boolean | string[] | undefined;
+}
+
+interface BusinessData {
+    name: string;
+    slug?: string;
+    [key: string]: unknown; 
+}
 
 interface Section {
     id?: string;
@@ -18,7 +28,7 @@ interface Section {
     images?: string[];
     order: number;
     isActive: boolean;
-    settings?: any;
+    settings?: SectionSettings;
 }
 
 const TEMPLATES = [
@@ -45,7 +55,7 @@ const WebsiteBuilderPage = () => {
     const [addSectionMenuOpen, setAddSectionMenuOpen] = useState<boolean>(false);
     const [editSection, setEditSection] = useState<Section | null>(null);
     const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
-    const [businessData, setBusinessData] = useState<any>(null);
+    const [businessData, setBusinessData] = useState<BusinessData | null>(null);
 
     useEffect(() => {
         const fetchWebsiteData = async () => {
@@ -120,7 +130,7 @@ const WebsiteBuilderPage = () => {
 
             setSections([...sections, res.data]);
             setEditSection(res.data);
-        } catch (error) {
+        } catch {
             toast.error("Failed to add section");
         } finally {
             setSaving(false);
@@ -177,16 +187,16 @@ const WebsiteBuilderPage = () => {
     }
 
     return (
-        <div className="h-[calc(100vh-80px)] -m-10 bg-zinc-950 flex flex-col overflow-hidden relative">
+        <div className="h-screen flex flex-col bg-zinc-950 overflow-hidden font-sans">
             {/* Builder Header */}
-            <div className="h-16 border-b border-zinc-900 bg-zinc-950 flex items-center justify-between px-6 shrink-0 z-30">
-                <div className="flex items-center gap-6">
+            <div className="h-16 border-b border-zinc-900 bg-zinc-950 flex items-center justify-between px-4 md:px-6 shrink-0 z-30">
+                <div className="flex items-center gap-3 md:gap-6">
                     <div>
-                        <h1 className="text-lg font-black text-white">{t("title")}</h1>
-                        <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Visual Studio v1.0</p>
+                        <h1 className="text-sm md:text-lg font-black text-white">{t("title")}</h1>
+                        <p className="hidden md:block text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Visual Studio v1.0</p>
                     </div>
 
-                    <div className="h-8 w-px bg-zinc-900 mx-2" />
+                    <div className="hidden md:block h-8 w-px bg-zinc-900 mx-2" />
 
                     <div className="flex gap-1 p-1 bg-zinc-900 rounded-xl border border-zinc-800">
                         <button
@@ -206,29 +216,26 @@ const WebsiteBuilderPage = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    {businessData?.slug && (
-                        <a
-                            href={`/${businessData.slug}`}
-                            target="_blank"
-                            className="text-[10px] font-black text-zinc-500 hover:text-white transition-colors uppercase tracking-widest border border-zinc-900 px-4 py-2 rounded-xl"
-                        >
-                            View Live Site
-                        </a>
-                    )}
-                    <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl">
+                <div className="flex items-center gap-2 md:gap-4">
+                    <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl">
                         <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                        <span className="text-xs font-bold text-zinc-400 uppercase tracking-tighter">Live Sync Active</span>
+                        <span className="text-xs font-bold text-zinc-400 uppercase tracking-tighter">Live Sync</span>
                     </div>
-                    <Button onClick={handleSaveConfig} isLoading={saving} className="h-10 px-6">
+                    <Button onClick={handleSaveConfig} isLoading={saving} className="h-10 px-4 md:px-6 text-xs md:text-sm">
                         {t("save")}
                     </Button>
                 </div>
             </div>
 
-            <div className="flex-1 flex overflow-hidden">
+            {/* Main Builder Area */}
+            <div className="flex-1 flex overflow-hidden relative">
+                {/* Desktop Required Guard for small screens */}
+                <div className="flex lg:hidden absolute inset-0 z-50">
+                    <DesktopOnlyGuard />
+                </div>
+
                 {/* Left Sidebar: Layers & Configuration */}
-                <div className="w-64 border-r border-zinc-900 flex flex-col shrink-0 bg-zinc-950 z-20 shadow-2xl">
+                <div className="hidden lg:flex w-80 flex-col bg-zinc-950 border-r border-zinc-800 relative z-30">
                     <div className="p-6 border-b border-zinc-900">
                         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-4">Site Design</h3>
                         <div className="space-y-4">
@@ -348,8 +355,8 @@ const WebsiteBuilderPage = () => {
                 </div>
 
                 {/* Center: Live Preview */}
-                <div className="flex-1 bg-zinc-900/30 relative overflow-hidden flex items-center justify-center p-8">
-                    <div className={`transition-all duration-500 ease-in-out bg-zinc-950 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden rounded-2xl border border-white/5 ${previewMode === "desktop" ? "w-full max-w-5xl h-full" : "w-[375px] h-[667px]"}`}>
+                <div className="flex-1 bg-zinc-900/30 relative overflow-hidden flex items-center justify-center p-4 md:p-8">
+                    <div className={`transition-all duration-500 ease-in-out bg-zinc-950 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden rounded-2xl border border-white/5 ${previewMode === "desktop" ? "w-full max-w-5xl h-full" : "w-full max-w-[375px] aspect-9/16 sm:h-[667px]"}`}>
                         <div className="w-full h-full overflow-y-auto scrollbar-hide relative group">
                             {/* Browser Decoration */}
                             <div className="sticky top-0 left-0 right-0 h-10 bg-zinc-900/90 backdrop-blur-md border-b border-white/5 z-40 px-4 flex items-center justify-between pointer-events-none transition-opacity group-hover:opacity-100 opacity-60">
@@ -399,39 +406,28 @@ const WebsiteBuilderPage = () => {
                 </div>
 
                 {/* Right Sidebar: Settings Panel */}
-                <AnimatePresence mode="wait">
-                    {editSection && (
-                        <motion.div
-                            key="setting-panel"
-                            initial={{ x: 320, opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: 320, opacity: 0 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                            className="z-30 shrink-0 relative flex"
+                {editSection && (
+                    <div className="hidden lg:flex">
+                        <SettingPanel
+                            section={editSection}
+                            onUpdate={handleUpdateSection}
+                            onBack={() => setEditSection(null)}
+                            onDelete={() => editSection.id && handleDeleteSection(editSection.id)}
                         >
-                            <SettingPanel
-                                section={editSection}
-                                onUpdate={handleUpdateSection}
-                                onBack={() => setEditSection(null)}
-                                onDelete={() => editSection.id && handleDeleteSection(editSection.id)}
-                            >
-
-
-                                <div className=" bottom-10 inset-x-8 z-40">
-                                    <Button
-                                        onClick={handleSaveSectionLocally}
-                                        isLoading={saving}
-                                        className="w-full bg-green-200 text-black hover:bg-zinc-200 shadow-2xl font-black text-xs tracking-widest h-12"
-                                    >
-                                        APPLY BLOCK CHANGES
-                                    </Button>
-                                </div>
-                            </SettingPanel>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                            <div className="sticky bottom-0 inset-x-0 p-6 bg-zinc-950 border-t border-zinc-900 z-50">
+                                <Button
+                                    onClick={handleSaveSectionLocally}
+                                    isLoading={saving}
+                                    className="w-full bg-indigo-600 text-white hover:bg-indigo-500 shadow-2xl font-black text-xs tracking-widest h-12 rounded-xl"
+                                >
+                                    APPLY BLOCK CHANGES
+                                </Button>
+                            </div>
+                        </SettingPanel>
+                    </div>
+                )}
             </div>
-        </div >
+        </div>
     );
 };
 

@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import { HiOutlineLockClosed, HiCheckCircle } from "react-icons/hi2";
 import { HiOutlineMail } from 'react-icons/hi';
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
 import { useTranslations } from "next-intl";
 import axios from 'axios';
 import { useParams, useSearchParams } from 'next/navigation';
@@ -53,6 +55,10 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    signIn("google");
   };
 
   return (
@@ -125,7 +131,7 @@ const Login = () => {
         <div className="p-10 bg-slate-900/40">
           {
             isRedirect &&
-            <motion.p dir={path == "en" ? "ltr" : "rtl"} initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }} className='text-yellow-700  bg-yellow-200 p-3 rounded text-2xl mb-3'>{t("redirect") }</motion.p>
+            <motion.p dir={path == "en" ? "ltr" : "rtl"} initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8 }} className='text-yellow-700  bg-yellow-200 p-3 rounded text-2xl mb-3'>{t("redirect")}</motion.p>
           }
           <h2 className="text-3xl font-semibold text-white mb-8">
             {t("signIn")}
@@ -179,6 +185,24 @@ const Login = () => {
               disabled:opacity-50 disabled:hover:scale-100"
             >
               {loading ? t("signingIn") : t("signIn")}
+            </button>
+
+            {/* SEPARATOR */}
+            <div className="relative flex items-center gap-4 py-2">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t("or")}</span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+
+            {/* GOOGLE BUTTON */}
+            <button
+              type="button"
+              onClick={() => signIn("google")}
+              className="w-full py-4 rounded-xl font-bold text-white border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-linear-to-r from-indigo-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <FcGoogle className="text-2xl group-hover:scale-110 transition-transform" />
+              <span className="relative z-10">{t("continueWithGoogle")}</span>
             </button>
 
           </form>

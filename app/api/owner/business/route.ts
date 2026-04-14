@@ -1,24 +1,16 @@
+import prisma from "@/Tools/db";
+import { getAuthUser } from "@/Tools/getAuthUser";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/Tools/db";
-import { jwtVerify } from "jose";
-
 async function getOwnerId(req: NextRequest) {
-    const token = req.cookies.get("myplatform_token")?.value;
-    if (!token) return null;
-    try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-        const { payload } = await jwtVerify(token, secret);
-        if (payload.role !== "OWNER") return null;
-        return payload.id as string;
-    } catch {
-        return null;
-    }
+    const authUser = await getAuthUser(req);
+    if (!authUser || (authUser.role !== "OWNER" && authUser.role !== "ADMIN")) return null;
+    return authUser.id;
 }
 
 export const GET = async (req: NextRequest) => {
     const ownerId = await getOwnerId(req);
     if (!ownerId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
+    let isAccountIsGoogle = false
     try {
         const business = await prisma.business.findFirst({
             where: { ownerId },
@@ -38,7 +30,8 @@ export const GET = async (req: NextRequest) => {
                 marketingAutomation: true,
                 status: true,
                 type: true,
-                // defaultLanguage: true,
+
+                defaultLanguage: true,
                 _count: {
                     select: {
                         services: true,
@@ -48,10 +41,20 @@ export const GET = async (req: NextRequest) => {
                 }
             }
         });
-
+        const existPassword = await prisma.user.findUnique({
+            where: { id: ownerId },
+            select: { password: true }
+        });
+        const account = await prisma.account.findFirst({
+            where: { userId: ownerId },
+            select: { provider: true }
+        });
+        if (account) {
+            isAccountIsGoogle = true
+        }
         if (!business) return NextResponse.json({ message: "Business not found" }, { status: 404 });
 
-        return NextResponse.json(business);
+        return NextResponse.json({ ...business, isAccountIsGoogle: !existPassword?.password && isAccountIsGoogle });
     } catch (error) {
         console.error("Fetch owner business error:", error);
 
@@ -87,7 +90,7 @@ export const PATCH = async (req: NextRequest) => {
                 logo,
                 remindersEnabled,
                 marketingAutomation,
-                // defaultLanguage
+                defaultLanguage
             }
         });
 

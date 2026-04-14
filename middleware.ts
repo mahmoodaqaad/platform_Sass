@@ -2,11 +2,13 @@ import { NextResponse, NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
+import { getToken } from 'next-auth/jwt';
 
 const handleI18nRouting = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get('myplatform_token')?.value;
+    const nextAuthToken = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
     const { pathname } = request.nextUrl;
 
     // 1. Handle i18n routing first to ensure locale is present/handled
@@ -38,40 +40,39 @@ export async function middleware(request: NextRequest) {
     const isDashboardRoute = publicPathname.startsWith('/owner') || publicPathname.startsWith('/admin') || publicPathname.startsWith('/staff') || publicPathname.startsWith('/onboarding');
     const isAuthRoute = publicPathname === '/login' || publicPathname === '/register';
 
+    // 2. Auth Logic
+    let userRole = null;
+
     if (token) {
         try {
             const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'secret');
             const { payload } = await jwtVerify(token, secret);
-            const userRole = payload.role as string;
-
-            // If token is valid and user is on login/register, redirect to home (keep locale)
-            if (isAuthRoute) {
-                return NextResponse.redirect(new URL('/', request.url));
-            }
-
-            // Role-based protection
-            if (publicPathname.startsWith('/admin') && userRole !== 'ADMIN') {
-                return NextResponse.redirect(new URL('/', request.url));
-            }
-            if (publicPathname.startsWith('/owner') && userRole !== 'OWNER' && userRole !== 'ADMIN') {
-                return NextResponse.redirect(new URL('/', request.url));
-            }
-            if (publicPathname.startsWith('/staff') && userRole !== 'STAFF' && userRole !== 'OWNER' && userRole !== 'ADMIN') {
-                return NextResponse.redirect(new URL('/', request.url));
-            }
-
+            userRole = payload.role as string;
         } catch (error) {
             console.error("JWT Verification failed:", error);
-            if (isDashboardRoute) {
-                const redirectUrl = new URL('/login', request.url);
-                const resp = NextResponse.redirect(redirectUrl);
-                resp.cookies.delete('myplatform_token');
-                return resp;
-            }
-            // Just clear token if invalid
-            response.cookies.delete('myplatform_token');
+        }
+    } else if (nextAuthToken) {
+        userRole = nextAuthToken.role as string;
+    }
+
+    if (userRole) {
+        // If logged in and on login/register, redirect to home
+        if (isAuthRoute) {
+            return NextResponse.redirect(new URL('/', request.url));
+        }
+
+        // Role-based protection
+        if (publicPathname.startsWith('/admin') && userRole !== 'ADMIN') {
+            return NextResponse.redirect(new URL('/', request.url));
+        }
+        if (publicPathname.startsWith('/owner') && userRole !== 'OWNER' && userRole !== 'ADMIN') {
+            return NextResponse.redirect(new URL('/', request.url));
+        }
+        if (publicPathname.startsWith('/staff') && userRole !== 'STAFF' && userRole !== 'OWNER' && userRole !== 'ADMIN') {
+            return NextResponse.redirect(new URL('/', request.url));
         }
     } else {
+        // Not logged in and trying to access dashboard
         if (isDashboardRoute) {
             return NextResponse.redirect(new URL('/login', request.url));
         }

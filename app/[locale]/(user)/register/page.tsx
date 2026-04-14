@@ -7,6 +7,8 @@ import { HiOutlineLockClosed, HiCheckCircle, HiOutlineUser } from "react-icons/h
 import { HiOutlineMail } from "react-icons/hi";
 import { useTranslations } from "next-intl";
 import axios from 'axios';
+import { signIn } from 'next-auth/react';
+import { FcGoogle } from 'react-icons/fc';
 
 const Register = () => {
   const t = useTranslations("Auth");
@@ -264,6 +266,24 @@ const Register = () => {
               shadow-lg shadow-indigo-600/30"
             >
               {loading ? t("signingIn") : t("createAccount")}
+            </button>
+
+            {/* SEPARATOR */}
+            <div className="relative flex items-center gap-4 py-2">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t("or")}</span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+
+            {/* GOOGLE BUTTON */}
+            <button
+              type="button"
+              onClick={() => signIn("google")}
+              className="w-full py-4 rounded-xl font-bold text-white border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-linear-to-r from-indigo-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <FcGoogle className="text-2xl group-hover:scale-110 transition-transform" />
+              <span className="relative z-10">{t("continueWithGoogle")}</span>
             </button>
 
           </form>

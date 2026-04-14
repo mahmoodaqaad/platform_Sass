@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React, { SetStateAction, useState } from 'react'
 import { HiLogout, HiX } from 'react-icons/hi';
+import { signOut } from 'next-auth/react';
 
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
@@ -20,6 +21,7 @@ const Logout = ({ dash = true, setUser, isCollapsed }: { dash: boolean, setUser:
 
     const handleLogout = async () => {
         try {
+            await signOut({ redirect: false });
             await axios.post("/api/auth/logout");
             setShowLogoutModal(false);
             if (!dash) {
@@ -39,7 +41,7 @@ const Logout = ({ dash = true, setUser, isCollapsed }: { dash: boolean, setUser:
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
                 >
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -89,13 +91,13 @@ const Logout = ({ dash = true, setUser, isCollapsed }: { dash: boolean, setUser:
                         {t("logout.btn")}
                     </button>
 
-                    : <div className="p-4 border-t border-zinc-900">
+                    : <div className="p-4 overflow-hidden">
                         <button
                             onClick={() => setShowLogoutModal(true)}
-                            className="w-full flex items-center gap-4 p-4 rounded-2xl text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
+                            className="w-full flex items-center gap-4 p-4 rounded-4xl text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all group"
                         >
-                            <HiLogout className="text-2xl" />
-                            {!isCollapsed && <span className="font-bold text-sm">{t("logout.btn")}</span>}
+                            <HiLogout className="text-2xl transition-transform group-hover:scale-110" />
+                            {!isCollapsed && <span className="font-bold text-sm tracking-wide">{t("logout.btn")}</span>}
                         </button>
                     </div>
             }

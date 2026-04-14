@@ -392,13 +392,13 @@ export default function BusinessesPage() {
             {/* Edit Modal */}
             <AnimatePresence>
                 {showEditModal && selectedBusiness && (
-                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center   overflow-y-auto p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowEditModal(false)}
-                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                            className="absolute inset-0 bg-black/80 backdrop-blur-md  overflow-y-auto"
                         />
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -517,13 +517,13 @@ export default function BusinessesPage() {
             {/* Add Modal */}
             <AnimatePresence>
                 {showAddModal && (
-                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4  overflow-y-auto">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowAddModal(false)}
-                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                            className="absolute inset-0 bg-black/80 backdrop-blur-md  overflow-y-auto"
                         />
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}

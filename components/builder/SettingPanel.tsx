@@ -6,8 +6,15 @@ import RichEditor from "@/components/ui/RichEditor";
 import { HiOutlineChevronLeft, HiOutlinePhoto, HiOutlineTrash } from "react-icons/hi2";
 
 interface SettingPanelProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    section: any;
+    section: {
+        id?: string;
+        type: string;
+        title: string;
+        content: string;
+        images?: string[];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        settings?: any;
+    };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onUpdate: (data: any) => void;
     onBack: () => void;
@@ -48,7 +55,7 @@ const SettingPanel: React.FC<SettingPanelProps> = ({ section, onUpdate, onBack, 
                             <button
                                 type="button"
                                 onClick={() => {
-                                    const newImages = section.images.filter((_: any, i: number) => i !== index);
+                                    const newImages = (section.images || []).filter((_: unknown, i: number) => i !== index);
                                     onUpdate({ ...section, images: newImages });
                                 }}
                                 className="p-2 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500/20"
@@ -197,9 +204,7 @@ const SettingPanel: React.FC<SettingPanelProps> = ({ section, onUpdate, onBack, 
                         {/* Add more setting renderers for other types */}
                     </div>
                 </div>
-                {
-                    children
-                }
+
                 <div className="pt-2">
                     <button
                         onClick={onDelete}
@@ -208,8 +213,14 @@ const SettingPanel: React.FC<SettingPanelProps> = ({ section, onUpdate, onBack, 
                         <HiOutlineTrash /> DELETE SECTION
                     </button>
                 </div>
-
             </div>
+
+            {/* Fixed Footer for Actions */}
+            {children && (
+                <div className="shrink-0">
+                    {children}
+                </div>
+            )}
         </div>
     );
 };

@@ -317,7 +317,7 @@ const AdminUsers = () => {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => { setShowAddModal(false); setShowEditModal(false); }}
-                            className="absolute  inset-0 bg-zinc-950/90 backdrop-blur-md "
+                            className="absolute overflow-y-auto  inset-0 bg-zinc-950/90 backdrop-blur-md "
                         />
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
