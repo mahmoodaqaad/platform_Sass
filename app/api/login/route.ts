@@ -21,6 +21,8 @@ export const POST = async (req: NextRequest) => {
                 email: true,
                 role: true,
                 password: true,
+                emailVerified: true
+
             }
         })
 
@@ -38,6 +40,8 @@ export const POST = async (req: NextRequest) => {
             name: user.name || "",
             email: user.email,
             role: user.role,
+            emailVerified: user?.emailVerified,
+
         })
 
         return NextResponse.json({

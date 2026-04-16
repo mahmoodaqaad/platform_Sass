@@ -3,14 +3,15 @@ import { jwtVerify } from 'jose';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 import { getToken } from 'next-auth/jwt';
-
+import jwt from "jsonwebtoken"
+import { cookies } from "next/headers";
 const handleI18nRouting = createMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get('myplatform_token')?.value;
     const nextAuthToken = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
     const { pathname } = request.nextUrl;
-
+    const cookie = await cookies()
     // 1. Handle i18n routing first to ensure locale is present/handled
     // valid locales: /en/..., /ar/...
     // If the path doesn't have a locale, handleI18nRouting might redirect.
@@ -39,6 +40,35 @@ export async function middleware(request: NextRequest) {
 
     const isDashboardRoute = publicPathname.startsWith('/owner') || publicPathname.startsWith('/admin') || publicPathname.startsWith('/staff') || publicPathname.startsWith('/onboarding');
     const isAuthRoute = publicPathname === '/login' || publicPathname === '/register';
+    const isVerfiedRoute = publicPathname === "/verify-email"
+
+    const otpToken = request.cookies.get("otp_code")?.value;
+
+    if (isVerfiedRoute) {
+        if (token || nextAuthToken) {
+
+            return NextResponse.redirect(new URL("/", request.url));
+        }
+
+        if (!otpToken) {
+            return NextResponse.redirect(new URL('/register', request.url));
+        }
+
+        try {
+
+
+            const decoded = await jwt.verify(otpToken, process?.env?.JWT_SECRET!)
+            console.log(decoded);
+
+        } catch (error) {
+            await cookie.delete("otp_code")
+            
+            return NextResponse.redirect(new URL("/register", request.url));
+
+        }
+
+    }
+
 
     // 2. Auth Logic
     let userRole = null;

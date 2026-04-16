@@ -3,8 +3,8 @@ import { prisma } from "@/Tools/db"
 import { RegisterDto } from "@/Tools/Dto"
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcrypt"
-import { setCookie } from "@/Tools/generateToken"
-
+import { setCookie, setOTPCookie } from "@/Tools/generateToken"
+import { sendOtp, transporter } from "@/lib/mailer"
 export const POST = async (req: NextRequest) => {
     try {
         // Check if registration is open
@@ -29,30 +29,35 @@ export const POST = async (req: NextRequest) => {
         if (userExist) {
             return NextResponse.json({ message: "هذا البريد الإلكتروني مسجل مسبقاً" }, { status: 400 })
         }
-
         const hashedPassword = await bcrypt.hash(password, 10)
+
+        const code = Math.floor(100000 + Math.random() * 900000).toString()
+
+        await sendOtp(email, code)
 
         const user = await prisma.user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
-                role: "USER" // All new signups are standard users until they create a business
+                role: "USER",
+                verifyCode: code,
+                verifyExpire: new Date(Date.now() + 10 * 60 * 1000),
+                isVerified: false,
+
+                // All new signups are standard users until they create a business
             },
             select: {
                 id: true,
                 name: true,
                 email: true,
                 role: true,
+                emailVerified: true,
+
             }
         })
 
-        const cookie = await setCookie({
-            id: user.id,
-            name: user.name || "",
-            email: user.email,
-            role: user.role,
-        })
+        const cookie = await setOTPCookie(user.email, user.id)
 
         return NextResponse.json({
             message: "تم التسجيل بنجاح",
@@ -66,13 +71,3 @@ export const POST = async (req: NextRequest) => {
         return NextResponse.json({ message: "حدث خطأ غير متوقع" }, { status: 500 })
     }
 }
-
-// export const GET = async () => {
-//     try {
-//         const users = await Prisma.user.findMany()
-//         return NextResponse.json({ users }, { status: 200 })
-//     } catch (error) {
-//         console.error("Fetch users error:", error)
-//         return NextResponse.json({ message: "Failed to fetch users" }, { status: 500 })
-//     }
-// }

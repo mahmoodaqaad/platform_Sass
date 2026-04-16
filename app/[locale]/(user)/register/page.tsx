@@ -66,20 +66,21 @@ const Register = () => {
       setSuccess(true);
       setUserRole(user.role);
 
-      setTimeout(() => {
-        // Use redirect param if provided, otherwise fall back to role
-        if (redirectAfter) {
-          router.push(redirectAfter as never);
+      // setTimeout(() => {
+        if (!user.emailVerified) {
+          return router.push("/verify-email");
+        } else if (redirectAfter) {
+          return router.push(redirectAfter as never);
         } else if (user.role === "ADMIN") {
-          router.push("/admin");
+          return router.push("/admin");
         } else if (user.role === "OWNER") {
-          router.push("/onboarding");
+          return router.push("/onboarding");
         } else if (user.role === "STAFF") {
-          router.push("/staff");
+          return router.push("/staff");
         } else {
-          router.push("/");
+          return router.push("/");
         }
-      }, 1500);
+      // }, 1500);
     } catch (e: unknown) {
       console.error(e);
       if (axios.isAxiosError(e)) {

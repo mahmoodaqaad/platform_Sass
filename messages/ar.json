@@ -94,7 +94,8 @@
         "nameShort": "الاسم قصير جداً!",
         "passwordShort": "كلمة المرور قصيرة جداً!",
         "passwordMismatch": "تأكيد كلمة المرور غير متطابق",
-        "contactUs": "تواصل معنا"
+        "contactUs": "تواصل معنا",
+        "continueWithGoogle":"متابعة باستخدام جوجل"
     },
     "Hero": {
         "v2Live": "الإصدار 2.0 متاح الآن",

@@ -94,7 +94,8 @@
         "nameShort": "Your name is too short!",
         "passwordShort": "Your password is too short!",
         "passwordMismatch": "Confirm password does not match your password",
-        "contactUs": "Contact Us"
+        "contactUs": "Contact Us",
+        "continueWithGoogle": "Continue with Google"
     },
     "Hero": {
         "v2Live": "v2.0 is now live",
