@@ -30,19 +30,19 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // const response = await axios.post("/api/login", { email, password });
-      // const { user } = response.data;
+      const response = await axios.post("/api/login", { email, password });
+      const { user } = response.data;
 
-      // setSuccess(true);
-      // setUserRole(user.role);
+      setSuccess(true);
+      setUserRole(user.role);
 
-      // // Dramatic pause for success effect
-      // setTimeout(() => {
-      //   if (user.role === "ADMIN") router.push("/admin");
-      //   else if (user.role === "OWNER") router.push("/owner");
-      //   else if (user.role === "STAFF") router.push("/staff");
-      //   else router.push("/");
-      // }, 1500);
+      // Dramatic pause for success effect
+      setTimeout(() => {
+        if (user.role === "ADMIN") router.push("/admin");
+        else if (user.role === "OWNER") router.push("/owner");
+        else if (user.role === "STAFF") router.push("/staff");
+        else router.push("/");
+      }, 1500);
 
     } catch (e: unknown) {
       console.error(e);

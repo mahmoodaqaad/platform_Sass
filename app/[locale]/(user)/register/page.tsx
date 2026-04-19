@@ -96,7 +96,7 @@ const Register = () => {
         setError(t("unexpectedError"));
       }
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
