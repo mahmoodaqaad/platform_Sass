@@ -311,7 +311,7 @@ const AdminUsers = () => {
             {/* Modals */}
             <AnimatePresence>
                 {(showAddModal || showEditModal) && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-y-auto min-h-screen">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6  min-h-screen">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -323,7 +323,7 @@ const AdminUsers = () => {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="relative w-full max-w-lg bg-zinc-900 border border-white/10 rounded-4xl p-10 shadow-2xl overflow-hidden"
+                            className="relative w-full max-w-lg bg-zinc-900 border border-white/10 rounded-4xl p-10 shadow-2xl overflow-y-auto max-h-[90vh]"
 
                         >
                             {error && <p className='p-3 text-red-700 bg-red-300 mb-2 rounded'>{error}</p>}

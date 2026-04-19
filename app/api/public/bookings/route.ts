@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
     try {
         const body = await req.json();
-        const { serviceId, businessId, customerName, customerEmail, customerPhone, startTime } = body;
+        const { serviceId, businessId, customerName, customerEmail, customerPhone, startTime, notes } = body;
 
-        if (!serviceId || !businessId || !customerName || !customerEmail || !customerPhone || !startTime) {
+        if (!serviceId || !businessId || !customerName || !customerEmail || !customerPhone || !startTime || !notes) {
             return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
         }
 
@@ -52,13 +52,15 @@ export const POST = async (req: NextRequest) => {
             },
             update: {
                 name: customerName,
-                phone: customerPhone
+                phone: customerPhone,
+                notes: notes
             },
             create: {
                 name: customerName,
                 email: customerEmail,
                 phone: customerPhone,
-                businessId: businessId
+                businessId: businessId,
+                notes: notes
             }
         });
 

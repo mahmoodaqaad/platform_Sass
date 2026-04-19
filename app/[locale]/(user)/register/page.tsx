@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 import { FcGoogle } from 'react-icons/fc';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const t = useTranslations("Auth");
@@ -63,11 +64,17 @@ const Register = () => {
       const res = await axios.post("/api/register", { name, email, password });
       const { user } = res.data;
 
-      setSuccess(true);
-      setUserRole(user.role);
-
-      // setTimeout(() => {
+      
+      if (res.data.redirect) {
+        toast.warning("تم ارسال رمز التحقق بنجاح راجع بريدك الالكتروني")
+        return router.push(res.data.redirect);
+      }
+      toast.success("تم ارسال رمز التحقق بنجاح راجع بريدك الالكتروني")
+      
+      setTimeout(() => {
         if (!user.emailVerified) {
+          setUserRole(user.role);
+          setSuccess(true);
           return router.push("/verify-email");
         } else if (redirectAfter) {
           return router.push(redirectAfter as never);
@@ -79,8 +86,8 @@ const Register = () => {
           return router.push("/staff");
         } else {
           return router.push("/");
-        }
-      // }, 1500);
+      }
+      }, 1500);
     } catch (e: unknown) {
       console.error(e);
       if (axios.isAxiosError(e)) {
@@ -89,7 +96,7 @@ const Register = () => {
         setError(t("unexpectedError"));
       }
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -264,6 +271,8 @@ const Register = () => {
               hover:scale-[1.02]
               active:scale-[0.98]
               transition-all
+              disabled:opacity-50
+              disabled:cursor-not-allowed
               shadow-lg shadow-indigo-600/30"
             >
               {loading ? t("signingIn") : t("createAccount")}
@@ -279,8 +288,9 @@ const Register = () => {
             {/* GOOGLE BUTTON */}
             <button
               type="button"
+              disabled={loading}
               onClick={() => signIn("google")}
-              className="w-full py-4 rounded-xl font-bold text-white border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+              className="w-full py-4 rounded-xl font-bold text-white border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3 group relative overflow-hidden disabled:opacity-50 disabled:hover:scale-100"
             >
               <div className="absolute inset-0 bg-linear-to-r from-indigo-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
               <FcGoogle className="text-2xl group-hover:scale-110 transition-transform" />

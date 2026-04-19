@@ -44,6 +44,11 @@ export async function middleware(request: NextRequest) {
 
     const otpToken = request.cookies.get("otp_code")?.value;
 
+    // if (otpToken && isAuthRoute) {
+    //     return NextResponse.redirect(new URL("/verify-email", request.url));
+
+    // }
+
     if (isVerfiedRoute) {
         if (token || nextAuthToken) {
 
@@ -57,12 +62,19 @@ export async function middleware(request: NextRequest) {
         try {
 
 
-            const decoded = await jwt.verify(otpToken, process?.env?.JWT_SECRET!)
-            console.log(decoded);
+            const secret = new TextEncoder().encode(
+                process.env.JWT_SECRET
+            );
+
+            const { payload } = await jwtVerify(
+                otpToken,
+                secret
+            );
+            console.log(payload);
 
         } catch (error) {
-            await cookie.delete("otp_code")
-            
+            console.log(error);
+
             return NextResponse.redirect(new URL("/register", request.url));
 
         }

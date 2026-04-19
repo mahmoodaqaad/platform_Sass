@@ -22,7 +22,6 @@ const Login = () => {
   const [userRole, setUserRole] = useState("");
   const prames = useSearchParams()
   const path = useParams().locale
-  console.log(path);
 
   const isRedirect = prames.get("redirect") || false; // "true" أو null
   const handleLogin = async (e: React.FormEvent) => {
@@ -31,19 +30,19 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/login", { email, password });
-      const { user } = response.data;
+      // const response = await axios.post("/api/login", { email, password });
+      // const { user } = response.data;
 
-      setSuccess(true);
-      setUserRole(user.role);
+      // setSuccess(true);
+      // setUserRole(user.role);
 
-      // Dramatic pause for success effect
-      setTimeout(() => {
-        if (user.role === "ADMIN") router.push("/admin");
-        else if (user.role === "OWNER") router.push("/owner");
-        else if (user.role === "STAFF") router.push("/staff");
-        else router.push("/");
-      }, 1500);
+      // // Dramatic pause for success effect
+      // setTimeout(() => {
+      //   if (user.role === "ADMIN") router.push("/admin");
+      //   else if (user.role === "OWNER") router.push("/owner");
+      //   else if (user.role === "STAFF") router.push("/staff");
+      //   else router.push("/");
+      // }, 1500);
 
     } catch (e: unknown) {
       console.error(e);
@@ -53,13 +52,11 @@ const Login = () => {
         setError(t("unexpectedError"));
       }
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    signIn("google");
-  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-slate-950">
@@ -182,6 +179,7 @@ const Login = () => {
               active:scale-[0.98]
               transition-all
               shadow-lg shadow-indigo-600/30
+              
               disabled:opacity-50 disabled:hover:scale-100"
             >
               {loading ? t("signingIn") : t("signIn")}
@@ -197,8 +195,9 @@ const Login = () => {
             {/* GOOGLE BUTTON */}
             <button
               type="button"
+              disabled={loading}
               onClick={() => signIn("google")}
-              className="w-full py-4 rounded-xl font-bold text-white border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+              className="w-full py-4 rounded-xl font-bold text-white border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3 group relative overflow-hidden disabled:opacity-50 disabled:hover:scale-100"
             >
               <div className="absolute inset-0 bg-linear-to-r from-indigo-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
               <FcGoogle className="text-2xl group-hover:scale-110 transition-transform" />

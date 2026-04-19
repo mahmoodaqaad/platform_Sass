@@ -95,7 +95,8 @@
         "passwordShort": "Your password is too short!",
         "passwordMismatch": "Confirm password does not match your password",
         "contactUs": "Contact Us",
-        "continueWithGoogle": "Continue with Google"
+        "continueWithGoogle": "Continue with Google",
+        "or": "Or"
     },
     "Hero": {
         "v2Live": "v2.0 is now live",
@@ -950,6 +951,8 @@
             "emailPlaceholder": "Enter your email",
             "phone": "Phone Number",
             "phonePlaceholder": "Enter your phone number",
+            "notes": "Notes & Extra Details",
+            "notesPlaceholder": "Add any important details or notes...",
             "confirm": "CONFIRM BOOKING",
             "terms": "By booking you agree to our terms and conditions.",
             "success": "Booking request sent! We will contact you soon.",

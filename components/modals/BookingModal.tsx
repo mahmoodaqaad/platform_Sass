@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiOutlineXMark, HiOutlineCalendarDays, HiOutlineClock, HiOutlineUser, HiOutlineEnvelope, HiOutlinePhone } from "react-icons/hi2";
+import { HiOutlineXMark, HiOutlineCalendarDays, HiOutlineClock, HiOutlineUser, HiOutlineEnvelope, HiOutlinePhone, HiOutlinePencilSquare } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import axios from "axios";
@@ -25,7 +25,9 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
         customerEmail: "",
         customerPhone: "",
         date: "",
-        time: ""
+        time: "",
+        notes: "",
+        
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -47,7 +49,7 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                 customerName: formData.customerName,
                 customerEmail: formData.customerEmail,
                 customerPhone: formData.customerPhone,
-                startTime
+                startTime,notes:formData.notes
             });
 
             toast.success(t("success"));
@@ -68,22 +70,22 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-100 flex items-center justify-center p-4 ">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm "
                     />
 
                     {/* Modal Content */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-lg bg-zinc-950 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+                        exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                        className="relative w-full max-w-lg bg-zinc-950 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto"
                         dir={business.defaultLanguage === 'ar' ? 'rtl' : 'ltr'}
                     >
                         {/* Header */}
@@ -168,7 +170,18 @@ const BookingModal = ({ isOpen, onClose, service, business }: BookingModalProps)
                                     value={formData.customerPhone}
                                     onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
                                 />
-                            </div>
+                            </div>    <div className="space-y-2">
+                                                                    <label className="text-sm font-bold text-zinc-400 flex items-center gap-2">
+                                                                        <HiOutlinePencilSquare />
+                                                                        {t("notes")}
+                                                                    </label>
+                                                                    <textarea
+                                                                        value={formData.notes}
+                                                                        onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                                                                        className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all font-medium placeholder:text-zinc-600 h-32"
+                                                                        placeholder={t("notesPlaceholder")}
+                                                                    />
+                                                                </div>
 
                             <div className="pt-4">
                                 <Button

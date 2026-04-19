@@ -517,7 +517,7 @@ export default function BusinessesPage() {
             {/* Add Modal */}
             <AnimatePresence>
                 {showAddModal && (
-                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4  overflow-y-auto">
+                    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 ">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -529,7 +529,7 @@ export default function BusinessesPage() {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="cursor-pointer  bg-zinc-950 border border-zinc-800 w-full max-w-xl rounded-[2.5rem] overflow-hidden shadow-2xl relative"
+                            className="  bg-zinc-950 border border-zinc-800 w-full max-w-xl rounded-[2.5rem] max-h-[90vh] overflow-y-auto shadow-2xl relative"
                         >
                             <div className="p-12 relative">
                                 <button

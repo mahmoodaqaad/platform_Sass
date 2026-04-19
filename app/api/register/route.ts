@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import { setCookie, setOTPCookie } from "@/Tools/generateToken"
 import { sendOtp, transporter } from "@/lib/mailer"
+import { cookies } from "next/headers"
+import { redirect } from "next/dist/server/api-utils"
 export const POST = async (req: NextRequest) => {
     try {
         // Check if registration is open
@@ -26,6 +28,31 @@ export const POST = async (req: NextRequest) => {
         }
 
         const userExist = await prisma.user.findUnique({ where: { email } })
+
+        if (userExist && !userExist?.isVerified) {
+            const cookie = await cookies()
+
+            const token = req.cookies.get("otp_code")?.value
+            if (token) {
+                return NextResponse.json({ message: "يرجى التحقق من البريد الإلكتروني" ,redirect:"/verify-email"}, { status: 200 })
+            }
+            else {
+                const code = Math.floor(100000 + Math.random() * 900000).toString()
+                await prisma.user.update({
+                    where: { id: userExist.id },
+                    data: {
+                        verifyCode: code,
+                        verifyExpire: new Date(Date.now() + 10 * 60 * 1000),
+                    }
+                })
+                await sendOtp(email, code)
+                const cookie = await setOTPCookie(email, userExist.id)
+                return NextResponse.json({ message: "يرجى التحقق من البريد الإلكتروني" ,redirect:"/verify-email"}, { status: 200, headers: { "Set-Cookie": cookie } })
+            }
+
+
+
+        }
         if (userExist) {
             return NextResponse.json({ message: "هذا البريد الإلكتروني مسجل مسبقاً" }, { status: 400 })
         }

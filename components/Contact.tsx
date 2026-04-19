@@ -1,15 +1,52 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { HiMail, HiPhone, HiLocationMarker, HiArrowRight } from "react-icons/hi";
 import { useTranslations } from "next-intl";
-
+import emailjs from "@emailjs/browser"
+import { toast } from "react-toastify";
 const Contact = () => {
     const t = useTranslations("Contact");
     const tInfo = useTranslations("Contact.info");
     const tForm = useTranslations("Contact.form");
+    const [loading, setLoading] = useState(false)
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+    })
+    const handelSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        try {
+            setLoading(true)
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+                {
+                    from_name: form.name,
+                    from_email: form.email,
+                    subject: form.subject,
+                    message: form.message
+                },
+                process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
+            )
+            toast.success("Message sent successfully")
+            setForm({
+                name: "",
+                email: "",
+                subject: "",
+                message: ""
+            })
+        } catch (error) {
+            console.log(error);
+            toast.error("حدث خطأ")
 
+        } finally {
+            setLoading(false)
+        }
+    }
     return (
         <section id="contact" className="py-24 bg-[#050505] text-white relative overflow-hidden">
             {/* Abstract Background Element */}
@@ -71,12 +108,14 @@ const Contact = () => {
                         viewport={{ once: true }}
                         className="p-10 rounded-[2.5rem] bg-zinc-950/50 border border-zinc-900 backdrop-blur-3xl shadow-2xl"
                     >
-                        <form className="space-y-6">
+                        <form className="space-y-6" onSubmit={handelSubmit}>
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-zinc-400 px-1">{tForm("fullName")}</label>
                                     <input
                                         type="text"
+                                        value={form.name}
+                                        onChange={(e) => setForm({ ...form, name: e.target.value })}
                                         placeholder={tForm("fullNamePlaceholder")}
                                         className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all"
                                     />
@@ -85,6 +124,8 @@ const Contact = () => {
                                     <label className="text-sm font-medium text-zinc-400 px-1">{tForm("email")}</label>
                                     <input
                                         type="email"
+                                        value={form.email}
+                                        onChange={(e) => setForm({ ...form, email: e.target.value })}
                                         placeholder={tForm("emailPlaceholder")}
                                         className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all"
                                     />
@@ -94,6 +135,8 @@ const Contact = () => {
                                 <label className="text-sm font-medium text-zinc-400 px-1">{tForm("subject")}</label>
                                 <input
                                     type="text"
+                                    value={form.subject}
+                                    onChange={(e) => setForm({ ...form, subject: e.target.value })}
                                     placeholder={tForm("subjectPlaceholder")}
                                     className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all"
                                 />
@@ -102,15 +145,18 @@ const Contact = () => {
                                 <label className="text-sm font-medium text-zinc-400 px-1">{tForm("message")}</label>
                                 <textarea
                                     rows={4}
+                                    value={form.message}
+                                    onChange={(e) => setForm({ ...form, message: e.target.value })}
                                     placeholder={tForm("messagePlaceholder")}
                                     className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-indigo-500 transition-all resize-none"
                                 />
                             </div>
                             <button
                                 type="submit"
-                                className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-600/20 transition-all flex items-center justify-center gap-3 group"
+                                disabled={loading}
+                                className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-600/20 transition-all flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {tForm("submit")}
+                                {loading ? "Sending..." : tForm("submit")}
                                 <HiArrowRight className="group-hover:translate-x-2 transition-transform" />
                             </button>
                         </form>

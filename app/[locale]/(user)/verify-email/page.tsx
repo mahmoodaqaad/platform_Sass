@@ -5,9 +5,11 @@ import { HiOutlineLockClosed } from "react-icons/hi"
 import { motion } from "framer-motion"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { useRouter } from "next/navigation"
 const VerifyCode = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""])
-    const [time, setTime] = useState<number>(30)
+    const [time, setTime] = useState<number>(2)
+    const router = useRouter()
     const handleChange = (value: string, index: number) => {
         if (!/^\d*$/.test(value)) return
 
@@ -62,7 +64,15 @@ const VerifyCode = () => {
             await axios.post("/api/auth/verify", {
                 code: code.join(""),
             })
+
+            toast.success("تم التحقق من البريد الإلكتروني بنجاح")
+            router.push("/")
         } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message || "حدث خطأ أثناء التحقق من البريد الإلكتروني")
+            } else {
+                toast.error("حدث خطأ أثناء التحقق من البريد الإلكتروني")
+            }
             console.log(error);
 
         }
@@ -70,11 +80,18 @@ const VerifyCode = () => {
 
     const resendCode = async () => {
         try {
+            toast.loading("جاري ارسال رمز تحقق جديد")
+            await axios.post("/api/auth/verify/resend")
             setTime(30)
-            const res = await axios.post("/api/auth/verify/resend")
-            console.log(res);
+            toast.dismiss()
+            toast.success("تم ارسال رمز تحقق اخر بنجاح راجع بريدك الالكتروني")
 
         } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.message || "حدث خطأ أثناء التحقق من البريد الإلكتروني")
+            } else {
+                toast.error("حدث خطأ أثناء التحقق من البريد الإلكتروني")
+            }
             console.log(error);
 
         }
@@ -152,7 +169,7 @@ const VerifyCode = () => {
                     <p className="text-center text-white/40 text-sm mt-6">
                         Didn’t get code?{" "}
                         {time <= 0 ? (
-                            <button onClick={resendCode} className="text-indigo-400 hover:text-indigo-300">
+                            <button onClick={resendCode} disabled={time > 0} className="text-indigo-400 hover:text-indigo-300">
                                 Resend
                             </button>
                         ) : (
