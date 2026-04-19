@@ -30,7 +30,6 @@ export const POST = async (req: NextRequest) => {
         const userExist = await prisma.user.findUnique({ where: { email } })
 
         if (userExist && !userExist?.isVerified) {
-            const cookie = await cookies()
 
             const token = req.cookies.get("otp_code")?.value
             if (token) {
@@ -81,7 +80,7 @@ export const POST = async (req: NextRequest) => {
                 role: true,
                 emailVerified: true,
 
-            }
+            } 
         })
 
         const cookie = await setOTPCookie(user.email, user.id)
