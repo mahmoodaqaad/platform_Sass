@@ -1,5 +1,5 @@
-import { User } from '@/prisma/generated/prisma/client';
 import axios from 'axios';
+import { User } from '@prisma/client';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import React, { SetStateAction, useState } from 'react'

@@ -11,8 +11,8 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@next-auth/prisma-adapter": "^1.0.7",
-    "@prisma/adapter-pg": "7.5.0",
-    "@prisma/client": "7.5.0",
+    "@prisma/adapter-pg": "7.7.0",
+    "@prisma/client": "7.7.0",
     "@reduxjs/toolkit": "^2.11.2",
     "@types/pg": "^8.20.0",
     "axios": "^1.13.4",

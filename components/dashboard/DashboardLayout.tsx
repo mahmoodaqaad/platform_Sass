@@ -11,7 +11,7 @@ import { Link } from "@/i18n/routing";
 import admin from "../../public/image/admin.png"
 import owner from "../../public/image/owner.png"
 import staff from "../../public/image/staff.png"
-import { User } from "@/prisma/generated/prisma/client";
+import { User } from "@prisma/client";
 import { Business } from "@/lib/types";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {

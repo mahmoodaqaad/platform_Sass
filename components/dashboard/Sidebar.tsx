@@ -17,7 +17,7 @@ import {
     HiOutlineGlobeAlt
 } from "react-icons/hi";
 import Logout from "../Logout";
-import { User } from "@/prisma/generated/prisma/client";
+import { User } from "@prisma/client";
 
 const Sidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);

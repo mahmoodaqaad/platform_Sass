@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import axios from "axios";
 import Logout from "./Logout";
-import { User } from "@/prisma/generated/prisma/client";
+import { User } from "@prisma/client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import LanguageSwitcher from "./LanguageSwitcher";
