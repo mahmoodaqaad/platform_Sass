@@ -8,9 +8,8 @@ import { usePathname, useRouter } from "next/navigation";
 import Button from "../ui/Button";
 
 interface SectionProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     section: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    
     business: any;
     isEditing?: boolean;
 }
@@ -29,7 +28,7 @@ const getRadiusClass = (radius?: string) => {
 const HeroWidget = ({ section, business }: SectionProps) => {
     const router = useRouter()
     const path = usePathname()
-    const settings = section.settings || {};
+    const settings = typeof section.settings === 'string' ? JSON.parse(section.settings || '{}') : (section.settings || {});
     const overlayOpacity = settings.overlayOpacity ?? 0.4;
     const textAlign = settings.textAlign ?? "center";
     const bgImage = section.images?.[0] || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80';
@@ -107,7 +106,7 @@ const HeroWidget = ({ section, business }: SectionProps) => {
 };
 
 const GalleryWidget = ({ section }: SectionProps) => {
-    const settings = section.settings || {};
+    const settings = typeof section.settings === 'string' ? JSON.parse(section.settings || '{}') : (section.settings || {});
     const borderRadius = getRadiusClass(settings.borderRadius);
     const objectFit = settings.objectFit || "cover";
 
@@ -130,7 +129,7 @@ const GalleryWidget = ({ section }: SectionProps) => {
 };
 
 const AboutWidget = ({ section }: SectionProps) => {
-    const settings = section.settings || {};
+    const settings = typeof section.settings === 'string' ? JSON.parse(section.settings || '{}') : (section.settings || {});
     const borderRadius = getRadiusClass(settings.borderRadius);
     const hasImage = section.images && section.images.length > 0 && section.images[0];
 

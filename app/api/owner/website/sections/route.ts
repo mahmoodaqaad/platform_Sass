@@ -9,9 +9,10 @@ async function getOwnerId(req: NextRequest) {
 }
 
 // Helper: parse settings string to object safely
-function parseSettings(raw: string | null | undefined): Record<string, unknown> {
+function parseSettings(raw: any): Record<string, any> {
     if (!raw) return {};
-    try { return raw } catch { return {}; }
+    if (typeof raw === 'object') return raw;
+    try { return JSON.parse(raw); } catch { return {}; }
 }
 
 export const GET = async (req: NextRequest) => {
@@ -57,7 +58,7 @@ export const POST = async (req: NextRequest) => {
         });
 
         if (!business) return NextResponse.json({ message: "Business not found" }, { status: 404 });
-        // Check if section already exists with this type
+        
         let section = type
         ? await prisma.businessSection.findFirst({
             where: { businessId: business.id, type }
@@ -74,7 +75,9 @@ export const POST = async (req: NextRequest) => {
                     images: Array.isArray(images) ? images : [],
                     order: Number(order) || 0,
                     isActive: isActive !== false,
-                    settings: settings ? JSON.stringify(settings) : "{}"
+                    settings: settings !== undefined 
+                        ? (typeof settings === 'object' ? JSON.stringify(settings) : settings) 
+                        : "{}"
                 }
             });
         }
@@ -83,12 +86,11 @@ export const POST = async (req: NextRequest) => {
             ...section,
             settings: parseSettings(section.settings)
         });
-    } catch (error: unknown) {
-        const err = error as { message?: string; code?: string; stack?: string };
-        console.error("Website Sections API POST error:", err.message);
+    } catch (error: any) {
+        console.error("Website Sections API POST error:", error.message);
         return NextResponse.json({
             message: "Internal server error",
-            error: err.message
+            error: error.message
         }, { status: 500 });
     }
 };

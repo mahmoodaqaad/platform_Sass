@@ -23,7 +23,9 @@ interface SettingPanelProps {
 }
 
 const SettingPanel: React.FC<SettingPanelProps> = ({ section, onUpdate, onBack, onDelete, children }) => {
-    const settings = section.settings || {};
+    const settings = typeof section.settings === 'string' 
+        ? (JSON.parse(section.settings || '{}')) 
+        : (section.settings || {});
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateSettings = (key: string, value: any) => {

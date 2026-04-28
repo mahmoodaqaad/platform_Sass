@@ -8,9 +8,10 @@ async function getOwnerId(req: NextRequest) {
     return authUser.id;
 }
 
-function parseSettings(raw: string | null | undefined): Record<string, unknown> {
+function parseSettings(raw: any): Record<string, any> {
     if (!raw) return {};
-    try { return raw; } catch { return {}; }
+    if (typeof raw === 'object') return raw;
+    try { return JSON.parse(raw); } catch { return {}; }
 }
 
 export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
@@ -41,16 +42,18 @@ export const PUT = async (req: NextRequest, { params }: { params: Promise<{ id: 
                 ...(type !== undefined && { type }),
                 ...(title !== undefined && { title }),
                 ...(content !== undefined && { content }),
-                ...(images !== undefined && { images }),
+                ...(images !== undefined && { images: { set: images } }),
                 ...(order !== undefined && { order }),
                 ...(isActive !== undefined && { isActive }),
-                settings: settings !== undefined ? settings : undefined
+                settings: settings !== undefined 
+                    ? (typeof settings === 'object' ? JSON.stringify(settings) : settings) 
+                    : "{}"
             }
         });
 
         return NextResponse.json({
             ...updatedSection,
-            settings: parseSettings(updatedSection.settings as string | null)
+            settings: parseSettings(updatedSection.settings)
         });
     } catch (error) {
         console.error("Website Sections API PUT error:", error);

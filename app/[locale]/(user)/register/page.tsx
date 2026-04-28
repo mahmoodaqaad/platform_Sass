@@ -71,7 +71,6 @@ const Register = () => {
       }
       toast.success("تم ارسال رمز التحقق بنجاح راجع بريدك الالكتروني")
       
-      setTimeout(() => {
         if (!user.emailVerified) {
           setUserRole(user.role);
           setSuccess(true);
@@ -87,7 +86,6 @@ const Register = () => {
         } else {
           return router.push("/");
       }
-      }, 1500);
     } catch (e: unknown) {
       console.error(e);
       if (axios.isAxiosError(e)) {
