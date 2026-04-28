@@ -180,17 +180,6 @@ export default function ClassicTemplate({ business, sections }: Props) {
                     business={business}
                 />
             )}
-
-
-            {selectedService && (
-                <BookingModal
-                    isOpen={isBookingOpen}
-                    onClose={() => setIsBookingOpen(false)}
-                    service={selectedService}
-                    business={business}
-                />
-            )}
-            </main>
-     
+        </main>
     );
 }
