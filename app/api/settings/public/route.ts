@@ -19,7 +19,7 @@ export const GET = async () => {
             settings = await prisma.globalSettings.create({
                 data: {
                     id: "global",
-                    platformName: "Booking SaaS",
+                    platformName: "OmniBooking",
                     supportEmail: "mahmmodaqaad@gmail.com",
                     registrationOpen: true,
                     currency: "USD",
