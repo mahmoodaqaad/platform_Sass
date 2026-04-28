@@ -168,6 +168,123 @@ const SettingPanel: React.FC<SettingPanelProps> = ({ section, onUpdate, onBack, 
         </div>
     );
 
+    const renderAboutSettings = () => (
+        <div className="space-y-6">
+            <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Image Side</label>
+                <div className="flex gap-2 p-1 bg-zinc-900 rounded-xl border border-zinc-800">
+                    {["left", "right"].map(side => (
+                        <button
+                            key={side}
+                            onClick={() => updateSettings("imageSide", side)}
+                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${settings.imageSide === side ? "bg-white/10 text-white" : "text-zinc-500 hover:text-white"}`}
+                        >
+                            {side.toUpperCase()}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    const renderTestimonialsSettings = () => (
+        <div className="space-y-6">
+            <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 block">Manage Testimonials</label>
+                <div className="space-y-4">
+                    {(settings.testimonials || []).map((t: any, index: number) => (
+                        <div key={index} className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl space-y-3 relative group">
+                            <button
+                                onClick={() => {
+                                    const newT = (settings.testimonials || []).filter((_: any, i: number) => i !== index);
+                                    updateSettings("testimonials", newT);
+                                }}
+                                className="absolute top-2 right-2 p-2 text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <HiOutlineTrash />
+                            </button>
+                            <textarea
+                                value={t.quote}
+                                onChange={(e) => {
+                                    const newT = [...(settings.testimonials || [])];
+                                    newT[index] = { ...t, quote: e.target.value };
+                                    updateSettings("testimonials", newT);
+                                }}
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500 min-h-[80px]"
+                                placeholder="The client's quote..."
+                            />
+                            <div className="grid grid-cols-2 gap-2">
+                                <input
+                                    value={t.author}
+                                    onChange={(e) => {
+                                        const newT = [...(settings.testimonials || [])];
+                                        newT[index] = { ...t, author: e.target.value };
+                                        updateSettings("testimonials", newT);
+                                    }}
+                                    className="bg-zinc-950 border border-zinc-800 rounded-xl p-2 text-[10px] text-white focus:outline-none focus:border-indigo-500"
+                                    placeholder="Author Name"
+                                />
+                                <input
+                                    value={t.role}
+                                    onChange={(e) => {
+                                        const newT = [...(settings.testimonials || [])];
+                                        newT[index] = { ...t, role: e.target.value };
+                                        updateSettings("testimonials", newT);
+                                    }}
+                                    className="bg-zinc-950 border border-zinc-800 rounded-xl p-2 text-[10px] text-white focus:outline-none focus:border-indigo-500"
+                                    placeholder="Role (e.g. CEO)"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                    <button
+                        onClick={() => {
+                            const newT = [...(settings.testimonials || []), { quote: "", author: "", role: "" }];
+                            updateSettings("testimonials", newT);
+                        }}
+                        className="w-full py-3 border border-dashed border-zinc-800 rounded-2xl text-xs font-bold text-zinc-500 hover:text-white transition-all"
+                    >
+                        + ADD TESTIMONIAL
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+
+    const renderGallerySettings = () => (
+        <div className="space-y-6">
+            <div>
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Grid Columns</label>
+                <div className="flex gap-2 p-1 bg-zinc-900 rounded-xl border border-zinc-800">
+                    {[2, 3, 4].map(cols => (
+                        <button
+                            key={cols}
+                            onClick={() => updateSettings("columns", cols)}
+                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${settings.columns === cols ? "bg-white/10 text-white" : "text-zinc-500 hover:text-white"}`}
+                        >
+                            {cols} COL
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    const renderContactSettings = () => (
+        <div className="space-y-6">
+            <div className="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    id="showMap"
+                    checked={settings.showMap !== false}
+                    onChange={(e) => updateSettings("showMap", e.target.checked)}
+                    className="w-4 h-4 accent-indigo-500 rounded border-zinc-800 bg-zinc-900"
+                />
+                <label htmlFor="showMap" className="text-sm text-zinc-300">Show Map Widget</label>
+            </div>
+        </div>
+    );
+
     return (
         <div className="h-full flex flex-col bg-zinc-950 border-r border-zinc-800 w-80 shrink-0">
             {/* Header */}
@@ -203,7 +320,10 @@ const SettingPanel: React.FC<SettingPanelProps> = ({ section, onUpdate, onBack, 
                     <div>
                         <h4 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] mb-6">Block Specific</h4>
                         {section.type === "HERO" && renderHeroSettings()}
-                        {/* Add more setting renderers for other types */}
+                        {section.type === "ABOUT" && renderAboutSettings()}
+                        {section.type === "TESTIMONIALS" && renderTestimonialsSettings()}
+                        {section.type === "GALLERY" && renderGallerySettings()}
+                        {section.type === "CONTACT" && renderContactSettings()}
                     </div>
                 </div>
 

@@ -26,7 +26,10 @@ export default async function BusinessPublicPage({ params }: { params: { locale:
     // Determine which template to render based on business.templateId
     const TemplateComponent = business.templateId === "classic" ? ClassicTemplate : ModernTemplate;
 
+    // Serialize data to handle Decimal objects
+    const serializedBusiness = JSON.parse(JSON.stringify(business));
+
     return (
-        <TemplateComponent business={business} sections={business.sections || []} />
+        <TemplateComponent business={serializedBusiness} sections={serializedBusiness.sections || []} />
     );
 }

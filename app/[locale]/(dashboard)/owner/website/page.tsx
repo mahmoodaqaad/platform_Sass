@@ -116,15 +116,41 @@ const WebsiteBuilderPage = () => {
     };
 
     const handleAddSection = async (type: string) => {
+        // Unique section check (optional, but keep for HERO and SERVICES if desired)
+        // const existing = sections.find(s => s.type === type);
+        // if (existing) { ... }
+
         setSaving(true);
         try {
+            const defaultSettings: any = {
+                borderRadius: "md",
+                objectFit: "cover",
+            };
+
+            if (type === "HERO") {
+                defaultSettings.overlayOpacity = 0.4;
+                defaultSettings.textAlign = "center";
+                defaultSettings.showButton = true;
+                defaultSettings.buttonText = "Book Now";
+            } else if (type === "ABOUT") {
+                defaultSettings.imageSide = "right";
+            } else if (type === "TESTIMONIALS") {
+                defaultSettings.testimonials = [
+                    { quote: "Amazing service! Highly recommended.", author: "John Doe", role: "Happy Client" }
+                ];
+            } else if (type === "GALLERY") {
+                defaultSettings.columns = 4;
+            } else if (type === "CONTACT") {
+                defaultSettings.showMap = true;
+            }
+
             const newSection = {
                 type,
-                title: `New ${type} Section`,
-                content: "Click to edit this content...",
+                title: type.charAt(0) + type.slice(1).toLowerCase(),
+                content: "Customize this section's content in the sidebar...",
                 order: sections.length,
                 isActive: true,
-                settings: {}
+                settings: defaultSettings
             };
             const res = await axios.post("/api/owner/website/sections", newSection);
 
